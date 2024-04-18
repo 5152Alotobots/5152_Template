@@ -1,0 +1,19 @@
+{
+  "robotWidth": 0.6,
+  "robotLength": 0.71,
+  "holonomicMode": true,
+  "pathFolders": [
+    "Auto_2PieceDisruptor",
+    "Auto_4PieceFastMiddle",
+    "Auto_4PieceOpenSide",
+    "Auto_2-5Piece"
+  ],
+  "autoFolders": [
+    "Fast"
+  ],
+  "defaultMaxVel": 3.5,
+  "defaultMaxAccel": 2.75,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "maxModuleSpeed": 5.0
+}
