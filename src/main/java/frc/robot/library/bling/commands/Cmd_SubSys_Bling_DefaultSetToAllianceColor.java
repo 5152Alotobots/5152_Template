@@ -1,7 +1,7 @@
-package frc.robot.crescendo.subsystems.bling.commands;
+package frc.robot.library.bling.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
+import frc.robot.library.bling.SubSys_Bling;
 
 public class Cmd_SubSys_Bling_DefaultSetToAllianceColor extends Command {
     private final SubSys_Bling subSysBling;

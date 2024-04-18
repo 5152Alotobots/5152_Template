@@ -1,4 +1,4 @@
-package frc.robot.crescendo.subsystems.bling;
+package frc.robot.library.bling;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.*;
 
 import static frc.robot.Constants.CAN_IDs.CANDLE_CAN_ID;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Animations.NO_ALLIANCE_ANIMATION;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.Colors.*;
-import static frc.robot.crescendo.subsystems.bling.SubSys_Bling_Constants.*;
+import static frc.robot.library.bling.SubSys_Bling_Constants.Animations.NO_ALLIANCE_ANIMATION;
+import static frc.robot.library.bling.SubSys_Bling_Constants.Colors.*;
+import static frc.robot.library.bling.SubSys_Bling_Constants.*;
 
 public class SubSys_Bling extends SubsystemBase {
     private Animation currentAnimation;

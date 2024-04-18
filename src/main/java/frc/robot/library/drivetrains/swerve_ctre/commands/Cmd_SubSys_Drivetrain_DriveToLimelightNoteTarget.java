@@ -9,27 +9,22 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 public class Cmd_SubSys_Drivetrain_DriveToLimelightNoteTarget extends Command {
   /** Creates a new Cmd_SubSys_Drivetrain_DriveToLimelightTarget. */
-  private CommandSwerveDrivetrain drivetrain;
-  private BooleanSupplier noteDetected;
-  private DoubleSupplier tx;
+  private final CommandSwerveDrivetrain drivetrain;
+    private final DoubleSupplier tx;
 
-  private RobotCentric drive = new SwerveRequest.RobotCentric()
+  private final RobotCentric drive = new SwerveRequest.RobotCentric()
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
  
   // Create a PID controller
@@ -42,8 +37,7 @@ public class Cmd_SubSys_Drivetrain_DriveToLimelightNoteTarget extends Command {
   
   public Cmd_SubSys_Drivetrain_DriveToLimelightNoteTarget(CommandSwerveDrivetrain drivetrain, BooleanSupplier noteDetected, DoubleSupplier tx) {
     this.drivetrain = drivetrain;
-    this.noteDetected = noteDetected;
-    this.tx = tx;
+      this.tx = tx;
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -54,9 +48,6 @@ public class Cmd_SubSys_Drivetrain_DriveToLimelightNoteTarget extends Command {
   public void initialize() {
     rotController.setTolerance(0.01);
     rotController.setGoal(0);
-    //rotController.reset(tx,drivetrain.getState().speeds.omegaRadiansPerSecond);
-    //rotController.reset(tx);
-    //double rotCmd = rotController.calculate(tx.getAsDouble(), 0);//+feedforward.calculate(drivetrain.getState().speeds.omegaRadiansPerSecond);
 
     drivetrain.applyRequest(() -> 
       drive.withVelocityX(drivetrain.getCurrentRobotChassisSpeeds().vxMetersPerSecond)
@@ -67,7 +58,7 @@ public class Cmd_SubSys_Drivetrain_DriveToLimelightNoteTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double rotCmd = rotController.calculate(Units.degreesToRadians(tx.getAsDouble()), 0); //+feedforward.calculate(drivetrain.getState().speeds.omegaRadiansPerSecond);
+    double rotCmd = rotController.calculate(Units.degreesToRadians(tx.getAsDouble()), 0);
     double ffCmd = feedforward.calculate(rotController.getSetpoint().velocity);
     SmartDashboard.putNumber("LimelightCmdTx", Units.degreesToRadians(tx.getAsDouble()));
     SmartDashboard.putNumber("LimelightRotCmd", rotCmd);

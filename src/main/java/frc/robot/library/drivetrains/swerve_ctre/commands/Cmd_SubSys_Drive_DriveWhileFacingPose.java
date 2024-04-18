@@ -2,29 +2,28 @@ package frc.robot.library.drivetrains.swerve_ctre.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.crescendo.HMIStation;
-import frc.robot.crescendo.subsystems.shooter.expirimental.AimModule;
+import frc.robot.library.drivetrains.AimModule;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 
 import java.util.function.DoubleSupplier;
 
-public class Cmd_SubSys_Drive_DriveWhileFacingSpeaker extends Command {
-    private CommandSwerveDrivetrain subSysSwerve;
-    private SwerveRequest.FieldCentricFacingAngle drive = new SwerveRequest.FieldCentricFacingAngle()
+public class Cmd_SubSys_Drive_DriveWhileFacingPose extends Command {
+    private final CommandSwerveDrivetrain subSysSwerve;
+    private final SwerveRequest.FieldCentricFacingAngle drive = new SwerveRequest.FieldCentricFacingAngle()
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-    private DoubleSupplier velocityX;
-    private DoubleSupplier velocityY;
+    private final DoubleSupplier velocityX;
+    private final DoubleSupplier velocityY;
+    private Pose2d pose;
 
-    public Cmd_SubSys_Drive_DriveWhileFacingSpeaker(
+    public Cmd_SubSys_Drive_DriveWhileFacingPose(
             CommandSwerveDrivetrain subSysSwerve,
             DoubleSupplier velocityX,
-            DoubleSupplier velocityY) {
+            DoubleSupplier velocityY,
+            Pose2d pose) {
         this.subSysSwerve = subSysSwerve;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
@@ -39,15 +38,7 @@ public class Cmd_SubSys_Drive_DriveWhileFacingSpeaker extends Command {
     @Override
     public void execute() {
         Rotation2d targetHeading;
-        if(DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
-                targetHeading = AimModule.calculateRobotHeadingAlignShooterToSpeaker(subSysSwerve.getState().Pose).plus(Rotation2d.fromDegrees(195));
-            } else {
-                targetHeading = AimModule.calculateRobotHeadingAlignShooterToSpeaker(subSysSwerve.getState().Pose);
-            }
-        } else {
-            targetHeading = new Rotation2d();
-        }
+        targetHeading = AimModule.calculateRobotHeadingAlignShooterToPose(pose, subSysSwerve.getState().Pose);
         SmartDashboard.putNumber("Auto Aim Target Heading", targetHeading.getDegrees());
         SmartDashboard.putNumber("vx", velocityX.getAsDouble());
         SmartDashboard.putNumber("vy", velocityY.getAsDouble());

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@SuppressWarnings("ALL")
 public class LimelightLib {
 
     public static class LimelightTarget_Retro {
@@ -45,66 +46,83 @@ public class LimelightLib {
         @JsonProperty("t6t_rs")
         private double[] targetPose_RobotSpace;
 
+        @SuppressWarnings("unused")
         public Pose3d getCameraPose_TargetSpace()
         {
             return toPose3D(cameraPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getRobotPose_FieldSpace()
         {
             return toPose3D(robotPose_FieldSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getRobotPose_TargetSpace()
         {
             return toPose3D(robotPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getTargetPose_CameraSpace()
         {
             return toPose3D(targetPose_CameraSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getTargetPose_RobotSpace()
         {
             return toPose3D(targetPose_RobotSpace);
         }
 
+        @SuppressWarnings("unused")
         public Pose2d getCameraPose_TargetSpace2D()
         {
             return toPose2D(cameraPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getRobotPose_FieldSpace2D()
         {
             return toPose2D(robotPose_FieldSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getRobotPose_TargetSpace2D()
         {
             return toPose2D(robotPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getTargetPose_CameraSpace2D()
         {
             return toPose2D(targetPose_CameraSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getTargetPose_RobotSpace2D()
         {
             return toPose2D(targetPose_RobotSpace);
         }
 
+        @SuppressWarnings("unused")
         @JsonProperty("ta")
         public double ta;
 
+        @SuppressWarnings("unused")
         @JsonProperty("tx")
         public double tx;
 
+        @SuppressWarnings("unused")
         @JsonProperty("txp")
         public double tx_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ty")
         public double ty;
 
+        @SuppressWarnings("unused")
         @JsonProperty("typ")
         public double ty_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ts")
         public double ts;
 
+        @SuppressWarnings("unused")
         public LimelightTarget_Retro() {
             cameraPose_TargetSpace = new double[6];
             robotPose_FieldSpace = new double[6];
@@ -117,9 +135,11 @@ public class LimelightLib {
 
     public static class LimelightTarget_Fiducial {
 
+        @SuppressWarnings("unused")
         @JsonProperty("fID")
         public double fiducialID;
 
+        @SuppressWarnings("unused")
         @JsonProperty("fam")
         public String fiducialFamily;
 
@@ -138,66 +158,83 @@ public class LimelightLib {
         @JsonProperty("t6t_rs")
         private double[] targetPose_RobotSpace;
 
+        @SuppressWarnings("unused")
         public Pose3d getCameraPose_TargetSpace()
         {
             return toPose3D(cameraPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getRobotPose_FieldSpace()
         {
             return toPose3D(robotPose_FieldSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getRobotPose_TargetSpace()
         {
             return toPose3D(robotPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getTargetPose_CameraSpace()
         {
             return toPose3D(targetPose_CameraSpace);
         }
+        @SuppressWarnings("unused")
         public Pose3d getTargetPose_RobotSpace()
         {
             return toPose3D(targetPose_RobotSpace);
         }
 
+        @SuppressWarnings("unused")
         public Pose2d getCameraPose_TargetSpace2D()
         {
             return toPose2D(cameraPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getRobotPose_FieldSpace2D()
         {
             return toPose2D(robotPose_FieldSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getRobotPose_TargetSpace2D()
         {
             return toPose2D(robotPose_TargetSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getTargetPose_CameraSpace2D()
         {
             return toPose2D(targetPose_CameraSpace);
         }
+        @SuppressWarnings("unused")
         public Pose2d getTargetPose_RobotSpace2D()
         {
             return toPose2D(targetPose_RobotSpace);
         }
         
+        @SuppressWarnings("unused")
         @JsonProperty("ta")
         public double ta;
 
+        @SuppressWarnings("unused")
         @JsonProperty("tx")
         public double tx;
 
+        @SuppressWarnings("unused")
         @JsonProperty("txp")
         public double tx_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ty")
         public double ty;
 
+        @SuppressWarnings("unused")
         @JsonProperty("typ")
         public double ty_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ts")
         public double ts;
         
+        @SuppressWarnings("unused")
         public LimelightTarget_Fiducial() {
             cameraPose_TargetSpace = new double[6];
             robotPose_FieldSpace = new double[6];
@@ -207,89 +244,116 @@ public class LimelightLib {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class LimelightTarget_Barcode {
 
     }
 
     public static class LimelightTarget_Classifier {
 
+        @SuppressWarnings("unused")
         @JsonProperty("class")
         public String className;
 
+        @SuppressWarnings("unused")
         @JsonProperty("classID")
         public double classID;
 
+        @SuppressWarnings("unused")
         @JsonProperty("conf")
         public double confidence;
 
+        @SuppressWarnings("unused")
         @JsonProperty("zone")
         public double zone;
 
+        @SuppressWarnings("unused")
         @JsonProperty("tx")
         public double tx;
 
+        @SuppressWarnings("unused")
         @JsonProperty("txp")
         public double tx_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ty")
         public double ty;
 
+        @SuppressWarnings("unused")
         @JsonProperty("typ")
         public double ty_pixels;
 
+        @SuppressWarnings("unused")
         public  LimelightTarget_Classifier() {
         }
     }
 
     public static class LimelightTarget_Detector {
 
+        @SuppressWarnings("unused")
         @JsonProperty("class")
         public String className;
 
+        @SuppressWarnings("unused")
         @JsonProperty("classID")
         public double classID;
 
+        @SuppressWarnings("unused")
         @JsonProperty("conf")
         public double confidence;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ta")
         public double ta;
 
+        @SuppressWarnings("unused")
         @JsonProperty("tx")
         public double tx;
 
+        @SuppressWarnings("unused")
         @JsonProperty("txp")
         public double tx_pixels;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ty")
         public double ty;
 
+        @SuppressWarnings("unused")
         @JsonProperty("typ")
         public double ty_pixels;
 
+        @SuppressWarnings("unused")
         public LimelightTarget_Detector() {
         }
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static class Results {
 
+        @SuppressWarnings("unused")
         @JsonProperty("pID")
         public double pipelineID;
 
+        @SuppressWarnings("unused")
         @JsonProperty("tl")
         public double latency_pipeline;
 
+        @SuppressWarnings("unused")
         @JsonProperty("cl")
         public double latency_capture;
 
+        @SuppressWarnings("unused")
         public double latency_jsonParse;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ts")
         public double timestamp_LIMELIGHT_publish;
 
+        @SuppressWarnings("unused")
         @JsonProperty("ts_rio")
         public double timestamp_RIOFPGA_capture;
 
+        @SuppressWarnings("unused")
         @JsonProperty("v")
         @JsonFormat(shape = Shape.NUMBER)
         public boolean valid;
@@ -303,48 +367,61 @@ public class LimelightLib {
         @JsonProperty("botpose_wpiblue")
         public double[] botpose_wpiblue;
 
+        @SuppressWarnings("unused")
         @JsonProperty("t6c_rs")
         public double[] camerapose_robotspace;
 
+        @SuppressWarnings("unused")
         public Pose3d getBotPose3d() {
             return toPose3D(botpose);
         }
     
+        @SuppressWarnings("unused")
         public Pose3d getBotPose3d_wpiRed() {
             return toPose3D(botpose_wpired);
         }
     
+        @SuppressWarnings("unused")
         public Pose3d getBotPose3d_wpiBlue() {
             return toPose3D(botpose_wpiblue);
         }
 
+        @SuppressWarnings("unused")
         public Pose2d getBotPose2d() {
             return toPose2D(botpose);
         }
     
+        @SuppressWarnings("unused")
         public Pose2d getBotPose2d_wpiRed() {
             return toPose2D(botpose_wpired);
         }
     
+        @SuppressWarnings("unused")
         public Pose2d getBotPose2d_wpiBlue() {
             return toPose2D(botpose_wpiblue);
         }
 
+        @SuppressWarnings("unused")
         @JsonProperty("Retro")
         public LimelightTarget_Retro[] targets_Retro;
 
+        @SuppressWarnings("unused")
         @JsonProperty("Fiducial")
         public LimelightTarget_Fiducial[] targets_Fiducials;
 
+        @SuppressWarnings("unused")
         @JsonProperty("Classifier")
         public LimelightTarget_Classifier[] targets_Classifier;
 
+        @SuppressWarnings("unused")
         @JsonProperty("Detector")
         public LimelightTarget_Detector[] targets_Detector;
 
+        @SuppressWarnings("unused")
         @JsonProperty("Barcode")
         public LimelightTarget_Barcode[] targets_Barcode;
 
+        @SuppressWarnings("unused")
         public Results() {
             botpose = new double[6];
             botpose_wpired = new double[6];
@@ -363,6 +440,7 @@ public class LimelightLib {
         @JsonProperty("Results")
         public Results targetingResults;
 
+        @SuppressWarnings("unused")
         public LimelightResults() {
             targetingResults = new Results();
         }
@@ -373,9 +451,9 @@ public class LimelightLib {
     /**
      * Print JSON Parse time to the console in milliseconds
      */
-    static boolean profileJSON = false;
+    static final boolean profileJSON = false;
 
-    static final String sanitizeName(String name) {
+    static String sanitizeName(String name) {
         if (name == "" || name == null) {
             return "limelight";
         }
@@ -451,22 +529,27 @@ public class LimelightLib {
         return getLimelightNTDouble(limelightName, "tx");
     }
 
+    @SuppressWarnings("unused")
     public static double getTY(String limelightName) {
         return getLimelightNTDouble(limelightName, "ty");
     }
 
+    @SuppressWarnings("unused")
     public static double getTA(String limelightName) {
         return getLimelightNTDouble(limelightName, "ta");
     }
 
+    @SuppressWarnings("unused")
     public static double getLatency_Pipeline(String limelightName) {
         return getLimelightNTDouble(limelightName, "tl");
     }
 
+    @SuppressWarnings("unused")
     public static double getLatency_Capture(String limelightName) {
         return getLimelightNTDouble(limelightName, "cl");
     }
 
+    @SuppressWarnings("unused")
     public static double getCurrentPipelineIndex(String limelightName) {
         return getLimelightNTDouble(limelightName, "getpipe");
     }
@@ -520,30 +603,37 @@ public class LimelightLib {
         return getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
     }
 
+    @SuppressWarnings("unused")
     public static double[] getBotPose_TargetSpace(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "botpose_targetspace");
     }
 
+    @SuppressWarnings("unused")
     public static double[] getCameraPose_TargetSpace(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
     }
 
+    @SuppressWarnings("unused")
     public static double[] getTargetPose_CameraSpace(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
     }
 
+    @SuppressWarnings("unused")
     public static double[] getTargetPose_RobotSpace(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
     }
 
+    @SuppressWarnings("unused")
     public static double[] getTargetColor(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "tc");
     }
 
+    @SuppressWarnings("unused")
     public static double getFiducialID(String limelightName) {
         return getLimelightNTDouble(limelightName, "tid");
     }
 
+    @SuppressWarnings("unused")
     public static double getNeuralClassID(String limelightName) {
         return getLimelightNTDouble(limelightName, "tclass");
     }
@@ -551,41 +641,49 @@ public class LimelightLib {
     /////
     /////
 
+    @SuppressWarnings("unused")
     public static Pose3d getBotPose3d(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getBotPose3d_wpiRed(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpired");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getBotPose3d_wpiBlue(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_wpiblue");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getBotPose3d_TargetSpace(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "botpose_targetspace");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getCameraPose3d_TargetSpace(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_targetspace");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getTargetPose3d_CameraSpace(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_cameraspace");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getTargetPose3d_RobotSpace(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "targetpose_robotspace");
         return toPose3D(poseArray);
     }
 
+    @SuppressWarnings("unused")
     public static Pose3d getCameraPose3d_RobotSpace(String limelightName) {
         double[] poseArray = getLimelightNTDoubleArray(limelightName, "camerapose_robotspace");
         return toPose3D(poseArray);
@@ -598,6 +696,7 @@ public class LimelightLib {
      * @param limelightName
      * @return
      */
+    @SuppressWarnings("unused")
     public static Pose2d getBotPose2d_wpiBlue(String limelightName) {
 
         double[] result = getBotPose_wpiBlue(limelightName);
@@ -611,6 +710,7 @@ public class LimelightLib {
      * @param limelightName
      * @return
      */
+    @SuppressWarnings("unused")
     public static Pose2d getBotPose2d_wpiRed(String limelightName) {
 
         double[] result = getBotPose_wpiRed(limelightName);
@@ -625,6 +725,7 @@ public class LimelightLib {
      * @param limelightName
      * @return
      */
+    @SuppressWarnings("unused")
     public static Pose2d getBotPose2d(String limelightName) {
 
         double[] result = getBotPose(limelightName);
@@ -639,6 +740,7 @@ public class LimelightLib {
     /////
     /////
 
+    @SuppressWarnings("unused")
     public static void setPipelineIndex(String limelightName, int pipelineIndex) {
         setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
     }
@@ -647,37 +749,46 @@ public class LimelightLib {
      * The LEDs will be controlled by Limelight pipeline settings, and not by robot
      * code.
      */
+    @SuppressWarnings("unused")
     public static void setLEDMode_PipelineControl(String limelightName) {
         setLimelightNTDouble(limelightName, "ledMode", 0);
     }
 
+    @SuppressWarnings("unused")
     public static void setLEDMode_ForceOff(String limelightName) {
         setLimelightNTDouble(limelightName, "ledMode", 1);
     }
 
+    @SuppressWarnings("unused")
     public static void setLEDMode_ForceBlink(String limelightName) {
         setLimelightNTDouble(limelightName, "ledMode", 2);
     }
 
+    @SuppressWarnings("unused")
     public static void setLEDMode_ForceOn(String limelightName) {
         setLimelightNTDouble(limelightName, "ledMode", 3);
     }
 
+    @SuppressWarnings("unused")
     public static void setStreamMode_Standard(String limelightName) {
         setLimelightNTDouble(limelightName, "stream", 0);
     }
 
+    @SuppressWarnings("unused")
     public static void setStreamMode_PiPMain(String limelightName) {
         setLimelightNTDouble(limelightName, "stream", 1);
     }
 
+    @SuppressWarnings("unused")
     public static void setStreamMode_PiPSecondary(String limelightName) {
         setLimelightNTDouble(limelightName, "stream", 2);
     }
 
+    @SuppressWarnings("unused")
     public static void setCameraMode_Processor(String limelightName) {
         setLimelightNTDouble(limelightName, "camMode", 0);
     }
+    @SuppressWarnings("unused")
     public static void setCameraMode_Driver(String limelightName) {
         setLimelightNTDouble(limelightName, "camMode", 1);
     }
@@ -687,6 +798,7 @@ public class LimelightLib {
      * Sets the crop window. The crop window in the UI must be completely open for
      * dynamic cropping to work.
      */
+    @SuppressWarnings("unused")
     public static void setCropWindow(String limelightName, double cropXMin, double cropXMax, double cropYMin, double cropYMax) {
         double[] entries = new double[4];
         entries[0] = cropXMin;
@@ -696,6 +808,7 @@ public class LimelightLib {
         setLimelightNTDoubleArray(limelightName, "crop", entries);
     }
 
+    @SuppressWarnings("unused")
     public static void setCameraPose_RobotSpace(String limelightName, double forward, double side, double up, double roll, double pitch, double yaw) {
         double[] entries = new double[6];
         entries[0] = forward;
@@ -710,10 +823,12 @@ public class LimelightLib {
     /////
     /////
 
+    @SuppressWarnings("unused")
     public static void setPythonScriptData(String limelightName, double[] outgoingPythonData) {
         setLimelightNTDoubleArray(limelightName, "llrobot", outgoingPythonData);
     }
 
+    @SuppressWarnings("unused")
     public static double[] getPythonScriptData(String limelightName) {
         return getLimelightNTDoubleArray(limelightName, "llpython");
     }
@@ -724,10 +839,9 @@ public class LimelightLib {
     /**
      * Asynchronously take snapshot.
      */
+    @SuppressWarnings("unused")
     public static CompletableFuture<Boolean> takeSnapshot(String tableName, String snapshotName) {
-        return CompletableFuture.supplyAsync(() -> {
-            return SYNCH_TAKESNAPSHOT(tableName, snapshotName);
-        });
+        return CompletableFuture.supplyAsync(() -> SYNCH_TAKESNAPSHOT(tableName, snapshotName));
     }
 
     private static boolean SYNCH_TAKESNAPSHOT(String tableName, String snapshotName) {
@@ -754,6 +868,7 @@ public class LimelightLib {
     /**
      * Parses Limelight's JSON results dump into a LimelightResults Object
      */
+    @SuppressWarnings("unused")
     public static LimelightResults getLatestResults(String limelightName) {
 
         long start = System.nanoTime();

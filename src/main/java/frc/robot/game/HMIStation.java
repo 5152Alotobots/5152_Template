@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.crescendo;
+package frc.robot.game;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,11 +20,11 @@ import frc.robot.library.driverstation.JoystickUtilities;
  */
 public class HMIStation {
   
-  SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
-  SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
+  final SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
+  final SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
 
-  SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveXYSpdPerfModeSwFilterRate);
-  SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveRotSpdPerfModeSwFilterRate);
+  final SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveXYSpdPerfModeSwFilterRate);
+  final SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveRotSpdPerfModeSwFilterRate);
 
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
@@ -99,12 +99,12 @@ public class HMIStation {
   public boolean robotCentricTrigger() {
     return (driverController.getRawAxis(2) > 0.3);
   }
-  public final Trigger robotCentric = new Trigger(() -> robotCentricTrigger());
+  public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
   public boolean shooterOutTrigger() {
     return (driverController.getRawAxis(3) > 0.3);
   }
-  public final Trigger shooterShoot = new Trigger(() -> shooterOutTrigger());
+  public final Trigger shooterShoot = new Trigger(this::shooterOutTrigger);
   
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
@@ -149,12 +149,12 @@ public class HMIStation {
    public boolean shooterSpeakerPosTrigger() {
     return (coDriverController.getRawAxis(2) > 0.3);
   }
-  public final Trigger shooterSpeakerPos = new Trigger(() -> shooterSpeakerPosTrigger());
+  public final Trigger shooterSpeakerPos = new Trigger(this::shooterSpeakerPosTrigger);
 
   public boolean shooterAmpPosTrigger() {
     return (coDriverController.getRawAxis(3) > 0.3);
   }
-  public final Trigger shooterAmpPos = new Trigger(() -> shooterAmpPosTrigger());
+  public final Trigger shooterAmpPos = new Trigger(this::shooterAmpPosTrigger);
   
   // Aux Driver Controller
   private final XboxController auxdriverController = new XboxController(2);
@@ -169,7 +169,7 @@ public class HMIStation {
 
   /**
      * 
-     * @return
+     * @return XY mode
      */
     public double getDriveXYPerfMode(){
         double xySpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd;
@@ -183,7 +183,7 @@ public class HMIStation {
 
      /**
      * 
-     * @return
+     * @return Rot mode
      */
     public double getDriveRotPerfMode(){
         double rotSpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd;

@@ -34,17 +34,17 @@ import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constant
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
+ * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem,
  * so it can be used in command-based projects easily.
  */
+@SuppressWarnings("ALL")
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
-    private static final double kSimLoopPeriod = 0.005; // 5 ms
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
+    private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+    private double lastSimTime;
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
-    private boolean m_flipPath = false;
+    private boolean flipPath = false;
 
-    private Field2d field = new Field2d();
+    private final Field2d field = new Field2d();
 
     private SubSys_Photonvision subSysPhotonvision;
    
@@ -130,18 +130,19 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
     private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        lastSimTime = Utils.getCurrentTimeSeconds();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
+        /* use the measured time delta, get battery voltage from WPILib */
+        Notifier simNotifier = new Notifier(() -> {
             final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
+            double deltaTime = currentTime - lastSimTime;
+            lastSimTime = currentTime;
 
             /* use the measured time delta, get battery voltage from WPILib */
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
-        m_simNotifier.startPeriodic(kSimLoopPeriod);
+        simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
 
@@ -173,19 +174,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         Units.degreesToRadians(540), Units.degreesToRadians(720));
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+
+        return AutoBuilder.pathfindToPose(
             targetPose,
             constraints,
             0.0, // Goal end velocity in meters/sec
             0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         );
-
-        return pathfindingCommand;
     }
 
     /**
      * configurePathPlanner
-     * 
+     * <p>
      * Sets up PathPlanner for use
      */
     private void configurePathPlanner() {
@@ -194,12 +194,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
              
-        m_flipPath = false;
+        flipPath = false;
         if(DriverStation.getAlliance().isPresent()){
             if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                m_flipPath = true;              
+                flipPath = true;
             }
-        SmartDashboard.putBoolean("ConfigPP_flipPath", m_flipPath);
+        SmartDashboard.putBoolean("ConfigPP_flipPath", flipPath);
         }
 
         AutoBuilder.configureHolonomic(
@@ -209,10 +209,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
             new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
                                             new PIDConstants(10, 0, 0),
-                                            TunerConstants_MK4iL3_2024.kSpeedAt12VoltsMps,
+                                            TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS,
                                             driveBaseRadius,
                                             new ReplanningConfig()),
-            ()-> m_flipPath, // Change this if the path needs to be flipped on red vs blue
+            ()-> flipPath, // Change this if the path needs to be flipped on red vs blue
             this); // Subsystem for requirements
     }   
 }

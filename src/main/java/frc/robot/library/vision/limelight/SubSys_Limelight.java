@@ -2,26 +2,22 @@ package frc.robot.library.vision.limelight;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.crescendo.subsystems.bling.SubSys_Bling;
+import frc.robot.library.bling.SubSys_Bling;
 import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
 //import frc.robot.library.vision.limelight.util.DetectedObject;
 //import frc.robot.library.vision.limelight.util.DetectedObjectList;
 
-import java.util.Map;
-
 import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
 
+@SuppressWarnings("ALL")
 public class SubSys_Limelight extends SubsystemBase {
-    private SubSys_Bling subSysBling;
-    private CommandSwerveDrivetrain subSys_Drive;
+    private final SubSys_Bling subSysBling;
+    private final CommandSwerveDrivetrain subSys_Drive;
     //private DetectedObjectList detectedObjectList = new DetectedObjectList();
     //private ShuffleboardLayout detectedObjectsShuffleboard;
-    private LinearFilter txFilter;
+    private final LinearFilter txFilter;
     private double txFiltered;
 
     public SubSys_Limelight(SubSys_Bling subSysBling, CommandSwerveDrivetrain subSys_Drive) {
@@ -49,7 +45,7 @@ public class SubSys_Limelight extends SubsystemBase {
      * Gets target distance from the camera
      *
      * @param targetHeight               distance from floor to center of target in meters
-     * @param targetOffsetAngle_Vertical ty entry from limelight of target crosshair (in radians)
+     * @param targetOffsetAngle_Vertical ty entry from limelight of target cross-hair (in radians)
      * @return the distance to the target in meters
      */
     public double targetDistanceMetersCamera(
@@ -67,7 +63,7 @@ public class SubSys_Limelight extends SubsystemBase {
         return LimelightLib.getTX(NN_LIMELIGHT);
     }
 
-    public double getNoteTxFilt(){
+    public double getNoteTxFiltered(){
         return txFiltered;
     }
 

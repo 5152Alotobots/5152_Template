@@ -20,8 +20,8 @@ import java.util.Optional;
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.CAMERA_OFFSET;
 
 public class SubSys_Photonvision implements Subsystem {
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-  PhotonPoseEstimator photonPoseEstimator;
+  final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  final PhotonPoseEstimator photonPoseEstimator;
 
   public SubSys_Photonvision(String cameraName) {
     PhotonCamera camera = new PhotonCamera(cameraName);
