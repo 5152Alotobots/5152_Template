@@ -21,39 +21,33 @@ public final class Constants {
     public static final class Calibrations {
 
       public static final class DriveTrain {
-        public static final double driveXYSpdPerfModeSwFilterRate = 8.0; // m/s/s
-        public static final double driveRotSpdPerfModeSwFilterRate = 4.0; // rad/s/s
-        public static final double DriveTrainMaxAccel = 3.0; // m/s^2
-        public static final double DriveTrainMaxDeccel = -2.0; // m/s^2
+        public static final double DRIVE_XY_SPD_PERF_MODE_SW_FILTER_RATE = 8.0; // m/s/s
+        public static final double DRIVE_ROT_SPD_PERF_MODE_SW_FILTER_RATE = 4.0; // rad/s/s
+        public static final double DRIVE_TRAIN_MAX_ACCEL = 3.0; // m/s^2
+        public static final double DRIVE_TRAIN_MAX_DECCEL = -2.0; // m/s^2
 
-        public static final class PerformanceMode_Default {
+        public static final class PerformanceModeDefault {
           // Default Performance Mode Speeds
-          //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
-          public static final double DriveTrainMaxSpd = 2.0; // m/s
-          public static double DriveTrainMaxAccel = 2.0; // m/s^2
-          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
-          public static final double DriveTrainMaxRotSpd = 0.75 * 2 * Math.PI; // rad/s
-          public static double DriveTrainMaxRotAccel = 0.75 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_SPD = 2.0; // m/s
+          public static double DRIVE_TRAIN_MAX_ACCELERATION = 2.0; // m/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_SPD = 0.75 * 2 * Math.PI; // rad/s
+          public static double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.75 * 2 * Math.PI; // rad/s^2
         }
 
-        public static final class PerformanceMode_Turtle {
+        public static final class PerformanceModeTurtle {
           // Performance Mode A Speeds (Slow)
-          //public static double DriveTrainMaxPctOutput = 0.25; // 0-1
-          public static final double DriveTrainMaxSpd = 1.0; // m/s
-          public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          //public static double DriveTrainMaxRotPctOutput = 0.6; // 0-1
-          public static final double DriveTrainMaxRotSpd = 0.5 * 2 * Math.PI; // rad/s
-          public static double DriveTrainMaxRotAccel = 0.15 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_SPD = 1.0; // m/s
+          public static double DRIVE_TRAIN_MAX_ACCELERATION = 0.35; // m/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_SPD = 0.5 * 2 * Math.PI; // rad/s
+          public static double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.15 * 2 * Math.PI; // rad/s^2
         }
 
-        public static final class PerformanceMode_Turbo {
+        public static final class PerformanceModeTurbo {
           // Performance Mode B Speeds (Fast)
-          //public static double DriveTrainMaxPctOutput = 0.75; // 0-1
-          public static final double DriveTrainMaxSpd = 10.0; // m/s
-          public static double DriveTrainMaxAccel = 1.00; // m/s^2
-          //public static double DriveTrainMaxRotPctOutput = 0.2; // 0-1
-          public static final double DriveTrainMaxRotSpd = 1.0 * 2 * Math.PI; // rad/s
-          public static double DriveTrainMaxRotAccel = 0.75 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_SPD = 10.0; // m/s
+          public static double DRIVE_TRAIN_MAX_ACCELERATION = 1.00; // m/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_SPD = 1.0 * 2 * Math.PI; // rad/s
+          public static double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.75 * 2 * Math.PI; // rad/s^2
         }
       }
     }
@@ -67,20 +61,20 @@ public final class Constants {
        */
       public static final int PDP_CAN_ID = 1;   // Power Distribution Panel
       public static final int PCM_CAN_ID = 2;   // Pneumatic Control Module
-      public static final int Pigeon2_ID = 3;
+      public static final int PIGEON_2_ID = 3;
 
-      public static final int FrontLeftDriveMtr_CAN_ID = 10;
-      public static final int FrontLeftSteerMtr_CAN_ID = 11;
-      public static final int FrontLeftSteerCANCoder_CAN_ID = 12;
-      public static final int FrontRightDriveMtr_CAN_ID = 13;
-      public static final int FrontRightSteerMtr_CAN_ID = 14;
-      public static final int FrontRightSteerCANCoder_CAN_ID = 15;
-      public static final int BackLeftDriveMtr_CAN_ID = 16;
-      public static final int BackLeftSteerMtr_CAN_ID = 17;
-      public static final int BackLeftSteerCANCoder_CAN_ID = 18;
-      public static final int BackRightDriveMtr_CAN_ID = 19;
-      public static final int BackRightSteerMtr_CAN_ID = 20;
-      public static final int BackRightSteerCANCoder_CAN_ID = 21;
+      public static final int FRONT_LEFT_DRIVE_MTR_CAN_ID = 10;
+      public static final int FRONT_LEFT_STEER_MTR_CAN_ID = 11;
+      public static final int FRONT_LEFT_STEER_CAN_CODER_CAN_ID = 12;
+      public static final int FRONT_RIGHT_DRIVE_MTR_CAN_ID = 13;
+      public static final int FRONT_RIGHT_STEER_MTR_CAN_ID = 14;
+      public static final int FRONT_RIGHT_STEER_CAN_CODER_CAN_ID = 15;
+      public static final int BACK_LEFT_DRIVE_MTR_CAN_ID = 16;
+      public static final int BACK_LEFT_STEER_MTR_CAN_ID = 17;
+      public static final int BACK_LEFT_STEER_CAN_CODER_CAN_ID = 18;
+      public static final int BACK_RIGHT_DRIVE_MTR_CAN_ID = 19;
+      public static final int BACK_RIGHT_STEER_MTR_CAN_ID = 20;
+      public static final int BACK_RIGHT_STEER_CAN_CODER_CAN_ID = 21;
         /* **** End Library Components CAN ID's **** */
 
       /**
@@ -90,13 +84,13 @@ public final class Constants {
       public static final int CANDLE_CAN_ID = 40;
     }
 
-    public static final class AnalogInput_IDs {
+    public static final class analogInputIds {
     }
 
-    public static final class DigitalIO_IDs {
+    public static final class digitalIoIds {
     }
 
-    public static final class PWM_IDs {
+    public static final class PWMIds {
     }
   }
 }

@@ -19,7 +19,6 @@ import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023;
 import frc.robot.library.vision.limelight.SubSys_Limelight;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
-import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
 
@@ -44,16 +43,16 @@ public class RobotContainer {
         drivetrain = TunerConstants_MK4iL2_2023.DriveTrain;
 
         drive = new SwerveRequest.FieldCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1)
+                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
         driveRC = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd * 0.1)
+                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        logger = new Telemetry(Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd);
+        logger = new Telemetry(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD);
 
         blingSubSys = new SubSys_Bling();
 

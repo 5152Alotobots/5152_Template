@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.Constants.Robot.Calibrations.DriveTrain;
 import frc.robot.library.driverstation.JoystickUtilities;
 
@@ -20,11 +19,11 @@ import frc.robot.library.driverstation.JoystickUtilities;
  */
 public class HMIStation {
   
-  final SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
-  final SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DriveTrainMaxAccel,DriveTrain.DriveTrainMaxDeccel,0);
+  final SlewRateLimiter driveXSpdFilter = new SlewRateLimiter(DriveTrain.DRIVE_TRAIN_MAX_ACCEL,DriveTrain.DRIVE_TRAIN_MAX_DECCEL,0);
+  final SlewRateLimiter driveYSpdFilter = new SlewRateLimiter(DriveTrain.DRIVE_TRAIN_MAX_ACCEL,DriveTrain.DRIVE_TRAIN_MAX_DECCEL,0);
 
-  final SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveXYSpdPerfModeSwFilterRate);
-  final SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.driveRotSpdPerfModeSwFilterRate);
+  final SlewRateLimiter driveSpdPerfModeSwFilter = new SlewRateLimiter(DriveTrain.DRIVE_XY_SPD_PERF_MODE_SW_FILTER_RATE);
+  final SlewRateLimiter driveRotPerfModeSwFilter = new SlewRateLimiter(DriveTrain.DRIVE_ROT_SPD_PERF_MODE_SW_FILTER_RATE);
 
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
@@ -172,11 +171,11 @@ public class HMIStation {
      * @return XY mode
      */
     public double getDriveXYPerfMode(){
-        double xySpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxSpd;
+        double xySpeed = DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD;
         if(turtleModeButton.getAsBoolean()){
-            xySpeed = Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxSpd;
+            xySpeed = DriveTrain.PerformanceModeTurtle.DRIVE_TRAIN_MAX_SPD;
         }else if(turboModeButton.getAsBoolean()){
-            xySpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxSpd;
+            xySpeed = DriveTrain.PerformanceModeTurbo.DRIVE_TRAIN_MAX_SPD;
         }
         return driveSpdPerfModeSwFilter.calculate(xySpeed);
     }
@@ -186,11 +185,11 @@ public class HMIStation {
      * @return Rot mode
      */
     public double getDriveRotPerfMode(){
-        double rotSpeed = Calibrations.DriveTrain.PerformanceMode_Default.DriveTrainMaxRotSpd;
+        double rotSpeed = DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD;
         if(turtleModeButton.getAsBoolean()){
-            rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turtle.DriveTrainMaxRotSpd;
+            rotSpeed = DriveTrain.PerformanceModeTurtle.DRIVE_TRAIN_MAX_ROT_SPD;
         }else if(turboModeButton.getAsBoolean()){
-            rotSpeed = Calibrations.DriveTrain.PerformanceMode_Turbo.DriveTrainMaxRotSpd;
+            rotSpeed = DriveTrain.PerformanceModeTurbo.DRIVE_TRAIN_MAX_ROT_SPD;
         }
         return driveRotPerfModeSwFilter.calculate(rotSpeed);
     }
