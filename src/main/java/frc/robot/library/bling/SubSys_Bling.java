@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.awt.*;
 
-import static frc.robot.Constants.CAN_IDs.CANDLE_CAN_ID;
+import static frc.robot.Constants.Robot.CanId.CANDLE_CAN_ID;
 import static frc.robot.library.bling.SubSys_Bling_Constants.Animations.NO_ALLIANCE_ANIMATION;
 import static frc.robot.library.bling.SubSys_Bling_Constants.Colors.*;
 import static frc.robot.library.bling.SubSys_Bling_Constants.*;
@@ -142,11 +142,13 @@ public class SubSys_Bling extends SubsystemBase {
      * Should be run in the periodic section of the command
      */
     public void update() {
-        if (currentAnimation == null) {
-            controller.clearAnimation(0);
-            controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, LED_OFFSET, NUM_LEDS);
-        } else {
-            controller.animate(currentAnimation, 0);
+        if (BLING_ENABLED) {
+            if (currentAnimation == null) {
+                controller.clearAnimation(0);
+                controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, LED_OFFSET, NUM_LEDS);
+            } else {
+                controller.animate(currentAnimation, 0);
+            }
         }
     }
 

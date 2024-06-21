@@ -19,14 +19,18 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,7 +42,7 @@ import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constant
  * so it can be used in command-based projects easily.
  */
 @SuppressWarnings("ALL")
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private double lastSimTime;
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -47,27 +51,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private final Field2d field = new Field2d();
 
     private SubSys_Photonvision subSysPhotonvision;
-   
     @Override
     public void periodic() {
-        
-        SmartDashboard.putNumber("Drive Yaw", this.m_yawGetter.getValueAsDouble());
-        
-        SmartDashboard.putNumber("Drive Angular Velocity",this.m_angularVelocity.getValueAsDouble());
-        SmartDashboard.putNumber("Drive Opr Forward Direction",this.m_operatorForwardDirection.getDegrees());
-
-        SmartDashboard.putNumber("PoseX", this.m_odometry.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("PoseY", this.m_odometry.getEstimatedPosition().getY());
+        // Setup Field2d
         field.setRobotPose(this.m_odometry.getEstimatedPosition());
-        SmartDashboard.putData("Field", field);
-
-        boolean lclFlipPath = false;
-        if(DriverStation.getAlliance().isPresent()){
-            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                lclFlipPath = true;              
-            }
-        }
-        SmartDashboard.putBoolean("Periodic_FlipPath", lclFlipPath);
 
         // Vision estimate
             if (ONLY_USE_POSE_ESTIMATION_IN_TELEOP) {
@@ -99,19 +86,21 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     }
 
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        initLog();
     }
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        initLog();
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -122,11 +111,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         
         
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
-    }
-
-    public void updatePoseWithAprilTag(Pose2d aprilTagPose){
-        this.addVisionMeasurement(aprilTagPose, 0.0);
-
     }
 
     private void startSimThread() {
@@ -154,7 +138,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public SendableChooser<Command> getAutoChooser(){
         //configurePathPlanner();
-        return AutoBuilder.buildAutoChooser("Auto_JustShoot");
+        return AutoBuilder.buildAutoChooser("DEFAULT_COMMAND_NAME");
         // Default Path
         //return AutoBuilder.buildAutoChooser(null);
     }
@@ -199,7 +183,6 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
                 flipPath = true;
             }
-        SmartDashboard.putBoolean("ConfigPP_flipPath", flipPath);
         }
 
         AutoBuilder.configureHolonomic(
@@ -214,5 +197,25 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                                             new ReplanningConfig()),
             ()-> flipPath, // Change this if the path needs to be flipped on red vs blue
             this); // Subsystem for requirements
-    }   
+    }
+
+    private void initLog() {
+        ShuffleboardTab tab = Shuffleboard.getTab("Drive");
+        ShuffleboardLayout poseList = tab
+                .getLayout("Pose", BuiltInLayouts.kList)
+                .withSize(2, 3)
+                .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+
+        tab.add("DriveAngularVelocity", this.m_angularVelocity.getValueAsDouble());
+        tab.add("DriveOprForwardDirection",this.m_operatorForwardDirection.getDegrees());
+
+        // Pose
+        poseList.add("PoseX", this.m_odometry.getEstimatedPosition().getX());
+        poseList.add("PoseY", this.m_odometry.getEstimatedPosition().getY());
+        poseList.add("Rotation", this.m_yawGetter.getValueAsDouble());
+
+        poseList.add("Field", field);
+
+        tab.add("FlipPath", this.flipPath);
+    }
 }

@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.library.bling.SubSys_Bling;
-import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
 //import frc.robot.library.vision.limelight.util.DetectedObject;
 //import frc.robot.library.vision.limelight.util.DetectedObjectList;
 
@@ -14,13 +14,13 @@ import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
 @SuppressWarnings("ALL")
 public class SubSys_Limelight extends SubsystemBase {
     private final SubSys_Bling subSysBling;
-    private final CommandSwerveDrivetrain subSys_Drive;
+    private final SubSys_SwerveDrive subSys_Drive;
     //private DetectedObjectList detectedObjectList = new DetectedObjectList();
     //private ShuffleboardLayout detectedObjectsShuffleboard;
     private final LinearFilter txFilter;
     private double txFiltered;
 
-    public SubSys_Limelight(SubSys_Bling subSysBling, CommandSwerveDrivetrain subSys_Drive) {
+    public SubSys_Limelight(SubSys_Bling subSysBling, SubSys_SwerveDrive subSys_Drive) {
         this.subSysBling = subSysBling;
         this.subSys_Drive = subSys_Drive;
         //DetectedObject.setDrive(subSys_Drive);

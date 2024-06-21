@@ -8,16 +8,26 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import org.photonvision.PhotonCamera;
 
+@SuppressWarnings("resource")
 public class SubSys_Photonvision_Constants {
 
-  // FORWARD: +, RIGHT: +, UP: + (USED FOR APRILTAGS)
-  public static final Transform3d CAMERA_OFFSET =
-      new Transform3d(
-              new Translation3d(-0.36, -0.16, 0.172), // Y WAS NEGATIVE
-              new Rotation3d(0, Math.toRadians(-35), Math.toRadians(180)));
+  // OFFSETS
+  // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)
+  public static final Transform3d[] CAMERA_OFFSETS = new Transform3d[]{
+          new Transform3d(
+                  new Translation3d(0.30, 0.23, 0.17),
+                  new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))
+          )
+  };
+  // CAMERAS
+  public static final PhotonCamera[] CAMERAS = new PhotonCamera[]{
+          new PhotonCamera("FL_AprilTag")
+  };
+
   public static final boolean USE_VISION_POSE_ESTIMATION = true;
-  public static final boolean ONLY_USE_POSE_ESTIMATION_IN_TELEOP = true;
+  public static final boolean ONLY_USE_POSE_ESTIMATION_IN_TELEOP = false;
 
 
   /*

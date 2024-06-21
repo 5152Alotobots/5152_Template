@@ -7,12 +7,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.library.drivetrains.AimModule;
-import frc.robot.library.drivetrains.swerve_ctre.CommandSwerveDrivetrain;
+import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
 
 import java.util.function.DoubleSupplier;
 
 public class Cmd_SubSys_Drive_DriveWhileFacingPose extends Command {
-    private final CommandSwerveDrivetrain subSysSwerve;
+    private final SubSys_SwerveDrive subSysSwerve;
     private final SwerveRequest.FieldCentricFacingAngle drive = new SwerveRequest.FieldCentricFacingAngle()
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
     private final DoubleSupplier velocityX;
@@ -20,7 +20,7 @@ public class Cmd_SubSys_Drive_DriveWhileFacingPose extends Command {
     private Pose2d pose;
 
     public Cmd_SubSys_Drive_DriveWhileFacingPose(
-            CommandSwerveDrivetrain subSysSwerve,
+            SubSys_SwerveDrive subSysSwerve,
             DoubleSupplier velocityX,
             DoubleSupplier velocityY,
             Pose2d pose) {

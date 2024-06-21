@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.ca
-
 package frc.robot.library.vision.photonvision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -12,66 +8,118 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
-import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.CAMERA_OFFSET;
+import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.*;
 
+/**
+ * A subsystem that manages multiple PhotonVision cameras and provides pose estimation functionality.
+ */
 public class SubSys_Photonvision implements Subsystem {
-  final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-  final PhotonPoseEstimator photonPoseEstimator;
+  private final AprilTagFieldLayout aprilTagFieldLayout;
+  private final ArrayList<PhotonPoseEstimator> photonPoseEstimators;
 
-  public SubSys_Photonvision(String cameraName) {
-    PhotonCamera camera = new PhotonCamera(cameraName);
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camera, CAMERA_OFFSET);
-    photonPoseEstimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
+  /**
+   * Constructs a new SubSys_Photonvision with the given PhotonCamera objects.
+   */
+  public SubSys_Photonvision() {
+    aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    photonPoseEstimators = new ArrayList<>();
+
+    // Ensure that we have offsets for each camera object
+    //noinspection ConstantValue
+    if (CAMERAS.length != CAMERA_OFFSETS.length) {
+      throw new RuntimeException("PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
+    }
+    // Loop, creating pose estimators
+    for (int i = 0; i < CAMERAS.length; i++) {
+      PhotonPoseEstimator estimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERAS[i], CAMERA_OFFSETS[i]);
+      estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
+      photonPoseEstimators.add(estimator);
+    }
   }
+
 
   @Override
   public void periodic() {
-    if (getEstimatedVisionPose2d().isPresent()) {
-      SmartDashboard.putString("Vision/Vision Pose Estimate", String.valueOf(getEstimatedVisionPose2d().get().getFirst()));
-    } else {
-      SmartDashboard.putString("Vision/Vision Pose Estimate", "NONE");
+    if (USE_VISION_POSE_ESTIMATION) {
+      Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
+      if (estimatedPose.isPresent()) {
+        SmartDashboard.putString("Vision/Vision Pose Estimate", estimatedPose.get().getFirst().toString());
+      } else {
+        SmartDashboard.putString("Vision/Vision Pose Estimate", "NONE");
+      }
     }
   }
 
   /**
-   * @return A {@link Pair} containing the {@link Pose3d} and the timestamp of the estimation if the MultiTag pose is present from the coprocessor
-   * @param previousPose The previous pose of the robot
+   * Returns the estimated 3D robot pose using the MultiTag pose from the coprocessor, if available.
+   *
+   * @param previousPose The previous pose of the robot.
+   * @return A Pair containing the estimated Pose3d and the timestamp of the estimation, or an empty Optional if the pose is not available.
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d(Pose2d previousPose) {
-    photonPoseEstimator.setLastPose(previousPose);
-    Optional<EstimatedRobotPose> estimate = photonPoseEstimator.update();
-    return estimate.map(estimatedRobotPose -> new Pair<>(estimatedRobotPose.estimatedPose, estimatedRobotPose.timestampSeconds));
+    ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
+    for (PhotonPoseEstimator estimator : photonPoseEstimators) {
+      estimator.setLastPose(previousPose);
+      estimator.update().ifPresent(estimates::add);
+    }
+    return averageEstimates(estimates);
   }
 
   /**
-   * @return A {@link Pair} containing the {@link Pose3d} and the timestamp of the estimation if the MultiTag pose is present from the coprocessor
+   * Returns the estimated 3D robot pose using the MultiTag pose from the coprocessor, if available.
+   *
+   * @return A Pair containing the estimated Pose3d and the timestamp of the estimation, or an empty Optional if the pose is not available.
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d() {
-    Optional<EstimatedRobotPose> estimate = photonPoseEstimator.update();
-    return estimate.map(estimatedRobotPose -> new Pair<>(estimatedRobotPose.estimatedPose, estimatedRobotPose.timestampSeconds));
+    ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
+    for (PhotonPoseEstimator estimator : photonPoseEstimators) {
+      estimator.update().ifPresent(estimates::add);
+    }
+    return averageEstimates(estimates);
   }
 
   /**
-   * @param previousPose The previous pose of the robot
-   * @return A {@link Pair} containing the {@link Pose2d} and the timestamp of the estimation if the MultiTag pose is present from the coprocessor
+   * Returns the estimated 2D robot pose using the MultiTag pose from the coprocessor, if available.
+   *
+   * @param previousPose The previous pose of the robot.
+   * @return A Pair containing the estimated Pose2d and the timestamp of the estimation, or an empty Optional if the pose is not available.
    */
   public Optional<Pair<Pose2d, Double>> getEstimatedVisionPose2d(Pose2d previousPose) {
-    photonPoseEstimator.setLastPose(previousPose);
-    Optional<EstimatedRobotPose> estimate = photonPoseEstimator.update();
-    return estimate.map(estimatedRobotPose -> new Pair<>(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds));
+    return getEstimatedVisionPose3d(previousPose).map(pair -> new Pair<>(pair.getFirst().toPose2d(), pair.getSecond()));
   }
 
   /**
-   * @return A {@link Pair} containing the {@link Pose2d} and the timestamp of the estimation if the MultiTag pose is present from the coprocessor
+   * Returns the estimated 2D robot pose using the MultiTag pose from the coprocessor, if available.
+   *
+   * @return A Pair containing the estimated Pose2d and the timestamp of the estimation, or an empty Optional if the pose is not available.
    */
   public Optional<Pair<Pose2d, Double>> getEstimatedVisionPose2d() {
-    Optional<EstimatedRobotPose> estimate = photonPoseEstimator.update();
-    return estimate.map(estimatedRobotPose -> new Pair<>(estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds));
+    return getEstimatedVisionPose3d().map(pair -> new Pair<>(pair.getFirst().toPose2d(), pair.getSecond()));
   }
 
+  /**
+   * Averages the estimated robot poses from multiple cameras.
+   *
+   * @param estimates An ArrayList of EstimatedRobotPose objects.
+   * @return A Pair containing the average Pose3d and timestamp, or an empty Optional if the list is empty.
+   */
+  private Optional<Pair<Pose3d, Double>> averageEstimates(ArrayList<EstimatedRobotPose> estimates) {
+    if (estimates.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Pose3d averagePose = estimates.get(0).estimatedPose;
+    double timestamp = estimates.get(0).timestampSeconds;
+    for (int i = 1; i < estimates.size(); i++) {
+      averagePose = averagePose.interpolate(estimates.get(i).estimatedPose, 1.0 / (i + 1));
+      timestamp += estimates.get(i).timestampSeconds;
+    }
+    timestamp /= estimates.size();
+    return Optional.of(new Pair<>(averagePose, timestamp));
+  }
 }

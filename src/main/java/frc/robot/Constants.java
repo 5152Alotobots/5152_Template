@@ -55,26 +55,12 @@ public final class Constants {
           public static final double DriveTrainMaxRotSpd = 1.0 * 2 * Math.PI; // rad/s
           public static double DriveTrainMaxRotAccel = 0.75 * 2 * Math.PI; // rad/s^2
         }
-
-        public static final class DriveTrainTrajSettings {
-          // PathPlanner Speeds
-          //public static double DriveTrainMaxPctOutput = 0.50; // 0-1
-          public static double DriveTrainMaxSpd = 4.0; // m/s
-          public static double DriveTrainMaxAccel = 0.35; // m/s^2
-          //public static double DriveTrainMaxRotPctOutput = 0.4; // 0-1
-          public static double DriveTrainMaxRotSpd = 140 * Math.PI / 180; // rad/s
-          public static double DriveTrainMaxRotAccel = 200 * Math.PI / 180; // rad/s^2
-        }
-
-        public static final class IdleSpeeds {
-          public static double IDLE_ROTATION_RADS_PER_SEC = 0.001; // +-X rads/s counts as not moving
-        }
       }
     }
 
     public static final class Field {}
 
-    public static final class CAN_IDs {
+    public static final class CanId {
 
       /**
        * *** Start Library Components CAN ID's ****
