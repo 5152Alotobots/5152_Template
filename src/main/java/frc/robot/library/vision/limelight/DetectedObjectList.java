@@ -1,6 +1,8 @@
 package frc.robot.library.vision.limelight;
 
 import edu.wpi.first.math.geometry.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,40 +10,31 @@ import java.util.Comparator;
 import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
 
 /**
- * A list implementation that extends ArrayList to store DetectedObjectPair objects.
- * The list automatically decreases the confidence value of each entry by a fixed amount (CONFIDENCE_DECAY) at every update.
- * Entries with a confidence value of 0.0 or less are removed from the list.
+ * A specialized ArrayList to store and manage DetectedObjectPair objects.
+ * This list automatically decreases the confidence value of each entry and removes entries with zero confidence.
  */
 public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObjectPair> {
 
     /**
-     * Adds a new DetectedObjectPair to the list.
-     * If the new DetectedObject's pose is within a certain range (POSE_TOLERANCE) of an existing pose,
-     * the existing DetectedObject is updated instead of adding a new one.
+     * Adds a new DetectedObjectPair to the list or updates an existing one if within tolerance.
      *
-     * @param pair The DetectedObjectPair to be added or updated in the list.
+     * @param pair The DetectedObjectPair to be added or updated.
+     * @return true if the list changed as a result of the call, false otherwise.
      */
     @Override
     public boolean add(DetectedObjectPair pair) {
         for (DetectedObjectPair existingPair : this) {
-            DetectedObject existingObject = existingPair.getObject();
-            DetectedObject newObject = pair.getObject();
-
-            if (isPoseWithinTolerance(existingObject.pose, newObject.pose, POSE_TOLERANCE)) {
-                // Update the existing DetectedObject with the new confidence and return
-                existingPair.setObject(newObject);
+            if (isPoseWithinTolerance(existingPair.getObject().getPose(), pair.getObject().getPose(), POSE_TOLERANCE)) {
+                existingPair.setObject(pair.getObject());
                 existingPair.setConfidence(pair.getConfidence());
                 return true;
             }
         }
-
-        // If no existing DetectedObject within the pose tolerance is found, add a new entry
         return super.add(pair);
     }
 
     /**
-     * Updates the list by decreasing the confidence value of each entry by CONFIDENCE_DECAY.
-     * If the updated confidence value of an entry is 0.0 or less, the entry is removed from the list.
+     * Updates the list by decreasing confidence values and removing low-confidence entries.
      */
     public void update() {
         removeIf(pair -> {
@@ -56,10 +49,9 @@ public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObj
     }
 
     /**
-     * Sorts the list based on the confidence values, with the highest confidence value at index 0 and decreasing as the index increases.
-     * Updates the list and returns the new copy.
+     * Sorts the list by confidence values in descending order.
      *
-     * @return The sorted list of DetectedObjectPair objects.
+     * @return The sorted list.
      */
     public DetectedObjectList sortByConfidence() {
         sort(Comparator.comparingDouble(DetectedObjectPair::getConfidence).reversed());
@@ -67,27 +59,25 @@ public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObj
     }
 
     /**
-     * Sorts the list based on the distance from the given Pose2d to the Pose3d of each DetectedObject.
-     * The DetectedObject with the closest Pose3d to the given Pose2d will be at index 0, and the distance increases as the index increases.
-     * Updates the list and returns the new copy.
+     * Sorts the list by distance from a given pose.
      *
-     * @param pose The Pose2d to calculate distances from.
-     * @return The sorted list of DetectedObjectPair objects.
+     * @param pose The reference Pose2d to calculate distances from.
+     * @return The sorted list.
      */
     public DetectedObjectList sortByPose(Pose2d pose) {
         sort(Comparator.comparingDouble(pair -> {
-            Translation2d translation = new Translation2d(pair.getObject().pose.getX(), pair.getObject().pose.getY());
+            Translation2d translation = new Translation2d(pair.getObject().getPose().getX(), pair.getObject().getPose().getY());
             return pose.getTranslation().getDistance(translation);
         }));
         return this;
     }
 
     /**
-     * Checks if two Pose3d objects are within a certain tolerance range.
+     * Checks if two Pose3d objects are within a specified tolerance range.
      *
-     * @param pose1     The first Pose3d object.
-     * @param pose2     The second Pose3d object.
-     * @param tolerance The tolerance range.
+     * @param pose1 The first Pose3d object.
+     * @param pose2 The second Pose3d object.
+     * @param tolerance The tolerance range in meters.
      * @return true if the poses are within the tolerance range, false otherwise.
      */
     private boolean isPoseWithinTolerance(Pose3d pose1, Pose3d pose2, double tolerance) {
@@ -104,83 +94,32 @@ public class DetectedObjectList extends ArrayList<DetectedObjectList.DetectedObj
     /**
      * Represents a pair of a DetectedObject and its associated confidence value.
      */
+    @Data
+    @AllArgsConstructor
     public static class DetectedObjectPair {
         private DetectedObject object;
         private double confidence;
 
-        /**
-         * Constructs a new DetectedObjectPair with the specified DetectedObject and confidence value.
-         *
-         * @param object     The DetectedObject.
-         * @param confidence The confidence value associated with the DetectedObject.
-         */
-        public DetectedObjectPair(DetectedObject object, double confidence) {
-            this.object = object;
-            this.confidence = confidence;
-        }
-
-        /**
-         * Retrieves the DetectedObject.
-         *
-         * @return The DetectedObject.
-         */
-        public DetectedObject getObject() {
-            return object;
-        }
-
-        /**
-         * Sets the DetectedObject.
-         *
-         * @param object The DetectedObject to set.
-         */
-        public void setObject(DetectedObject object) {
-            this.object = object;
-        }
-
-        /**
-         * Retrieves the confidence value associated with the DetectedObject.
-         *
-         * @return The confidence value.
-         */
-        public double getConfidence() {
-            return confidence;
-        }
-
-        /**
-         * Sets the confidence value associated with the DetectedObject.
-         *
-         * @param confidence The confidence value to set.
-         */
-        public void setConfidence(double confidence) {
-            this.confidence = confidence;
-        }
         @Override
         public String toString() {
             return String.format("(X: %.2f, Y: %.2f, Z: %.2f, FieldAngle: %.2f) Class: %S, Conf: %.2f",
-                    getObject().pose.getX(),
-                    getObject().pose.getY(),
-                    getObject().pose.getZ(),
-                    getObject().getAngle(),
-                    getObject().type,
-                    getConfidence()
+                    object.getPose().getX(),
+                    object.getPose().getY(),
+                    object.getPose().getZ(),
+                    object.getAngle(),
+                    object.getType(),
+                    confidence
             );
         }
     }
 
     /**
-     * Returns an array containing the string representation of each DetectedObjectPair in this list
-     * in proper sequence (from first to last element).
+     * Converts the list to an array of strings representing each DetectedObjectPair.
      *
-     * @return an array containing the string representation of each DetectedObjectPair in this list
-     *         in proper sequence
+     * @return An array of strings representing the DetectedObjectPairs.
      */
     @Override
     public String[] toArray() {
-        String[] array = new String[size()];
-        for (int i = 0; i < size(); i++) {
-            DetectedObjectPair pair = get(i);
-            array[i] = pair.toString();
-        }
-        return array;
+        return stream().map(DetectedObjectPair::toString).toArray(String[]::new);
     }
 }
