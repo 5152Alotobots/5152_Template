@@ -38,10 +38,9 @@ import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constant
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
- * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem,
- * so it can be used in command-based projects easily.
+ * Subsystem class for the Swerve Drive, extending CTRE's SwerveDrivetrain and implementing WPILib's Subsystem.
+ * This class manages the swerve drive functionality, including autonomous path following and vision-based pose estimation.
  */
-@SuppressWarnings("ALL")
 public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private double lastSimTime;
@@ -51,24 +50,59 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     private final Field2d field = new Field2d();
 
     private SubSys_Photonvision subSysPhotonvision;
-    @Override
-    public void periodic() {
-        // Setup Field2d
-        field.setRobotPose(this.m_odometry.getEstimatedPosition());
 
-        // Vision estimate
-            if (ONLY_USE_POSE_ESTIMATION_IN_TELEOP) {
-                if (DriverStation.isTeleopEnabled()) {
-                    updateVisionPoseEstimate();
-                }
-            } else {
-                updateVisionPoseEstimate();
-            }
+    /**
+     * Constructor for the SubSys_SwerveDrive with a specified odometry update frequency.
+     *
+     * @param driveTrainConstants    The constants for the swerve drivetrain
+     * @param odometryUpdateFrequency The frequency at which to update odometry
+     * @param modules                The constants for each swerve module
+     */
+    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, odometryUpdateFrequency, modules);
+        initializeSubsystem();
     }
 
     /**
-     * Updates the robot pose with PhotonVision ONCE if tags can be seen
-     * */
+     * Constructor for the SubSys_SwerveDrive without specifying an odometry update frequency.
+     *
+     * @param driveTrainConstants The constants for the swerve drivetrain
+     * @param modules             The constants for each swerve module
+     */
+    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, modules);
+        initializeSubsystem();
+    }
+
+    /**
+     * Initializes the subsystem by configuring PathPlanner, simulation (if applicable), and logging.
+     */
+    private void initializeSubsystem() {
+        configurePathPlanner();
+        if (Utils.isSimulation()) {
+            startSimThread();
+        }
+        initLog();
+    }
+
+    @Override
+    public void periodic() {
+        // Update Field2d with the estimated robot pose
+        field.setRobotPose(this.m_odometry.getEstimatedPosition());
+
+        // Update vision-based pose estimate if enabled
+        if (ONLY_USE_POSE_ESTIMATION_IN_TELEOP) {
+            if (DriverStation.isTeleopEnabled()) {
+                updateVisionPoseEstimate();
+            }
+        } else {
+            updateVisionPoseEstimate();
+        }
+    }
+
+    /**
+     * Updates the robot pose with PhotonVision data if tags can be seen.
+     */
     public void updateVisionPoseEstimate() {
         if (subSysPhotonvision != null && USE_VISION_POSE_ESTIMATION) {
             Optional<Pair<Pose2d, Double>> estimatedVisionPose2d = subSysPhotonvision.getEstimatedVisionPose2d(this.m_odometry.getEstimatedPosition());
@@ -77,139 +111,140 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Sets the SubSys_PhotonVision object to use
+     * Sets the SubSys_PhotonVision object to use for vision-based pose estimation.
      *
-     * @param subSysPhotonvision The object
+     * @param subSysPhotonvision The PhotonVision subsystem to use
      */
     public void setPhotonVisionSubSys(SubSys_Photonvision subSysPhotonvision) {
         this.subSysPhotonvision = subSysPhotonvision;
     }
 
-
-    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        configurePathPlanner();
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
-        initLog();
-    }
-    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, modules);
-        configurePathPlanner();
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
-        initLog();
-    }
-
+    /**
+     * Creates a command that applies a SwerveRequest to the drivetrain.
+     *
+     * @param requestSupplier A supplier for the SwerveRequest
+     * @return A Command that applies the SwerveRequest
+     */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
+    /**
+     * Gets the current robot chassis speeds.
+     *
+     * @return The current ChassisSpeeds of the robot
+     */
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        
-        
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
+    /**
+     * Starts the simulation thread for the swerve drive.
+     */
     private void startSimThread() {
         lastSimTime = Utils.getCurrentTimeSeconds();
 
-        /* Run simulation at a faster rate so PID gains behave more reasonably */
-        /* use the measured time delta, get battery voltage from WPILib */
         Notifier simNotifier = new Notifier(() -> {
             final double currentTime = Utils.getCurrentTimeSeconds();
             double deltaTime = currentTime - lastSimTime;
             lastSimTime = currentTime;
 
-            /* use the measured time delta, get battery voltage from WPILib */
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         simNotifier.startPeriodic(SIM_LOOP_PERIOD);
     }
 
-
-    // ***** PathPlanner *****
-
+    /**
+     * Gets an autonomous command for a specified path.
+     *
+     * @param pathName The name of the path to follow
+     * @return A Command to run the specified autonomous path
+     */
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
 
-    public SendableChooser<Command> getAutoChooser(){
-        //configurePathPlanner();
+    /**
+     * Gets a SendableChooser for selecting autonomous routines.
+     *
+     * @return A SendableChooser containing available autonomous routines
+     */
+    public SendableChooser<Command> getAutoChooser() {
         return AutoBuilder.buildAutoChooser("DEFAULT_COMMAND_NAME");
-        // Default Path
-        //return AutoBuilder.buildAutoChooser(null);
     }
 
-
-    public Command getPath(String pathName){
+    /**
+     * Gets a command to follow a specific path.
+     *
+     * @param pathName The name of the path to follow
+     * @return A Command to follow the specified path
+     */
+    public Command getPath(String pathName) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
         return AutoBuilder.followPath(path);
     }
 
-    public Command getPathFinderCommand(Pose2d targetPose){
-        //Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
-
-        // Create the constraints to use while pathfinding
+    /**
+     * Creates a command to pathfind to a target pose.
+     *
+     * @param targetPose The target Pose2d to reach
+     * @return A Command to pathfind to the target pose
+     */
+    public Command getPathFinderCommand(Pose2d targetPose) {
         PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-        Units.degreesToRadians(540), Units.degreesToRadians(720));
-
-        // Since AutoBuilder is configured, we can use it to build pathfinding commands
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
 
         return AutoBuilder.pathfindToPose(
-            targetPose,
-            constraints,
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0  // Rotation delay distance in meters
         );
     }
 
     /**
-     * configurePathPlanner
-     * <p>
-     * Sets up PathPlanner for use
+     * Configures PathPlanner for use with the swerve drive.
      */
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
-             
-        flipPath = false;
-        if(DriverStation.getAlliance().isPresent()){
-            if(DriverStation.getAlliance().get()==DriverStation.Alliance.Red){
-                flipPath = true;
-            }
-        }
+
+        flipPath = DriverStation.getAlliance().isPresent() &&
+                DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(autoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
-            ()-> flipPath, // Change this if the path needs to be flipped on red vs blue
-            this); // Subsystem for requirements
+                () -> this.getState().Pose,
+                this::seedFieldRelative,
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)),
+                new HolonomicPathFollowerConfig(
+                        new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS,
+                        driveBaseRadius,
+                        new ReplanningConfig()
+                ),
+                () -> flipPath,
+                this
+        );
     }
 
+    /**
+     * Initializes logging and Shuffleboard displays for the swerve drive.
+     */
     private void initLog() {
         ShuffleboardTab tab = Shuffleboard.getTab("Drive");
         ShuffleboardLayout poseList = tab
                 .getLayout("Pose", BuiltInLayouts.kList)
                 .withSize(2, 3)
-                .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+                .withProperties(Map.of("Label position", "HIDDEN"));
 
         tab.add("DriveAngularVelocity", this.m_angularVelocity.getValueAsDouble());
-        tab.add("DriveOprForwardDirection",this.m_operatorForwardDirection.getDegrees());
+        tab.add("DriveOprForwardDirection", this.m_operatorForwardDirection.getDegrees());
 
-        // Pose
         poseList.add("PoseX", this.m_odometry.getEstimatedPosition().getX());
         poseList.add("PoseY", this.m_odometry.getEstimatedPosition().getY());
         poseList.add("Rotation", this.m_yawGetter.getValueAsDouble());
