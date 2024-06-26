@@ -3,9 +3,7 @@ package frc.robot.library.vision.limelight;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import lombok.experimental.UtilityClass;
 
-@UtilityClass
 public class SubSys_Limelight_Constants {
     // FORWARD: +, RIGHT: +, UP: + (USED FOR Object Detection)
     // ROLL, PITCH, YAW: CCW +
