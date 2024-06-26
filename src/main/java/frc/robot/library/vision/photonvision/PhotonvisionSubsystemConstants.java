@@ -13,7 +13,7 @@ import org.photonvision.PhotonCamera;
 
 @SuppressWarnings("resource")
 @UtilityClass
-public class SubSys_Photonvision_Constants {
+public class PhotonvisionSubsystemConstants {
 
   // OFFSETS
   // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)

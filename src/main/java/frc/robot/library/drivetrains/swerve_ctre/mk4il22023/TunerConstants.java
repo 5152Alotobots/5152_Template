@@ -9,7 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
+import frc.robot.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -18,7 +18,7 @@ import lombok.experimental.UtilityClass;
  * for the swerve modules and drivetrain.
  */
 @UtilityClass
-public class TunerConstants_MK4iL2_2023 {
+public class TunerConstants {
 
     // PID gains for the steer motors
     private static final Slot0Configs STEER_GAINS = new Slot0Configs()
@@ -144,7 +144,7 @@ public class TunerConstants_MK4iL2_2023 {
     /**
      * The swerve drivetrain subsystem, configured with the constants defined in this class.
      */
-    public static final SubSys_SwerveDrive DRIVE_TRAIN = new SubSys_SwerveDrive(
+    public static final SwerveDriveSubsystem DRIVE_TRAIN = new SwerveDriveSubsystem(
             DRIVETRAIN_CONSTANTS,
             FRONT_LEFT,
             FRONT_RIGHT,

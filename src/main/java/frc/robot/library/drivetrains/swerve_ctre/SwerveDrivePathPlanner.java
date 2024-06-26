@@ -5,13 +5,13 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
+import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants;
 
 public class SwerveDrivePathPlanner {
-    private final SubSys_SwerveDrive swerveDrive;
+    private final SwerveDriveSubsystem swerveDrive;
     private boolean flipPath;
 
-    public SwerveDrivePathPlanner(SubSys_SwerveDrive swerveDrive) {
+    public SwerveDrivePathPlanner(SwerveDriveSubsystem swerveDrive) {
         this.swerveDrive = swerveDrive;
         configurePathPlanner();
     }
@@ -33,7 +33,7 @@ public class SwerveDrivePathPlanner {
                 new HolonomicPathFollowerConfig(
                         new PIDConstants(10, 0, 0),
                         new PIDConstants(10, 0, 0),
-                        TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS,
+                        TunerConstants.SPEED_AT_12_VOLTS_MPS,
                         driveBaseRadius,
                         new ReplanningConfig()
                 ),

@@ -6,18 +6,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import lombok.Getter;
 
 import java.awt.Color;
 
 import static frc.robot.Constants.Robot.CanId.CANDLE_CAN_ID;
-import static frc.robot.library.bling.SubSys_Bling_Constants.*;
+import static frc.robot.library.bling.BlingSubsystemConstants.*;
 
 /**
  * Subsystem for controlling LED lighting on the robot.
  */
-public class SubSys_Bling extends SubsystemBase {
+public class BlingSubsystem extends SubsystemBase {
     private final CANdle controller = new CANdle(CANDLE_CAN_ID);
     private final ShuffleboardTab blingTab = Shuffleboard.getTab("Bling");
 
@@ -29,7 +28,7 @@ public class SubSys_Bling extends SubsystemBase {
     /**
      * Constructs a new Bling subsystem.
      */
-    public SubSys_Bling() {
+    public BlingSubsystem() {
         controller.configBrightnessScalar(MAX_LED_BRIGHTNESS);
         controller.configLEDType(LED_TYPE);
         controller.configStatusLedState(DISABLE_STATUS_LED);

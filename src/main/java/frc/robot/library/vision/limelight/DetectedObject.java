@@ -3,7 +3,7 @@ package frc.robot.library.vision.limelight;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
+import frc.robot.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
 
@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class DetectedObject {
-    private static SubSys_SwerveDrive drive;
+    private static SwerveDriveSubsystem drive;
 
     @Getter
     private final Pose3d pose;
@@ -32,7 +32,7 @@ public class DetectedObject {
      *
      * @param drive The SwerveDrive subsystem.
      */
-    public static void setDrive(SubSys_SwerveDrive drive) {
+    public static void setDrive(SwerveDriveSubsystem drive) {
         DetectedObject.drive = drive;
     }
 

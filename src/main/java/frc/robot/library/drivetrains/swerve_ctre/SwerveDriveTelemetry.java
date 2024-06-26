@@ -22,14 +22,14 @@ public class SwerveDriveTelemetry {
     private SimpleWidget turnKIWidget;
     private SimpleWidget turnKDWidget;
 
-    public SwerveDriveTelemetry(SubSys_SwerveDrive swerveDrive) {
+    public SwerveDriveTelemetry(SwerveDriveSubsystem swerveDrive) {
         this.driveTab = Shuffleboard.getTab("Drive");
         this.field = new Field2d();
         this.poseList = initializeShuffleboard(swerveDrive);
         this.tunableParamsList = initializeTunableParameters(swerveDrive);
     }
 
-    private ShuffleboardLayout initializeShuffleboard(SubSys_SwerveDrive swerveDrive) {
+    private ShuffleboardLayout initializeShuffleboard(SwerveDriveSubsystem swerveDrive) {
         ShuffleboardLayout poseList = driveTab
                 .getLayout("Pose", BuiltInLayouts.kList)
                 .withSize(2, 3)
@@ -49,7 +49,7 @@ public class SwerveDriveTelemetry {
         return poseList;
     }
 
-    private ShuffleboardLayout initializeTunableParameters(SubSys_SwerveDrive swerveDrive) {
+    private ShuffleboardLayout initializeTunableParameters(SwerveDriveSubsystem swerveDrive) {
         ShuffleboardLayout tunableParamsList = driveTab
                 .getLayout("Tunable Parameters", BuiltInLayouts.kList)
                 .withSize(2, 4)
@@ -67,7 +67,7 @@ public class SwerveDriveTelemetry {
         return tunableParamsList;
     }
 
-    public void updateShuffleboard(SubSys_SwerveDrive swerveDrive) {
+    public void updateShuffleboard(SwerveDriveSubsystem swerveDrive) {
         field.setRobotPose(swerveDrive.getPose());
 
         if (Constants.Robot.TUNE_MODE) {
@@ -75,7 +75,7 @@ public class SwerveDriveTelemetry {
         }
     }
 
-    private void updateTunableParameters(SubSys_SwerveDrive swerveDrive) {
+    private void updateTunableParameters(SwerveDriveSubsystem swerveDrive) {
         double newMaxSpeed = maxSpeedWidget.getEntry().getDouble(swerveDrive.getMaxSpeed());
         double newMaxAngularSpeed = maxAngularSpeedWidget.getEntry().getDouble(swerveDrive.getMaxAngularSpeed());
 

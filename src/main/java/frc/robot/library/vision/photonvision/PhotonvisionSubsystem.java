@@ -13,19 +13,19 @@ import org.photonvision.PhotonPoseEstimator;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.*;
+import static frc.robot.library.vision.photonvision.PhotonvisionSubsystemConstants.*;
 
 /**
  * A subsystem that manages multiple PhotonVision cameras and provides pose estimation functionality.
  */
-public class SubSys_Photonvision implements Subsystem {
+public class PhotonvisionSubsystem implements Subsystem {
   private final AprilTagFieldLayout aprilTagFieldLayout;
   private final ArrayList<PhotonPoseEstimator> photonPoseEstimators;
 
   /**
    * Constructs a new SubSys_Photonvision with the given PhotonCamera objects.
    */
-  public SubSys_Photonvision() {
+  public PhotonvisionSubsystem() {
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     photonPoseEstimators = new ArrayList<>();
 

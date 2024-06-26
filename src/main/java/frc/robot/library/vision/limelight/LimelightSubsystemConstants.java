@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
  * Constants for the Limelight subsystem.
  */
 @UtilityClass
-public class SubSys_Limelight_Constants {
+public class LimelightSubsystemConstants {
     // Limelight position offset relative to the robot center
     // FORWARD: +, RIGHT: +, UP: + (USED FOR Object Detection)
     // ROLL, PITCH, YAW: CCW +

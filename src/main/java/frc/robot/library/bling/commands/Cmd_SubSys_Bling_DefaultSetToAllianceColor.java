@@ -1,20 +1,20 @@
 package frc.robot.library.bling.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.library.bling.SubSys_Bling;
+import frc.robot.library.bling.BlingSubsystem;
 
 /**
  * Default command for the Bling subsystem that sets the LEDs to the alliance color.
  */
 public class Cmd_SubSys_Bling_DefaultSetToAllianceColor extends Command {
-    private final SubSys_Bling subSysBling;
+    private final BlingSubsystem subSysBling;
 
     /**
      * Constructs a new Cmd_SubSys_Bling_DefaultSetToAllianceColor command.
      *
      * @param subSysBling The Bling subsystem to control.
      */
-    public Cmd_SubSys_Bling_DefaultSetToAllianceColor(SubSys_Bling subSysBling) {
+    public Cmd_SubSys_Bling_DefaultSetToAllianceColor(BlingSubsystem subSysBling) {
         this.subSysBling = subSysBling;
         addRequirements(subSysBling);
     }
