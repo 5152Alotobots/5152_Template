@@ -6,10 +6,12 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Robot.Calibrations;
 import frc.robot.game.HMIStation;
 import frc.robot.library.bling.SubSys_Bling;
@@ -18,102 +20,124 @@ import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023;
 import frc.robot.library.vision.limelight.SubSys_Limelight;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import lombok.Getter;
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and button mappings) should be declared here.
+ */
 public class RobotContainer {
 
-    public final SendableChooser<Command> autoChooser;
+    // Subsystems
+    private final SubSys_SwerveDrive drivetrain;
+    private final SubSys_Limelight limelightSubSys;
+    private final SubSys_Bling blingSubSys;
+    private final SubSys_Photonvision photonvisionSubSys;
 
+    // Human-Machine Interface
+    private final HMIStation hmiStation;
+
+    // Swerve drive requests
+    private final SwerveRequest.FieldCentric driveFieldCentric;
+    private final SwerveRequest.RobotCentric driveRobotCentric;
+
+    // Shuffleboard
+    private final ShuffleboardTab driveTab;
+
+    @Getter
+    private final SendableChooser<Command> autoChooser;
+
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
     public RobotContainer() {
-
-        // Instance Variables
-        final SubSys_SwerveDrive drivetrain;
-        final SwerveRequest.RobotCentric driveRC;
-        final SwerveRequest.FieldCentric drive;
-        final SubSys_Limelight limelightSubSys;
-        final HMIStation hmiStation;
-        final SubSys_Bling blingSubSys;
-        final SubSys_Photonvision photonvisionSubSys;
-
-        // Shuffleboard Tabs
-        final ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
-
-        /* Subsystems */
+        // Initialize subsystems
         drivetrain = TunerConstants_MK4iL2_2023.DRIVE_TRAIN;
-
-        drive = new SwerveRequest.FieldCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
-        driveRC = new SwerveRequest.RobotCentric()
-                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
-                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
-
         blingSubSys = new SubSys_Bling();
-
         limelightSubSys = new SubSys_Limelight(blingSubSys, drivetrain);
-
-        hmiStation = new HMIStation();
-
         photonvisionSubSys = new SubSys_Photonvision();
 
-        // Auto Chooser
+        // Initialize HMI
+        hmiStation = new HMIStation();
+
+        // Initialize drive requests
+        driveFieldCentric = new SwerveRequest.FieldCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+        driveRobotCentric = new SwerveRequest.RobotCentric()
+                .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
+                .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+        // Initialize Shuffleboard
+        driveTab = Shuffleboard.getTab("Drive");
+
+        // Initialize auto chooser
         autoChooser = drivetrain.getAutoChooser();
         driveTab.add("Auto Chooser", autoChooser).withSize(2, 1).withPosition(0, 0);
 
-        // Configure the button bindings
-        configure(
-                drivetrain,
-                drive,
-                driveRC,
-                hmiStation,
-                blingSubSys,
-                photonvisionSubSys,
-                driveTab
-        );
+        // Configure button bindings and subsystem defaults
+        configureButtonBindings();
+        configureSubsystemDefaults();
+        configureShuffleboard();
     }
 
-    private void configure(
-            SubSys_SwerveDrive drivetrain,
-            SwerveRequest.FieldCentric drive,
-            SwerveRequest.RobotCentric driveRC,
-            HMIStation hmiStation,
-            SubSys_Bling subSysBling,
-            SubSys_Photonvision subSysPhotonvision,
-            ShuffleboardTab driveTab) {
-
-        // Vision
-        drivetrain.setPhotonVisionSubSys(subSysPhotonvision);
-
-        // ---- Drive Subsystem ----
+    /**
+     * Use this method to define your button->command mappings. Buttons can be created by
+     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling passing it to a
+     * {@link JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        // Configure swerve drive controls
         drivetrain.setDefaultCommand(
-                drivetrain.applyRequest(() ->
-                        drive.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                                .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                                .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()))
+                drivetrain.applyRequest(() -> driveFieldCentric
+                        .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                        .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                        .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()))
         );
         hmiStation.robotCentric.whileTrue(
-                drivetrain.applyRequest(() ->
-                        driveRC.withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                                .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                                .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()))
+                drivetrain.applyRequest(() -> driveRobotCentric
+                        .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                        .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                        .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()))
         );
-        // ---- Sim Drive Subsystem ----
-        if (Utils.isSimulation()) {
-            drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-        }
-        
-        // ---- Gyro Reset ----
+
+        // Gyro reset button
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
-
-        // ---- LEDs ----
-        subSysBling.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(subSysBling)); // Default
-
     }
 
+    /**
+     * Use this method to define your subsystem default commands.
+     */
+    private void configureSubsystemDefaults() {
+        // Set default command for LEDs
+        blingSubSys.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(blingSubSys));
+    }
+
+    /**
+     * Use this method to configure Shuffleboard layouts and widgets.
+     */
+    private void configureShuffleboard() {
+    }
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
+    }
+
+    /**
+     * Sets up the PhotonVision subsystem for the drivetrain.
+     */
+    public void setupVision() {
+        drivetrain.setPhotonVisionSubSys(photonvisionSubSys);
     }
 }
