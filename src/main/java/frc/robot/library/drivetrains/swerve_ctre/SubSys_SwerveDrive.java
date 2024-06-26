@@ -5,32 +5,27 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,59 +33,63 @@ import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constant
 import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
 
 /**
- * Subsystem class for the Swerve Drive, extending CTRE's SwerveDrivetrain and implementing WPILib's Subsystem.
- * This class manages the swerve drive functionality, including autonomous path following and vision-based pose estimation.
+ * Subsystem class for the Swerve Drive.
+ * This class extends the Phoenix SwerveDrivetrain class and implements the Subsystem interface
+ * for easy integration with WPILib's command-based framework.
  */
 public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private double lastSimTime;
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
-    private boolean flipPath = false;
-
-    private final Field2d field = new Field2d();
 
     private SubSys_Photonvision subSysPhotonvision;
+    private final SwerveDriveTelemetry telemetry;
+    private final SwerveDrivePathPlanner pathPlanner;
+
+    // Tunable parameters
+    @Getter @Setter private double maxSpeed = TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS;
+    @Getter @Setter private double maxAngularSpeed = Math.PI * 2;
+    @Getter @Setter private double driveKP = 0.1;
+    @Getter @Setter private double driveKI = 0.0;
+    @Getter @Setter private double driveKD = 0.0;
+    @Getter @Setter private double turnKP = 0.1;
+    @Getter @Setter private double turnKI = 0.0;
+    @Getter @Setter private double turnKD = 0.0;
 
     /**
-     * Constructor for the SubSys_SwerveDrive with a specified odometry update frequency.
+     * Constructs a new SubSys_SwerveDrive with the given constants and modules.
      *
-     * @param driveTrainConstants    The constants for the swerve drivetrain
-     * @param odometryUpdateFrequency The frequency at which to update odometry
-     * @param modules                The constants for each swerve module
+     * @param driveTrainConstants The constants for the swerve drivetrain.
+     * @param odometryUpdateFrequency The frequency at which to update odometry.
+     * @param modules The swerve module constants for each module.
      */
     public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, odometryUpdateFrequency, modules);
-        initializeSubsystem();
-    }
-
-    /**
-     * Constructor for the SubSys_SwerveDrive without specifying an odometry update frequency.
-     *
-     * @param driveTrainConstants The constants for the swerve drivetrain
-     * @param modules             The constants for each swerve module
-     */
-    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, modules);
-        initializeSubsystem();
-    }
-
-    /**
-     * Initializes the subsystem by configuring PathPlanner, simulation (if applicable), and logging.
-     */
-    private void initializeSubsystem() {
-        configurePathPlanner();
+        this.telemetry = new SwerveDriveTelemetry(this);
+        this.pathPlanner = new SwerveDrivePathPlanner(this);
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        initLog();
+    }
+
+    /**
+     * Constructs a new SubSys_SwerveDrive with the given constants and modules.
+     *
+     * @param driveTrainConstants The constants for the swerve drivetrain.
+     * @param modules The swerve module constants for each module.
+     */
+    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, modules);
+        this.telemetry = new SwerveDriveTelemetry(this);
+        this.pathPlanner = new SwerveDrivePathPlanner(this);
+        if (Utils.isSimulation()) {
+            startSimThread();
+        }
     }
 
     @Override
     public void periodic() {
-        // Update Field2d with the estimated robot pose
-        field.setRobotPose(this.m_odometry.getEstimatedPosition());
-
-        // Update vision-based pose estimate if enabled
+        // Vision estimate
         if (ONLY_USE_POSE_ESTIMATION_IN_TELEOP) {
             if (DriverStation.isTeleopEnabled()) {
                 updateVisionPoseEstimate();
@@ -98,12 +97,33 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
         } else {
             updateVisionPoseEstimate();
         }
+
+        telemetry.updateShuffleboard(this);
     }
 
     /**
-     * Updates the robot pose with PhotonVision data if tags can be seen.
+     * Applies a SwerveRequest to the drivetrain.
+     *
+     * @param requestSupplier A supplier for the SwerveRequest.
+     * @return A command that applies the SwerveRequest.
      */
-    public void updateVisionPoseEstimate() {
+    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+        return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    /**
+     * Gets the current robot chassis speeds.
+     *
+     * @return The current ChassisSpeeds of the robot.
+     */
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+
+    /**
+     * Updates the robot pose with PhotonVision if tags can be seen.
+     */
+    private void updateVisionPoseEstimate() {
         if (subSysPhotonvision != null && USE_VISION_POSE_ESTIMATION) {
             Optional<Pair<Pose2d, Double>> estimatedVisionPose2d = subSysPhotonvision.getEstimatedVisionPose2d(this.m_odometry.getEstimatedPosition());
             estimatedVisionPose2d.ifPresent(pose2dDoublePair -> this.addVisionMeasurement(pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
@@ -113,29 +133,10 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     /**
      * Sets the SubSys_PhotonVision object to use for vision-based pose estimation.
      *
-     * @param subSysPhotonvision The PhotonVision subsystem to use
+     * @param subSysPhotonvision The PhotonVision subsystem to use.
      */
     public void setPhotonVisionSubSys(SubSys_Photonvision subSysPhotonvision) {
         this.subSysPhotonvision = subSysPhotonvision;
-    }
-
-    /**
-     * Creates a command that applies a SwerveRequest to the drivetrain.
-     *
-     * @param requestSupplier A supplier for the SwerveRequest
-     * @return A Command that applies the SwerveRequest
-     */
-    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        return run(() -> this.setControl(requestSupplier.get()));
-    }
-
-    /**
-     * Gets the current robot chassis speeds.
-     *
-     * @return The current ChassisSpeeds of the robot
-     */
-    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
     /**
@@ -155,10 +156,10 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Gets an autonomous command for a specified path.
+     * Gets an autonomous command for the specified path.
      *
-     * @param pathName The name of the path to follow
-     * @return A Command to run the specified autonomous path
+     * @param pathName The name of the path to follow.
+     * @return A Command to run the specified autonomous path.
      */
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
@@ -167,7 +168,7 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     /**
      * Gets a SendableChooser for selecting autonomous routines.
      *
-     * @return A SendableChooser containing available autonomous routines
+     * @return A SendableChooser containing available autonomous routines.
      */
     public SendableChooser<Command> getAutoChooser() {
         return AutoBuilder.buildAutoChooser("DEFAULT_COMMAND_NAME");
@@ -176,8 +177,8 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     /**
      * Gets a command to follow a specific path.
      *
-     * @param pathName The name of the path to follow
-     * @return A Command to follow the specified path
+     * @param pathName The name of the path to follow.
+     * @return A Command to follow the specified path.
      */
     public Command getPath(String pathName) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -185,10 +186,10 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Creates a command to pathfind to a target pose.
+     * Gets a command to pathfind to a target pose.
      *
-     * @param targetPose The target Pose2d to reach
-     * @return A Command to pathfind to the target pose
+     * @param targetPose The target pose to pathfind to.
+     * @return A Command to pathfind to the specified pose.
      */
     public Command getPathFinderCommand(Pose2d targetPose) {
         PathConstraints constraints = new PathConstraints(
@@ -199,58 +200,88 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
                 targetPose,
                 constraints,
                 0.0, // Goal end velocity in meters/sec
-                0.0  // Rotation delay distance in meters
+                0.0 // Rotation delay distance in meters
         );
     }
 
     /**
-     * Configures PathPlanner for use with the swerve drive.
+     * Sets the auto request for PathPlanner.
+     *
+     * @param speeds The ChassisSpeeds to set.
      */
-    private void configurePathPlanner() {
-        double driveBaseRadius = 0;
-        for (var moduleLocation : m_moduleLocations) {
-            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+    public void setAutoRequest(ChassisSpeeds speeds) {
+        this.setControl(autoRequest.withSpeeds(speeds));
+    }
+
+    public Pose2d getPose() {
+        return this.getState().Pose;
+    }
+
+    public double getAngularVelocity() {
+        return this.m_angularVelocity.getValueAsDouble();
+    }
+
+    public double getOperatorForwardDirection() {
+        return this.m_operatorForwardDirection.getDegrees();
+    }
+
+    public double getYaw() {
+        return this.m_yawGetter.getValueAsDouble();
+    }
+
+    public boolean getFlipPath() {
+        return pathPlanner.getFlipPath();
+    }
+
+    public Translation2d[] getModuleLocations() {
+        return m_moduleLocations;
+    }
+
+    /**
+     * Sets the maximum speeds for the swerve drive.
+     *
+     * @param maxSpeed The maximum linear speed in meters per second.
+     * @param maxAngularSpeed The maximum angular speed in radians per second.
+     */
+    public void setMaxSpeeds(double maxSpeed, double maxAngularSpeed) {
+        this.maxSpeed = maxSpeed;
+        this.maxAngularSpeed = maxAngularSpeed;
+        // Apply the new max speeds to the swerve drive controller
+        // Implementation depends on the specifics of your swerve drive controller
+        System.out.println("Updating max speeds: " + maxSpeed + " m/s, " + maxAngularSpeed + " rad/s");
+    }
+
+    /**
+     * Sets the PID values for the drive motors.
+     *
+     * @param kP The proportional gain.
+     * @param kI The integral gain.
+     * @param kD The derivative gain.
+     */
+    public void setDrivePID(double kP, double kI, double kD) {
+        this.driveKP = kP;
+        this.driveKI = kI;
+        this.driveKD = kD;
+        // Apply the new PID values to the drive motors
+        for (var module : this.Modules) {
+            module.getDriveMotor().getConfigurator().apply(new Slot0Configs().withKP(kP).withKI(kI).withKD(kD));
         }
-
-        flipPath = DriverStation.getAlliance().isPresent() &&
-                DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-
-        AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose,
-                this::seedFieldRelative,
-                this::getCurrentRobotChassisSpeeds,
-                (speeds) -> this.setControl(autoRequest.withSpeeds(speeds)),
-                new HolonomicPathFollowerConfig(
-                        new PIDConstants(10, 0, 0),
-                        new PIDConstants(10, 0, 0),
-                        TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS,
-                        driveBaseRadius,
-                        new ReplanningConfig()
-                ),
-                () -> flipPath,
-                this
-        );
     }
 
     /**
-     * Initializes logging and Shuffleboard displays for the swerve drive.
+     * Sets the PID values for the turn motors.
+     *
+     * @param kP The proportional gain.
+     * @param kI The integral gain.
+     * @param kD The derivative gain.
      */
-    private void initLog() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Drive");
-        ShuffleboardLayout poseList = tab
-                .getLayout("Pose", BuiltInLayouts.kList)
-                .withSize(2, 3)
-                .withProperties(Map.of("Label position", "HIDDEN"));
-
-        tab.add("DriveAngularVelocity", this.m_angularVelocity.getValueAsDouble());
-        tab.add("DriveOprForwardDirection", this.m_operatorForwardDirection.getDegrees());
-
-        poseList.add("PoseX", this.m_odometry.getEstimatedPosition().getX());
-        poseList.add("PoseY", this.m_odometry.getEstimatedPosition().getY());
-        poseList.add("Rotation", this.m_yawGetter.getValueAsDouble());
-
-        poseList.add("Field", field);
-
-        tab.add("FlipPath", this.flipPath);
+    public void setTurnPID(double kP, double kI, double kD) {
+        this.turnKP = kP;
+        this.turnKI = kI;
+        this.turnKD = kD;
+        // Apply the new PID values to the turn motors
+        for (var module : this.Modules) {
+            module.getSteerMotor().getConfigurator().apply(new Slot0Configs().withKP(kP).withKI(kI).withKD(kD));
+        }
     }
 }
