@@ -22,9 +22,9 @@ public class LimelightSubsystem extends SubsystemBase {
     private BlingSubsystem subSysBling;
     @Setter
     private SwerveDriveSubsystem subSysDrive;
-    private final DetectedObjectList detectedObjectList = new DetectedObjectList();
-    private final ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
-    private final ShuffleboardLayout detectedObjectsLayout;
+    private DetectedObjectList detectedObjectList;
+    private ShuffleboardTab limelightTab;
+    private ShuffleboardLayout detectedObjectsLayout;
 
     /**
      * Constructs a new SubSys_Limelight.
@@ -33,31 +33,42 @@ public class LimelightSubsystem extends SubsystemBase {
      * @param subSysDrive The SwerveDrive subsystem for pose estimation.
      */
     public LimelightSubsystem(BlingSubsystem subSysBling, SwerveDriveSubsystem subSysDrive) {
+        System.out.println("Initializing LimelightSubsystem");
         this.subSysBling = subSysBling;
         this.subSysDrive = subSysDrive;
         DetectedObject.setDrive(subSysDrive);
-
-        detectedObjectsLayout = limelightTab
-                .getLayout("Detected Objects", BuiltInLayouts.kGrid)
-                .withProperties(Map.of("Number of columns", 1, "Number of rows", 3));
-
-        initializeShuffleboard();
+        System.out.println("LimelightSubsystem initialized");
     }
 
-    /**
-     * Initializes Shuffleboard displays for the Limelight subsystem.
-     */
     private void initializeShuffleboard() {
-        detectedObjectsLayout.addStringArray("Highest Confidence", () -> detectedObjectList.sortByConfidence().toArray());
+        if (limelightTab == null) {
+            System.out.println("Initializing Limelight Shuffleboard");
+            limelightTab = Shuffleboard.getTab("Limelight");
+            detectedObjectsLayout = limelightTab
+                    .getLayout("Detected Objects", BuiltInLayouts.kGrid)
+                    .withProperties(Map.of("Number of columns", 1, "Number of rows", 3));
 
-        if (subSysDrive != null) {
-            detectedObjectsLayout.addStringArray("Closest To Robot", () -> detectedObjectList.sortByPose(subSysDrive.getState().Pose).toArray());
-        } else {
-            detectedObjectsLayout.addString("Closest To Robot", () -> "Cannot get Pose from drive!");
+            detectedObjectsLayout.addStringArray("Highest Confidence", () -> getDetectedObjectList().sortByConfidence().toArray());
+
+            if (subSysDrive != null) {
+                detectedObjectsLayout.addStringArray("Closest To Robot", () -> getDetectedObjectList().sortByPose(subSysDrive.getState().Pose).toArray());
+            } else {
+                detectedObjectsLayout.addString("Closest To Robot", () -> "Cannot get Pose from drive!");
+            }
+
+            limelightTab.addBoolean("Limelight Connected", this::isLimelightConnected);
+            limelightTab.addBoolean("Object Detected", () -> LimelightLib.getTV(NN_LIMELIGHT));
+            System.out.println("Limelight Shuffleboard initialized");
         }
+    }
 
-        limelightTab.addBoolean("Limelight Connected", this::isLimelightConnected);
-        limelightTab.addBoolean("Object Detected", () -> LimelightLib.getTV(NN_LIMELIGHT));
+    private DetectedObjectList getDetectedObjectList() {
+        if (detectedObjectList == null) {
+            System.out.println("Initializing DetectedObjectList");
+            detectedObjectList = new DetectedObjectList();
+            System.out.println("DetectedObjectList initialized");
+        }
+        return detectedObjectList;
     }
 
     /**
@@ -87,11 +98,12 @@ public class LimelightSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        initializeShuffleboard();
         if (OBJECT_DETECTION_ENABLED && isLimelightConnected()) {
             updateDetectedObjects();
         }
 
-        detectedObjectList.update();
+        getDetectedObjectList().update();
     }
 
     /**
@@ -107,7 +119,7 @@ public class LimelightSubsystem extends SubsystemBase {
                 double verticalOffset = Math.toRadians(-detection.ty); // Make CCW positive
 
                 DetectedObject note = new DetectedObject(horizontalOffset, verticalOffset, DetectedObject.ObjectType.NOTE, LL_OFFSET);
-                detectedObjectList.add(new DetectedObjectList.DetectedObjectPair(note, detection.confidence));
+                getDetectedObjectList().add(new DetectedObjectList.DetectedObjectPair(note, detection.confidence));
             }
         }
     }

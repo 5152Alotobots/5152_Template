@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.alotobots.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants;
+import frc.alotobots.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.vision.photonvision.PhotonvisionSubsystem;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,8 +43,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
     private PhotonvisionSubsystem subSysPhotonvision;
-    private final SwerveDriveTelemetry telemetry;
-    private final SwerveDrivePathPlanner pathPlanner;
+    private SwerveDriveTelemetry telemetry;
+    private SwerveDrivePathPlanner pathPlanner;
 
     // Tunable parameters
     @Getter @Setter private double maxSpeed = TunerConstants.SPEED_AT_12_VOLTS_MPS;
@@ -65,11 +65,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
      */
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, odometryUpdateFrequency, modules);
-        this.telemetry = new SwerveDriveTelemetry(this);
-        this.pathPlanner = new SwerveDrivePathPlanner(this);
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
+        initializeSubsystem();
     }
 
     /**
@@ -80,11 +76,25 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
      */
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+        initializeSubsystem();
+    }
+
+    private void initializeSubsystem() {
+        System.out.println("Initializing SwerveDriveSubsystem");
         this.telemetry = new SwerveDriveTelemetry(this);
-        this.pathPlanner = new SwerveDrivePathPlanner(this);
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        System.out.println("SwerveDriveSubsystem initialized");
+    }
+
+    private SwerveDrivePathPlanner getPathPlanner() {
+        if (pathPlanner == null) {
+            System.out.println("Initializing PathPlanner");
+            pathPlanner = new SwerveDrivePathPlanner(this);
+            System.out.println("PathPlanner initialized");
+        }
+        return pathPlanner;
     }
 
     @Override
@@ -230,7 +240,13 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     public boolean getFlipPath() {
-        return pathPlanner.getFlipPath();
+        SwerveDrivePathPlanner planner = getPathPlanner();
+        if (planner != null) {
+            return planner.getFlipPath();
+        } else {
+            System.err.println("WARNING: PathPlanner is null in getFlipPath()");
+            return false;
+        }
     }
 
     public Translation2d[] getModuleLocations() {
