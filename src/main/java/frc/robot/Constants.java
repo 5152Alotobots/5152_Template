@@ -1,11 +1,6 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
+
+import lombok.experimental.UtilityClass;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -15,19 +10,24 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+@UtilityClass
 public final class Constants {
+  @UtilityClass
   public static final class Robot {
 
     public static final boolean TUNE_MODE = false;
 
+    @UtilityClass
     public static final class Calibrations {
 
+      @UtilityClass
       public static final class DriveTrain {
         public static final double DRIVE_XY_SPD_PERF_MODE_SW_FILTER_RATE = 8.0; // m/s/s
         public static final double DRIVE_ROT_SPD_PERF_MODE_SW_FILTER_RATE = 4.0; // rad/s/s
         public static final double DRIVE_TRAIN_MAX_ACCEL = 3.0; // m/s^2
         public static final double DRIVE_TRAIN_MAX_DECCEL = -2.0; // m/s^2
 
+        @UtilityClass
         public static final class PerformanceModeDefault {
           // Default Performance Mode Speeds
           public static final double DRIVE_TRAIN_MAX_SPD = 2.0; // m/s
@@ -36,6 +36,7 @@ public final class Constants {
           public static double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.75 * 2 * Math.PI; // rad/s^2
         }
 
+        @UtilityClass
         public static final class PerformanceModeTurtle {
           // Performance Mode A Speeds (Slow)
           public static final double DRIVE_TRAIN_MAX_SPD = 1.0; // m/s
@@ -44,6 +45,7 @@ public final class Constants {
           public static double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.15 * 2 * Math.PI; // rad/s^2
         }
 
+        @UtilityClass
         public static final class PerformanceModeTurbo {
           // Performance Mode B Speeds (Fast)
           public static final double DRIVE_TRAIN_MAX_SPD = 10.0; // m/s
@@ -54,8 +56,10 @@ public final class Constants {
       }
     }
 
+    @UtilityClass
     public static final class Field {}
 
+    @UtilityClass
     public static final class CanId {
 
       /**
@@ -77,7 +81,7 @@ public final class Constants {
       public static final int BACK_RIGHT_DRIVE_MTR_CAN_ID = 19;
       public static final int BACK_RIGHT_STEER_MTR_CAN_ID = 20;
       public static final int BACK_RIGHT_STEER_CAN_CODER_CAN_ID = 21;
-        /* **** End Library Components CAN ID's **** */
+      /* **** End Library Components CAN ID's **** */
 
       /**
        * *** Start GAME Components CAN ID's ****
@@ -86,12 +90,15 @@ public final class Constants {
       public static final int CANDLE_CAN_ID = 40;
     }
 
+    @UtilityClass
     public static final class analogInputIds {
     }
 
+    @UtilityClass
     public static final class digitalIoIds {
     }
 
+    @UtilityClass
     public static final class PWMIds {
     }
   }

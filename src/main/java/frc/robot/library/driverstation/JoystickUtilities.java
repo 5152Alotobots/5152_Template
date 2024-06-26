@@ -1,13 +1,9 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.library.driverstation;
 
+import lombok.experimental.UtilityClass;
+
 /** Add your docs here. */
+@UtilityClass
 public class JoystickUtilities {
 
   public static double joyDeadBnd(double rawJoy, double deadband) {

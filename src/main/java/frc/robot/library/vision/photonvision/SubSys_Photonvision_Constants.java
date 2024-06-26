@@ -8,9 +8,11 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import lombok.experimental.UtilityClass;
 import org.photonvision.PhotonCamera;
 
 @SuppressWarnings("resource")
+@UtilityClass
 public class SubSys_Photonvision_Constants {
 
   // OFFSETS

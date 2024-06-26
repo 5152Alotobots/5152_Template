@@ -10,12 +10,14 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
+import lombok.experimental.UtilityClass;
 
 /**
  * This class contains tuning constants for the MK4iL3 2024 Swerve Drive.
  * It includes PID gains, gear ratios, and other configuration parameters
  * for the swerve modules and drivetrain.
  */
+@UtilityClass
 public class TunerConstants_MK4iL3_2024 {
 
     // PID gains for the steer motors
