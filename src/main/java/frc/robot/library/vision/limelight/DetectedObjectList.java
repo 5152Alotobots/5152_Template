@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
+import static frc.robot.library.vision.limelight.LimelightSubsystemConstants.*;
 
 /**
  * A specialized ArrayList to store and manage DetectedObjectPair objects.

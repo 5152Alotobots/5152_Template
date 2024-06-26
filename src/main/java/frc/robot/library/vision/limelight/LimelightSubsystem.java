@@ -6,22 +6,22 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.library.bling.SubSys_Bling;
-import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
+import frc.robot.library.bling.BlingSubsystem;
+import frc.robot.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
 import lombok.Setter;
 
 import java.util.Map;
 
-import static frc.robot.library.vision.limelight.SubSys_Limelight_Constants.*;
+import static frc.robot.library.vision.limelight.LimelightSubsystemConstants.*;
 
 /**
  * Subsystem for interfacing with the Limelight vision system.
  */
-public class SubSys_Limelight extends SubsystemBase {
+public class LimelightSubsystem extends SubsystemBase {
     @Setter
-    private SubSys_Bling subSysBling;
+    private BlingSubsystem subSysBling;
     @Setter
-    private SubSys_SwerveDrive subSysDrive;
+    private SwerveDriveSubsystem subSysDrive;
     private final DetectedObjectList detectedObjectList = new DetectedObjectList();
     private final ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
     private final ShuffleboardLayout detectedObjectsLayout;
@@ -32,7 +32,7 @@ public class SubSys_Limelight extends SubsystemBase {
      * @param subSysBling The Bling subsystem for visual feedback.
      * @param subSysDrive The SwerveDrive subsystem for pose estimation.
      */
-    public SubSys_Limelight(SubSys_Bling subSysBling, SubSys_SwerveDrive subSysDrive) {
+    public LimelightSubsystem(BlingSubsystem subSysBling, SwerveDriveSubsystem subSysDrive) {
         this.subSysBling = subSysBling;
         this.subSysDrive = subSysDrive;
         DetectedObject.setDrive(subSysDrive);

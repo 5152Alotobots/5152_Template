@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
  * Constants for the Bling subsystem.
  */
 @UtilityClass
-public class SubSys_Bling_Constants {
+public class BlingSubsystemConstants {
     public static final boolean BLING_ENABLED = false;
     public static final double MAX_LED_BRIGHTNESS = 0.25;
     public static final int NUM_LEDS = 92;

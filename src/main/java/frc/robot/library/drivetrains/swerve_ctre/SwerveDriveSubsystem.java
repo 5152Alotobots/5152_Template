@@ -21,33 +21,33 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants_MK4iL3_2024;
-import frc.robot.library.vision.photonvision.SubSys_Photonvision;
+import frc.robot.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants;
+import frc.robot.library.vision.photonvision.PhotonvisionSubsystem;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP;
-import static frc.robot.library.vision.photonvision.SubSys_Photonvision_Constants.USE_VISION_POSE_ESTIMATION;
+import static frc.robot.library.vision.photonvision.PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP;
+import static frc.robot.library.vision.photonvision.PhotonvisionSubsystemConstants.USE_VISION_POSE_ESTIMATION;
 
 /**
  * Subsystem class for the Swerve Drive.
  * This class extends the Phoenix SwerveDrivetrain class and implements the Subsystem interface
  * for easy integration with WPILib's command-based framework.
  */
-public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
+public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem {
     private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
     private double lastSimTime;
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
-    private SubSys_Photonvision subSysPhotonvision;
+    private PhotonvisionSubsystem subSysPhotonvision;
     private final SwerveDriveTelemetry telemetry;
     private final SwerveDrivePathPlanner pathPlanner;
 
     // Tunable parameters
-    @Getter @Setter private double maxSpeed = TunerConstants_MK4iL3_2024.SPEED_AT_12_VOLTS_MPS;
+    @Getter @Setter private double maxSpeed = TunerConstants.SPEED_AT_12_VOLTS_MPS;
     @Getter @Setter private double maxAngularSpeed = Math.PI * 2;
     @Getter @Setter private double driveKP = 0.1;
     @Getter @Setter private double driveKI = 0.0;
@@ -63,7 +63,7 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
      * @param odometryUpdateFrequency The frequency at which to update odometry.
      * @param modules The swerve module constants for each module.
      */
-    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, double odometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, odometryUpdateFrequency, modules);
         this.telemetry = new SwerveDriveTelemetry(this);
         this.pathPlanner = new SwerveDrivePathPlanner(this);
@@ -78,7 +78,7 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
      * @param driveTrainConstants The constants for the swerve drivetrain.
      * @param modules The swerve module constants for each module.
      */
-    public SubSys_SwerveDrive(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         this.telemetry = new SwerveDriveTelemetry(this);
         this.pathPlanner = new SwerveDrivePathPlanner(this);
@@ -135,7 +135,7 @@ public class SubSys_SwerveDrive extends SwerveDrivetrain implements Subsystem {
      *
      * @param subSysPhotonvision The PhotonVision subsystem to use.
      */
-    public void setPhotonVisionSubSys(SubSys_Photonvision subSysPhotonvision) {
+    public void setPhotonVisionSubSys(PhotonvisionSubsystem subSysPhotonvision) {
         this.subSysPhotonvision = subSysPhotonvision;
     }
 
