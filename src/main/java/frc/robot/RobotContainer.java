@@ -15,7 +15,6 @@ import frc.robot.game.HMIStation;
 import frc.robot.library.bling.SubSys_Bling;
 import frc.robot.library.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
 import frc.robot.library.drivetrains.swerve_ctre.SubSys_SwerveDrive;
-import frc.robot.library.drivetrains.swerve_ctre.Telemetry;
 import frc.robot.library.drivetrains.swerve_ctre.mk4il22023.TunerConstants_MK4iL2_2023;
 import frc.robot.library.vision.limelight.SubSys_Limelight;
 import frc.robot.library.vision.photonvision.SubSys_Photonvision;
@@ -30,7 +29,6 @@ public class RobotContainer {
         final SubSys_SwerveDrive drivetrain;
         final SwerveRequest.RobotCentric driveRC;
         final SwerveRequest.FieldCentric drive;
-        final Telemetry logger;
         final SubSys_Limelight limelightSubSys;
         final HMIStation hmiStation;
         final SubSys_Bling blingSubSys;
@@ -40,7 +38,7 @@ public class RobotContainer {
         final ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
 
         /* Subsystems */
-        drivetrain = TunerConstants_MK4iL2_2023.DriveTrain;
+        drivetrain = TunerConstants_MK4iL2_2023.DRIVE_TRAIN;
 
         drive = new SwerveRequest.FieldCentric()
                 .withDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD * 0.1)
@@ -52,7 +50,6 @@ public class RobotContainer {
                 .withRotationalDeadband(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_ROT_SPD * 0.1)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        logger = new Telemetry(Calibrations.DriveTrain.PerformanceModeDefault.DRIVE_TRAIN_MAX_SPD);
 
         blingSubSys = new SubSys_Bling();
 
@@ -71,7 +68,6 @@ public class RobotContainer {
                 drivetrain,
                 drive,
                 driveRC,
-                logger,
                 hmiStation,
                 blingSubSys,
                 photonvisionSubSys,
@@ -83,7 +79,6 @@ public class RobotContainer {
             SubSys_SwerveDrive drivetrain,
             SwerveRequest.FieldCentric drive,
             SwerveRequest.RobotCentric driveRC,
-            Telemetry logger,
             HMIStation hmiStation,
             SubSys_Bling subSysBling,
             SubSys_Photonvision subSysPhotonvision,
@@ -109,10 +104,7 @@ public class RobotContainer {
         if (Utils.isSimulation()) {
             drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
         }
-
-        // ---- Telemetry ----
-        drivetrain.registerTelemetry(logger::telemeterize);
-
+        
         // ---- Gyro Reset ----
         hmiStation.gyroResetButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldRelative));
 

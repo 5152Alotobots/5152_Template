@@ -18,6 +18,8 @@ package frc.robot;
 public final class Constants {
   public static final class Robot {
 
+    public static final boolean TUNE_MODE = false;
+
     public static final class Calibrations {
 
       public static final class DriveTrain {
