@@ -3,51 +3,65 @@ package frc.robot.library.bling;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import lombok.Getter;
 
-import java.awt.*;
+import java.awt.Color;
 
 import static frc.robot.Constants.Robot.CanId.CANDLE_CAN_ID;
-import static frc.robot.library.bling.SubSys_Bling_Constants.Animations.NO_ALLIANCE_ANIMATION;
-import static frc.robot.library.bling.SubSys_Bling_Constants.Colors.*;
 import static frc.robot.library.bling.SubSys_Bling_Constants.*;
 
+/**
+ * Subsystem for controlling LED lighting on the robot.
+ */
 public class SubSys_Bling extends SubsystemBase {
-    private Animation currentAnimation;
-    private Animation queuedAnimation;
-    private Color currentSolidColor;
-    private Color queuedColor;
     private final CANdle controller = new CANdle(CANDLE_CAN_ID);
+    private final ShuffleboardTab blingTab = Shuffleboard.getTab("Bling");
 
+    @Getter private Animation currentAnimation;
+    @Getter private Animation queuedAnimation;
+    @Getter private Color currentSolidColor;
+    @Getter private Color queuedColor;
+
+    /**
+     * Constructs a new Bling subsystem.
+     */
     public SubSys_Bling() {
         controller.configBrightnessScalar(MAX_LED_BRIGHTNESS);
         controller.configLEDType(LED_TYPE);
         controller.configStatusLedState(DISABLE_STATUS_LED);
+
+        initializeShuffleboard();
     }
 
+    /**
+     * Initializes Shuffleboard displays for the Bling subsystem.
+     */
+    private void initializeShuffleboard() {
+        blingTab.addBoolean("Bling Enabled", () -> BLING_ENABLED);
+        blingTab.addString("Current Color", () -> currentSolidColor != null ? colorToString(currentSolidColor) : "None");
+        blingTab.addString("Current Animation", () -> currentAnimation != null ? currentAnimation.getClass().getSimpleName() : "None");
+    }
 
     /**
-     * Sets the LED strip to be the color of the alliance reported by the FMS/DS
+     * Sets the LED strip to the color of the alliance reported by the FMS/DS.
      */
     public void setLedToAllianceColor() {
         clearAnimation();
-        // Alliance colors
         if (DriverStation.getAlliance().isPresent()) {
-            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-                setSolidColor(RED_ALLIANCE_COLOR);
-            } else {
-                setSolidColor(BLUE_ALLIANCE_COLOR);
-            }
+            setSolidColor(DriverStation.getAlliance().get() == DriverStation.Alliance.Red ? Colors.RED_ALLIANCE_COLOR : Colors.BLUE_ALLIANCE_COLOR);
         } else {
-            runAnimation(NO_ALLIANCE_ANIMATION);
+            runAnimation(Animations.NO_ALLIANCE_ANIMATION);
         }
-
-
     }
 
     /**
-     * Sets the color of the LED strip. Overrides previously running animations
+     * Sets the color of the LED strip. Overrides previously running animations.
      *
+     * @param color The color to set the LEDs to.
      */
     public void setSolidColor(Color color) {
         clearAnimation();
@@ -55,23 +69,23 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Clears the LEDs solid color (Turns off LEDs)
+     * Clears the LEDs solid color (Turns off LEDs).
      */
     public void clearSolidColor() {
-        currentSolidColor = OFF_COLOR;
+        currentSolidColor = Colors.OFF_COLOR;
     }
 
     /**
-     * Queues a color and doesn't set the next one until released
+     * Queues a color and doesn't set the next one until released.
      *
-     * @param toQueue The color to queue
+     * @param toQueue The color to queue.
      */
     public void queueColor(Color toQueue) {
         queuedColor = toQueue;
     }
 
     /**
-     * Sets the next color if available. If not, runs default behavior
+     * Sets the next color if available. If not, runs default behavior.
      */
     public void setQueuedColor() {
         if (queuedColor != null) {
@@ -83,9 +97,9 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Sets the CANdle and attached LED's animation. Overrides previous solid colors and other animations
+     * Sets the CANdle and attached LED's animation. Overrides previous solid colors and other animations.
      *
-     * @param animation The animation to set
+     * @param animation The animation to set.
      */
     public void runAnimation(Animation animation) {
         clearAnimation();
@@ -93,7 +107,7 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Clears the current animation
+     * Clears the current animation.
      */
     public void clearAnimation() {
         controller.clearAnimation(0);
@@ -101,16 +115,16 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Queues an animation and doesn't run the next one until released
+     * Queues an animation and doesn't run the next one until released.
      *
-     * @param toQueue The animation to queue
+     * @param toQueue The animation to queue.
      */
     public void queueAnimation(Animation toQueue) {
         queuedAnimation = toQueue;
     }
 
     /**
-     * Runs the next animation if available. If not, runs default behavior
+     * Runs the next animation if available. If not, runs default behavior.
      */
     public void runQueuedAnimation() {
         if (queuedAnimation != null) {
@@ -122,7 +136,7 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Clears all settings (turns off LEDs)
+     * Clears all settings (turns off LEDs).
      */
     public void clearAll() {
         clearAnimation();
@@ -130,23 +144,27 @@ public class SubSys_Bling extends SubsystemBase {
     }
 
     /**
-     * Runs the default action
+     * Runs the default action.
      */
     public void runDefault() {
         setLedToAllianceColor();
     }
 
-
     /**
      * Updates the controller with the current state.
-     * Should be run in the periodic section of the command
+     * Should be run in the periodic section of the command.
      */
     public void update() {
         if (BLING_ENABLED) {
-            if (currentAnimation == null) {
+            if (currentAnimation == null && currentSolidColor != null) {
                 controller.clearAnimation(0);
-                controller.setLEDs(currentSolidColor.getRed(), currentSolidColor.getGreen(), currentSolidColor.getBlue(), 0, LED_OFFSET, NUM_LEDS);
-            } else {
+                controller.setLEDs(
+                        currentSolidColor.getRed(),
+                        currentSolidColor.getGreen(),
+                        currentSolidColor.getBlue(),
+                        0, LED_OFFSET, NUM_LEDS
+                );
+            } else if (currentAnimation != null) {
                 controller.animate(currentAnimation, 0);
             }
         }
@@ -154,6 +172,19 @@ public class SubSys_Bling extends SubsystemBase {
 
     @Override
     public void periodic() {
+        update();
     }
 
+    /**
+     * Converts a Color object to a string representation.
+     *
+     * @param color The Color object to convert.
+     * @return A string representation of the color in RGB format.
+     */
+    private String colorToString(Color color) {
+        return String.format("RGB(%d, %d, %d)",
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue());
+    }
 }
