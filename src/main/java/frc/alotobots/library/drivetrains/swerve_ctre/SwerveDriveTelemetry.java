@@ -33,7 +33,7 @@ public class SwerveDriveTelemetry {
         ShuffleboardLayout poseList = driveTab
                 .getLayout("Pose", BuiltInLayouts.kList)
                 .withSize(2, 3)
-                .withProperties(Map.of("Label position", "HIDDEN"));
+                .withProperties(Map.of("Label position", "LEFT"));
 
         driveTab.addNumber("Drive Angular Velocity", swerveDrive::getAngularVelocity);
         driveTab.addNumber("Drive Operator Forward Direction", swerveDrive::getOperatorForwardDirection);
@@ -44,6 +44,7 @@ public class SwerveDriveTelemetry {
 
         poseList.add("Field", field);
 
+        driveTab.addBoolean("Tuning Mode", () -> Constants.Robot.TUNE_MODE);
         driveTab.addBoolean("Flip Path", swerveDrive::getFlipPath);
 
         return poseList;
@@ -80,6 +81,7 @@ public class SwerveDriveTelemetry {
         double newMaxAngularSpeed = maxAngularSpeedWidget.getEntry().getDouble(swerveDrive.getMaxAngularSpeed());
 
         if (newMaxSpeed != swerveDrive.getMaxSpeed() || newMaxAngularSpeed != swerveDrive.getMaxAngularSpeed()) {
+            System.out.println("Hot reload of SwerveMaxSpeed");
             swerveDrive.setMaxSpeeds(newMaxSpeed, newMaxAngularSpeed);
         }
 
@@ -88,6 +90,7 @@ public class SwerveDriveTelemetry {
         double newDriveKD = driveKDWidget.getEntry().getDouble(swerveDrive.getDriveKD());
 
         if (newDriveKP != swerveDrive.getDriveKP() || newDriveKI != swerveDrive.getDriveKI() || newDriveKD != swerveDrive.getDriveKD()) {
+            System.out.println("Hot reload of SwerveDrivePID");
             swerveDrive.setDrivePID(newDriveKP, newDriveKI, newDriveKD);
         }
 
@@ -96,6 +99,7 @@ public class SwerveDriveTelemetry {
         double newTurnKD = turnKDWidget.getEntry().getDouble(swerveDrive.getTurnKD());
 
         if (newTurnKP != swerveDrive.getTurnKP() || newTurnKI != swerveDrive.getTurnKI() || newTurnKD != swerveDrive.getTurnKD()) {
+            System.out.println("Hot reload of SwerveTurnPID");
             swerveDrive.setTurnPID(newTurnKP, newTurnKI, newTurnKD);
         }
     }
