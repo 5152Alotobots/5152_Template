@@ -1,5 +1,11 @@
 package frc.alotobots;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -13,7 +19,7 @@ import frc.alotobots.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
 public class Auto {
 
     private final SwerveDriveSubsystem drivetrainSubsystem;
-    private final SendableChooser<Command> autoChooser;
+    private SendableChooser<Command> autoChooser;
 
     /**
      * Constructs an AutoCommands object with the necessary subsystems.
@@ -32,8 +38,7 @@ public class Auto {
      */
     private void configureAutoChooser() {
         if (SubsystemConfig.SWERVE_DRIVE_SUBSYSTEM_ENABLED && drivetrainSubsystem != null) {
-            autoChooser.setDefaultOption("Default Auto", drivetrainSubsystem.getAutoPath("Default"));
-            autoChooser.addOption("Complex Auto", drivetrainSubsystem.getAutoPath("Complex"));
+            autoChooser = getAutoChooser();
             // Add more auto options here
         } else {
             autoChooser.setDefaultOption("No Auto Available", null);
@@ -55,5 +60,54 @@ public class Auto {
      */
     public Command getSelectedAutoCommand() {
         return autoChooser.getSelected();
+    }
+
+    /**
+     * Gets an autonomous command for the specified path.
+     *
+     * @param pathName The name of the path to follow.
+     * @return A Command to run the specified autonomous path.
+     */
+    public Command getAutoPath(String pathName) {
+        return new PathPlannerAuto(pathName);
+    }
+
+    /**
+     * Gets a SendableChooser for selecting autonomous routines.
+     *
+     * @return A SendableChooser containing available autonomous routines.
+     */
+    public SendableChooser<Command> getAutoChooser() {
+        return AutoBuilder.buildAutoChooser("DEFAULT_COMMAND_NAME");
+    }
+
+    /**
+     * Gets a command to follow a specific path.
+     *
+     * @param pathName The name of the path to follow.
+     * @return A Command to follow the specified path.
+     */
+    public Command getPath(String pathName) {
+        PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+        return AutoBuilder.followPath(path);
+    }
+
+    /**
+     * Gets a command to pathfind to a target pose.
+     *
+     * @param targetPose The target pose to pathfind to.
+     * @return A Command to pathfind to the specified pose.
+     */
+    public Command getPathFinderCommand(Pose2d targetPose) {
+        PathConstraints constraints = new PathConstraints(
+                3.0, 4.0,
+                Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+        return AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters
+        );
     }
 }
