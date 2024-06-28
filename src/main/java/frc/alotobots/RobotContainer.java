@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.Constants.SubsystemConfig;
 import frc.alotobots.game.HMIStation;
 import frc.alotobots.library.bling.BlingSubsystem;
-import frc.alotobots.library.bling.commands.Cmd_SubSys_Bling_DefaultSetToAllianceColor;
+import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.vision.limelight.LimelightSubsystem;
@@ -74,7 +74,7 @@ public class RobotContainer {
         }
 
         if (blingSubsystem != null) {
-            blingSubsystem.setDefaultCommand(new Cmd_SubSys_Bling_DefaultSetToAllianceColor(blingSubsystem));
+            blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
         }
 
         // Add other subsystem default commands here as needed

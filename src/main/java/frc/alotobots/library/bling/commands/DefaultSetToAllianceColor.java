@@ -6,7 +6,7 @@ import frc.alotobots.library.bling.BlingSubsystem;
 /**
  * Default command for the Bling subsystem that sets the LEDs to the alliance color.
  */
-public class Cmd_SubSys_Bling_DefaultSetToAllianceColor extends Command {
+public class DefaultSetToAllianceColor extends Command {
     private final BlingSubsystem subSysBling;
 
     /**
@@ -14,7 +14,7 @@ public class Cmd_SubSys_Bling_DefaultSetToAllianceColor extends Command {
      *
      * @param subSysBling The Bling subsystem to control.
      */
-    public Cmd_SubSys_Bling_DefaultSetToAllianceColor(BlingSubsystem subSysBling) {
+    public DefaultSetToAllianceColor(BlingSubsystem subSysBling) {
         this.subSysBling = subSysBling;
         addRequirements(subSysBling);
     }
