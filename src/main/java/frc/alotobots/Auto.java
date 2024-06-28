@@ -50,7 +50,9 @@ public class Auto {
      */
     private void addAutoChooserToShuffleboard() {
         ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
-        driveTab.add("Auto Chooser", autoChooser).withSize(2, 1).withPosition(0, 0);
+        driveTab.add("Auto Chooser", autoChooser)
+                .withSize(2, 1)
+                .withPosition(2, 5);
     }
 
     /**

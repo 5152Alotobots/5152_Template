@@ -170,7 +170,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     public Pose2d getPose() {
-        return this.getState().Pose;
+        return this.m_odometry.getEstimatedPosition();
     }
 
     public double getAngularVelocity() {

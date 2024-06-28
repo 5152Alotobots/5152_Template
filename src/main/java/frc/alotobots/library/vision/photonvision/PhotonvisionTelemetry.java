@@ -42,7 +42,7 @@ public class PhotonvisionTelemetry {
                 .withPosition(0, 2);
 
         // Add Photonvision camera stream
-        HttpCamera photonCamera = new HttpCamera("Photonvision", "http://photonvision.local:1182/stream.mjpg");
+        HttpCamera photonCamera = new HttpCamera("Photonvision", "http://photonvision.local:1184/stream.mjpg");
         photonCamera.setFPS(20);
         photonvisionTab.add("Photonvision Camera", photonCamera)
                 .withWidget(BuiltInWidgets.kCameraStream)

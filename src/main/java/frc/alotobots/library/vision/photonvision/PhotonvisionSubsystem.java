@@ -44,7 +44,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       }
       for (int i = 0; i < CAMERAS.length; i++) {
         PhotonPoseEstimator estimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERAS[i], CAMERA_OFFSETS[i]);
-        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
+        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimators.add(estimator);
       }
       System.out.println("PhotonPoseEstimators initialized");
@@ -124,6 +124,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       timestamp += estimates.get(i).timestampSeconds;
     }
     timestamp /= estimates.size();
+
     return Optional.of(new Pair<>(averagePose, timestamp));
   }
 }

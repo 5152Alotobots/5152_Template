@@ -32,20 +32,23 @@ public class SwerveDriveTelemetry {
     private ShuffleboardLayout initializeShuffleboard(SwerveDriveSubsystem swerveDrive) {
         ShuffleboardLayout poseList = driveTab
                 .getLayout("Pose", BuiltInLayouts.kList)
-                .withSize(2, 3)
+                .withSize(2, 2)
+                .withPosition(0, 4)
                 .withProperties(Map.of("Label position", "LEFT"));
 
-        driveTab.addNumber("Drive Angular Velocity", swerveDrive::getAngularVelocity);
-        driveTab.addNumber("Drive Operator Forward Direction", swerveDrive::getOperatorForwardDirection);
-
-        poseList.addNumber("Pose X", () -> swerveDrive.getPose().getX());
-        poseList.addNumber("Pose Y", () -> swerveDrive.getPose().getY());
+        poseList.addNumber("Pose X", swerveDrive.getPose()::getX);
+        poseList.addNumber("Pose Y", swerveDrive.getPose()::getY);
         poseList.addNumber("Rotation", swerveDrive::getYaw);
+        driveTab.add("Field", field)
+                .withPosition(2, 0)
+                .withSize(12, 5);
 
-        poseList.add("Field", field);
-
-        driveTab.addBoolean("Tuning Mode", () -> Constants.Robot.TUNE_MODE);
-        driveTab.addBoolean("Flip Path", swerveDrive::getFlipPath);
+        driveTab.addBoolean("Tuning Mode", () -> Constants.Robot.TUNE_MODE)
+                .withPosition(4, 5)
+                .withSize(2, 1);
+        driveTab.addBoolean("Flip Path", swerveDrive::getFlipPath)
+                .withPosition(6, 5)
+                .withSize(2, 1);
 
         return poseList;
     }
@@ -54,6 +57,7 @@ public class SwerveDriveTelemetry {
         ShuffleboardLayout tunableParamsList = driveTab
                 .getLayout("Tunable Parameters", BuiltInLayouts.kList)
                 .withSize(2, 4)
+                .withPosition(0, 0)
                 .withProperties(Map.of("Label position", "LEFT"));
 
         maxSpeedWidget = tunableParamsList.add("Max Speed (m/s)", swerveDrive.getMaxSpeed());

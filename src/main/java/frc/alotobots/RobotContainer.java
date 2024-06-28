@@ -57,6 +57,7 @@ public class RobotContainer {
         // Configure commands and bindings
         configureDefaultCommands();
         configureLogicCommands();
+        setupVision();
     }
 
     /**
