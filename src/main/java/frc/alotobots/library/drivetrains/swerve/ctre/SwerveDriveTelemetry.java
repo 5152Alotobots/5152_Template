@@ -1,4 +1,4 @@
-package frc.alotobots.library.drivetrains.swerve_ctre;
+package frc.alotobots.library.drivetrains.swerve.ctre;
 
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;

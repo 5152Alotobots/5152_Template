@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.Constants.SubsystemConfig;
-import frc.alotobots.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 
 /**
  * This class contains methods to set up and manage autonomous commands for the robot.

@@ -1,11 +1,11 @@
-package frc.alotobots.library.drivetrains.swerve_ctre;
+package frc.alotobots.library.drivetrains.swerve.ctre;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.alotobots.library.drivetrains.swerve_ctre.mk4il32024.TunerConstants;
+import frc.alotobots.library.drivetrains.swerve.ctre.mk4il32024.TunerConstants;
 
 public class SwerveDrivePathPlanner {
     private final SwerveDriveSubsystem swerveDrive;

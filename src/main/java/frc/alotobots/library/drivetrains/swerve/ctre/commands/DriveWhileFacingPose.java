@@ -1,4 +1,4 @@
-package frc.alotobots.library.drivetrains.swerve_ctre.commands;
+package frc.alotobots.library.drivetrains.swerve.ctre.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.AimModule;
-import frc.alotobots.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 
 import java.util.function.DoubleSupplier;
 

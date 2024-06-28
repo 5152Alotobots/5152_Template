@@ -1,4 +1,4 @@
-package frc.alotobots.library.drivetrains.swerve_ctre.mk4il22023;
+package frc.alotobots.library.drivetrains.swerve.ctre.mk4il32024;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -9,11 +9,11 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 
 import edu.wpi.first.math.util.Units;
 import frc.alotobots.Constants;
-import frc.alotobots.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import lombok.experimental.UtilityClass;
 
 /**
- * This class contains tuning constants for the MK4iL2 2023 Swerve Drive.
+ * This class contains tuning constants for the MK4iL3 2024 Swerve Drive.
  * It includes PID gains, gear ratios, and other configuration parameters
  * for the swerve modules and drivetrain.
  */
@@ -35,14 +35,14 @@ public class TunerConstants {
     private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT = ClosedLoopOutputType.Voltage;
 
     // Current at which wheels start to slip
-    private static final double SLIP_CURRENT_A = 300.0;
+    private static final double SLIP_CURRENT_A = 60.0;
 
     // Theoretical free speed at 12V applied output
-    public static final double SPEED_AT_12_VOLTS_MPS = 4.73;
+    public static final double SPEED_AT_12_VOLTS_MPS = 5.21;
 
     // Gear ratios and coupling
     private static final double COUPLE_RATIO = 3.5714285714285716;
-    private static final double DRIVE_GEAR_RATIO = 6.746031746031747;
+    private static final double DRIVE_GEAR_RATIO = 6.122448979591837;
     private static final double STEER_GEAR_RATIO = 21.428571428571427;
     private static final double WHEEL_RADIUS_INCHES = 2;
 
@@ -52,7 +52,7 @@ public class TunerConstants {
     private static final boolean INVERT_RIGHT_SIDE = true;
 
     // CAN bus name
-    private static final String CANBUS_NAME = "";
+    private static final String CAN_BUS_NAME = "CTRDriveBus";
 
     // Simulation constants
     private static final double STEER_INERTIA = 0.00001;
@@ -63,7 +63,7 @@ public class TunerConstants {
     // Drivetrain constants
     private static final SwerveDrivetrainConstants DRIVETRAIN_CONSTANTS = new SwerveDrivetrainConstants()
             .withPigeon2Id(Constants.Robot.CanId.PIGEON_2_ID)
-            .withCANbusName(CANBUS_NAME);
+            .withCANbusName(CAN_BUS_NAME);
 
     // Swerve module constants factory
     private static final SwerveModuleConstantsFactory CONSTANT_CREATOR = new SwerveModuleConstantsFactory()
@@ -85,19 +85,19 @@ public class TunerConstants {
             .withSteerMotorInverted(STEER_MOTOR_REVERSED);
 
     // Encoder offsets for each module
-    private static final double FRONT_LEFT_ENCODER_OFFSET = 0.491943359375;
-    private static final double FRONT_RIGHT_ENCODER_OFFSET = 0.1962890625;
-    private static final double BACK_LEFT_ENCODER_OFFSET = -0.468017578125;
-    private static final double BACK_RIGHT_ENCODER_OFFSET = -0.2978515625;
+    private static final double FRONT_LEFT_ENCODER_OFFSET = -0.18;
+    private static final double FRONT_RIGHT_ENCODER_OFFSET = -0.47900390625;
+    private static final double BACK_LEFT_ENCODER_OFFSET = 0.05615234375;
+    private static final double BACK_RIGHT_ENCODER_OFFSET = 0.351318359375;
 
     // Module positions (in inches)
-    private static final double FRONT_LEFT_X_POS_INCHES = 9.25;
+    private static final double FRONT_LEFT_X_POS_INCHES = 11.375;
     private static final double FRONT_LEFT_Y_POS_INCHES = 9.25;
-    private static final double FRONT_RIGHT_X_POS_INCHES = 9.25;
+    private static final double FRONT_RIGHT_X_POS_INCHES = 11.375;
     private static final double FRONT_RIGHT_Y_POS_INCHES = -9.25;
-    private static final double BACK_LEFT_X_POS_INCHES = -9.25;
+    private static final double BACK_LEFT_X_POS_INCHES = -11.375;
     private static final double BACK_LEFT_Y_POS_INCHES = 9.25;
-    private static final double BACK_RIGHT_X_POS_INCHES = -9.25;
+    private static final double BACK_RIGHT_X_POS_INCHES = -11.375;
     private static final double BACK_RIGHT_Y_POS_INCHES = -9.25;
 
     // Swerve module constants

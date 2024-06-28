@@ -2,7 +2,7 @@ package frc.alotobots.library.vision.limelight;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.bling.BlingSubsystem;
-import frc.alotobots.library.drivetrains.swerve_ctre.SwerveDriveSubsystem;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import lombok.Getter;
 import lombok.Setter;
 
