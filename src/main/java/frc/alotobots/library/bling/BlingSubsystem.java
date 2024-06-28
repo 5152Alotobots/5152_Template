@@ -3,8 +3,6 @@ package frc.alotobots.library.bling;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lombok.Getter;
 
@@ -18,7 +16,7 @@ import static frc.alotobots.library.bling.BlingSubsystemConstants.*;
  */
 public class BlingSubsystem extends SubsystemBase {
     private final CANdle controller;
-    private final ShuffleboardTab blingTab;
+    private final BlingTelemetry telemetry;
 
     @Getter private Animation currentAnimation;
     @Getter private Animation queuedAnimation;
@@ -39,21 +37,10 @@ public class BlingSubsystem extends SubsystemBase {
         controller.configStatusLedState(DISABLE_STATUS_LED);
         System.out.println("CANdle configuration completed");
 
-        blingTab = Shuffleboard.getTab("Bling");
-        initializeShuffleboard();
-        System.out.println("Shuffleboard initialized");
+        telemetry = new BlingTelemetry();
+        System.out.println("Telemetry initialized");
 
         System.out.println("BlingSubsystem initialization completed");
-    }
-
-    /**
-     * Initializes Shuffleboard displays for the Bling subsystem.
-     */
-    private void initializeShuffleboard() {
-        blingTab.addBoolean("Bling Enabled", () -> BLING_ENABLED);
-        blingTab.addString("Current Color", () -> currentSolidColor != null ? colorToString(currentSolidColor) : "None");
-        blingTab.addString("Current Animation", () -> currentAnimation != null ? currentAnimation.getClass().getSimpleName() : "None");
-        System.out.println("Shuffleboard entries added");
     }
 
     /**
@@ -196,6 +183,7 @@ public class BlingSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         update();
+        telemetry.updateShuffleboard(currentSolidColor, currentAnimation);
     }
 
     /**

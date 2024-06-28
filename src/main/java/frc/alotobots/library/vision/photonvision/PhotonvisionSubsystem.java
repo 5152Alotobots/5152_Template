@@ -5,8 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -19,17 +18,19 @@ import static frc.alotobots.library.vision.photonvision.PhotonvisionSubsystemCon
 /**
  * A subsystem that manages multiple PhotonVision cameras and provides pose estimation functionality.
  */
-public class PhotonvisionSubsystem implements Subsystem {
+public class PhotonvisionSubsystem extends SubsystemBase {
   private final AprilTagFieldLayout aprilTagFieldLayout;
   private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
+  private PhotonvisionTelemetry telemetry;
 
   /**
-   * Constructs a new SubSys_Photonvision with the given PhotonCamera objects.
+   * Constructs a new PhotonvisionSubsystem.
    */
   public PhotonvisionSubsystem() {
     System.out.println("Initializing PhotonvisionSubsystem");
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     initializePoseEstimators();
+    telemetry = new PhotonvisionTelemetry();
     System.out.println("PhotonvisionSubsystem initialized");
   }
 
@@ -38,11 +39,9 @@ public class PhotonvisionSubsystem implements Subsystem {
       System.out.println("Initializing PhotonPoseEstimators");
       photonPoseEstimators = new ArrayList<>();
 
-      // Ensure that we have offsets for each camera object
       if (CAMERAS.length != CAMERA_OFFSETS.length) {
         throw new RuntimeException("PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
       }
-      // Loop, creating pose estimators
       for (int i = 0; i < CAMERAS.length; i++) {
         PhotonPoseEstimator estimator = new PhotonPoseEstimator(aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, CAMERAS[i], CAMERA_OFFSETS[i]);
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_LAST_POSE);
@@ -56,11 +55,7 @@ public class PhotonvisionSubsystem implements Subsystem {
   public void periodic() {
     if (USE_VISION_POSE_ESTIMATION) {
       Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
-      if (estimatedPose.isPresent()) {
-        SmartDashboard.putString("Vision/Vision Pose Estimate", estimatedPose.get().getFirst().toString());
-      } else {
-        SmartDashboard.putString("Vision/Vision Pose Estimate", "NONE");
-      }
+      telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst));
     }
   }
 
