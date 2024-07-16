@@ -67,9 +67,9 @@ public class RobotContainer {
         if (drivetrainSubsystem != null) {
             drivetrainSubsystem.setDefaultCommand(
                     drivetrainSubsystem.applyRequest(() -> driveFieldCentric
-                            .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                            .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                            .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())
+                            .withVelocityX(hmiStation.getDriveFwd() * hmiStation.getDriveXYPerfMode())
+                            .withVelocityY(hmiStation.getDriveStr() * hmiStation.getDriveXYPerfMode())
+                            .withRotationalRate(hmiStation.getDriveRot() * hmiStation.getDriveRotPerfMode())
                     )
             );
         }
@@ -86,15 +86,15 @@ public class RobotContainer {
      */
     private void configureLogicCommands() {
         if (drivetrainSubsystem != null) {
-            hmiStation.robotCentric.whileTrue(
+            hmiStation.getRobotCentricButton().whileTrue(
                     drivetrainSubsystem.applyRequest(() -> driveRobotCentric
-                            .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                            .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                            .withRotationalRate(hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())
+                            .withVelocityX(hmiStation.getDriveFwd() * hmiStation.getDriveXYPerfMode())
+                            .withVelocityY(hmiStation.getDriveStr() * hmiStation.getDriveXYPerfMode())
+                            .withRotationalRate(hmiStation.getDriveRot() * hmiStation.getDriveRotPerfMode())
                     )
             );
 
-            hmiStation.gyroResetButton.onTrue(drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
+            hmiStation.getGyroResetButton().onTrue(drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
         }
 
         // Add other logic-based commands here
