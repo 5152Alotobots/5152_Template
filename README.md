@@ -75,15 +75,15 @@
 * WPilib (Required if you want to build code to the robot locally/easily)
   ```sh
   #Get package for your system https://github.com/wpilibsuite/allwpilib/releases/
-  
+
   #Most linux distros
   tar -xf WPILib_Linux-<version>.tar.gz
   cd WPILib_Linux-<version>/
   ./WPILibInstaller
-  
+
   #Windows
   #Extract and run installer
-  
+
   #Macos
   #Download installer and run
   ```

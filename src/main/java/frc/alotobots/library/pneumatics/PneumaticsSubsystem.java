@@ -5,16 +5,12 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.Constants;
 
-/**
- * Subsystem for controlling the pneumatics system on the robot.
- */
+/** Subsystem for controlling the pneumatics system on the robot. */
 public class PneumaticsSubsystem extends SubsystemBase {
   private final Compressor compressor;
   private final PneumaticsTelemetry telemetry;
 
-  /**
-   * Constructs a new PneumaticsSubsystem.
-   */
+  /** Constructs a new PneumaticsSubsystem. */
   public PneumaticsSubsystem() {
     System.out.println("Initializing PneumaticsSubsystem");
 
@@ -29,16 +25,12 @@ public class PneumaticsSubsystem extends SubsystemBase {
     telemetry.updateShuffleboard(compressor);
   }
 
-  /**
-   * Enables the compressor in digital mode.
-   */
+  /** Enables the compressor in digital mode. */
   public void compressorOn() {
     compressor.enableDigital();
   }
 
-  /**
-   * Disables the compressor.
-   */
+  /** Disables the compressor. */
   public void compressorOff() {
     compressor.disable();
   }
