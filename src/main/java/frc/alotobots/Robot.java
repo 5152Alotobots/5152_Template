@@ -39,16 +39,23 @@ public class Robot extends TimedRobot {
     logEnabledSubsystems();
   }
 
-  /**
-   * Logs the current state of enabled/disabled subsystems.
-   */
+  /** Logs the current state of enabled/disabled subsystems. */
   private void logEnabledSubsystems() {
     System.out.println("=== Subsystem Status ===");
-    System.out.println("Swerve Drive Subsystem: " + (SubsystemConfig.SWERVE_DRIVE_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println("Bling Subsystem: " + (SubsystemConfig.BLING_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println("Limelight Subsystem: " + (SubsystemConfig.LIMELIGHT_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println("Photonvision Subsystem: " + (SubsystemConfig.PHOTONVISION_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println("Pneumatics Subsystem: " + (SubsystemConfig.PNEUMATICS_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
+    System.out.println(
+        "Swerve Drive Subsystem: "
+            + (SubsystemConfig.SWERVE_DRIVE_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
+    System.out.println(
+        "Bling Subsystem: " + (SubsystemConfig.BLING_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
+    System.out.println(
+        "Limelight Subsystem: "
+            + (SubsystemConfig.LIMELIGHT_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
+    System.out.println(
+        "Photonvision Subsystem: "
+            + (SubsystemConfig.PHOTONVISION_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
+    System.out.println(
+        "Pneumatics Subsystem: "
+            + (SubsystemConfig.PNEUMATICS_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
     System.out.println("========================");
   }
 

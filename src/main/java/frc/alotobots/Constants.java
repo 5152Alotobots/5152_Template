@@ -1,6 +1,5 @@
 package frc.alotobots;
 
-import edu.wpi.first.math.util.Units;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -14,9 +13,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Constants {
 
-  /**
-   * Subsystem enable/disable flags for debugging purposes.
-   */
+  /** Subsystem enable/disable flags for debugging purposes. */
   @UtilityClass
   public static final class SubsystemConfig {
     public static final boolean SWERVE_DRIVE_SUBSYSTEM_ENABLED = true;
@@ -44,7 +41,8 @@ public final class Constants {
           public static final double DRIVE_TRAIN_MAX_SPD = 2.0; // m/s
           public static final double DRIVE_TRAIN_MAX_ACCELERATION = 2.0; // m/s^2
           public static final double DRIVE_TRAIN_MAX_ROT_SPD = 0.75 * 2 * Math.PI; // rad/s
-          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.75 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION =
+              0.75 * 2 * Math.PI; // rad/s^2
         }
 
         @UtilityClass
@@ -52,7 +50,8 @@ public final class Constants {
           public static final double DRIVE_TRAIN_MAX_SPD = 1.0; // m/s
           public static final double DRIVE_TRAIN_MAX_ACCELERATION = 0.35; // m/s^2
           public static final double DRIVE_TRAIN_MAX_ROT_SPD = 0.5 * 2 * Math.PI; // rad/s
-          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.15 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION =
+              0.15 * 2 * Math.PI; // rad/s^2
         }
 
         @UtilityClass
@@ -60,7 +59,8 @@ public final class Constants {
           public static final double DRIVE_TRAIN_MAX_SPD = 10.0; // m/s
           public static final double DRIVE_TRAIN_MAX_ACCELERATION = 1.00; // m/s^2
           public static final double DRIVE_TRAIN_MAX_ROT_SPD = 1.0 * 2 * Math.PI; // rad/s
-          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION = 0.75 * 2 * Math.PI; // rad/s^2
+          public static final double DRIVE_TRAIN_MAX_ROT_ACCELERATION =
+              0.75 * 2 * Math.PI; // rad/s^2
         }
       }
     }
@@ -72,8 +72,8 @@ public final class Constants {
 
     @UtilityClass
     public static final class CanId {
-      public static final int PDP_CAN_ID = 1;   // Power Distribution Panel
-      public static final int PCM_CAN_ID = 2;   // Pneumatic Control Module
+      public static final int PDP_CAN_ID = 1; // Power Distribution Panel
+      public static final int PCM_CAN_ID = 2; // Pneumatic Control Module
       public static final int PIGEON_2_ID = 3;
 
       public static final int FRONT_LEFT_DRIVE_MTR_CAN_ID = 10;
