@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /** Handles telemetry for the Photonvision subsystem. */
 public class PhotonvisionTelemetry {
@@ -108,12 +109,16 @@ public class PhotonvisionTelemetry {
    * @param detectedTags The list of detected AprilTags.
    */
   private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
-
     for (PhotonTrackedTarget tag : detectedTags) {
       Optional<Pose3d> tagPoseOptional =
           PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
       if (tagPoseOptional.isPresent()) {
         Pose2d tagPose = tagPoseOptional.get().toPose2d();
+
+        // Determine the color based on the tag's position
+        Color8Bit lineColor = (tagPose.getX() < PhotonvisionSubsystemConstants.FIELD_LENGTH / 2) 
+            ? new Color8Bit(0, 0, 255) // Blue for left side
+            : new Color8Bit(255, 0, 0); // Red for right side
 
         // Create a trajectory (line) from robot to tag with more than 8 points
         List<Trajectory.State> states = new ArrayList<>();
@@ -133,9 +138,15 @@ public class PhotonvisionTelemetry {
         }
         Trajectory line = new Trajectory(states);
 
-        // Add the line to the field with a unique name
+        // Add the line to the field with a unique name and color
         String lineName = "Tag" + tag.getFiducialId() + "Line";
         field.getObject(lineName).setTrajectory(line);
+        field.getObject(lineName).setColor(lineColor);
+
+        // Draw a box for the tag position
+        String boxName = "Tag" + tag.getFiducialId() + "Box";
+        field.getObject(boxName).setPose(tagPose);
+        field.getObject(boxName).setColor(lineColor);
       }
     }
   }

@@ -20,6 +20,8 @@ public class PhotonvisionSubsystemConstants {
   public static final AprilTagFieldLayout aprilTagFieldLayout =
       AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
+  public static final double FIELD_LENGTH = 16.54175; // in meters
+
   // OFFSETS
   // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)
   public static final Transform3d[] CAMERA_OFFSETS =
