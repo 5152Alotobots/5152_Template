@@ -1,7 +1,6 @@
 package frc.alotobots.library.vision.photonvision;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
@@ -78,7 +77,8 @@ public class PhotonvisionTelemetry {
    * @param estimatedPose The estimated pose from Photonvision.
    * @param detectedTags The list of detected AprilTags.
    */
-  public void updateShuffleboard(Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
+  public void updateShuffleboard(
+      Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
     estimatedPose.ifPresent(
         pose -> {
           // Update pose entries with truncated values
@@ -109,12 +109,16 @@ public class PhotonvisionTelemetry {
   private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
     for (int i = 0; i < detectedTags.size(); i++) {
       PhotonTrackedTarget tag = detectedTags.get(i);
-      Pose2d tagPose = PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId()).get().toPose2d();
-      
+      Pose2d tagPose =
+          PhotonvisionSubsystemConstants.aprilTagFieldLayout
+              .getTagPose(tag.getFiducialId())
+              .get()
+              .toPose2d();
+
       // Create a trajectory (line) from robot to tag
       List<Trajectory.State> states = new ArrayList<>();
-      states.add(new Trajectory.State(0, 0, 0, robotPose, robotPose.getRotation()));
-      states.add(new Trajectory.State(1, 0, 0, tagPose, tagPose.getRotation()));
+      states.add(new Trajectory.State(0, 0, 0, robotPose, 0));
+      states.add(new Trajectory.State(1, 0, 0, tagPose, 0));
       Trajectory line = new Trajectory(states);
 
       // Add the line to the field
