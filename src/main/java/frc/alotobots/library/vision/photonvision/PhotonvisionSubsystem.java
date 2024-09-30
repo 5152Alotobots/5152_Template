@@ -58,8 +58,25 @@ public class PhotonvisionSubsystem extends SubsystemBase {
   public void periodic() {
     if (USE_VISION_POSE_ESTIMATION) {
       Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
-      telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst));
+      List<PhotonTrackedTarget> detectedTags = getDetectedTags();
+      telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags);
     }
+  }
+
+  /**
+   * Returns a list of all detected AprilTags from all cameras.
+   *
+   * @return A list of PhotonTrackedTarget objects representing the detected AprilTags.
+   */
+  private List<PhotonTrackedTarget> getDetectedTags() {
+    List<PhotonTrackedTarget> allDetectedTags = new ArrayList<>();
+    for (PhotonCamera camera : CAMERAS) {
+      var result = camera.getLatestResult();
+      if (result.hasTargets()) {
+        allDetectedTags.addAll(result.getTargets());
+      }
+    }
+    return allDetectedTags;
   }
 
   /**

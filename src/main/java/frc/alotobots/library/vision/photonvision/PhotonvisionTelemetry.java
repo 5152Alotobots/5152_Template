@@ -1,11 +1,16 @@
 package frc.alotobots.library.vision.photonvision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the Photonvision subsystem. */
 public class PhotonvisionTelemetry {
@@ -71,8 +76,9 @@ public class PhotonvisionTelemetry {
    * Updates the Shuffleboard with the latest telemetry data.
    *
    * @param estimatedPose The estimated pose from Photonvision.
+   * @param detectedTags The list of detected AprilTags.
    */
-  public void updateShuffleboard(Optional<Pose2d> estimatedPose) {
+  public void updateShuffleboard(Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
     estimatedPose.ifPresent(
         pose -> {
           // Update pose entries with truncated values
@@ -82,12 +88,37 @@ public class PhotonvisionTelemetry {
 
           // Update field widget
           field.setRobotPose(pose);
+
+          // Draw tracer lines to detected tags
+          drawTracerLines(pose, detectedTags);
         });
 
-    if (!estimatedPose.isPresent()) {
+    if (estimatedPose.isEmpty()) {
       poseXEntry.setString("N/A");
       poseYEntry.setString("N/A");
       rotationEntry.setString("N/A");
+    }
+  }
+
+  /**
+   * Draws tracer lines from the robot pose to detected AprilTags.
+   *
+   * @param robotPose The current robot pose.
+   * @param detectedTags The list of detected AprilTags.
+   */
+  private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
+    for (int i = 0; i < detectedTags.size(); i++) {
+      PhotonTrackedTarget tag = detectedTags.get(i);
+      Pose2d tagPose = PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId()).get().toPose2d();
+      
+      // Create a trajectory (line) from robot to tag
+      List<Trajectory.State> states = new ArrayList<>();
+      states.add(new Trajectory.State(0, 0, 0, robotPose, robotPose.getRotation()));
+      states.add(new Trajectory.State(1, 0, 0, tagPose, tagPose.getRotation()));
+      Trajectory line = new Trajectory(states);
+
+      // Add the line to the field
+      field.getObject("Tag" + tag.getFiducialId() + "Line").setTrajectory(line);
     }
   }
 
