@@ -115,11 +115,6 @@ public class PhotonvisionTelemetry {
       if (tagPoseOptional.isPresent()) {
         Pose2d tagPose = tagPoseOptional.get().toPose2d();
 
-        // Determine the color based on the tag's position
-        Color8Bit lineColor = (tagPose.getX() < PhotonvisionSubsystemConstants.FIELD_LENGTH / 2) 
-            ? new Color8Bit(0, 0, 255) // Blue for left side
-            : new Color8Bit(255, 0, 0); // Red for right side
-
         // Create a trajectory (line) from robot to tag with more than 8 points
         List<Trajectory.State> states = new ArrayList<>();
         for (int i = 0; i <= 8; i++) {
@@ -138,15 +133,13 @@ public class PhotonvisionTelemetry {
         }
         Trajectory line = new Trajectory(states);
 
-        // Add the line to the field with a unique name and color
+        // Add the line to the field with a unique name
         String lineName = "Tag" + tag.getFiducialId() + "Line";
         field.getObject(lineName).setTrajectory(line);
-        field.getObject(lineName).setColor(lineColor);
 
         // Draw a box for the tag position
         String boxName = "Tag" + tag.getFiducialId() + "Box";
         field.getObject(boxName).setPose(tagPose);
-        field.getObject(boxName).setColor(lineColor);
       }
     }
   }
