@@ -107,8 +107,12 @@ tasks.withType(JavaCompile) {
 }
 
 // Make deploy and build tasks depend on spotlessApply
-deploy.dependsOn spotlessApply
-build.dependsOn spotlessApply
+tasks.named('deploy') {
+  dependsOn spotlessApply
+}
+tasks.named('build') {
+  dependsOn spotlessApply
+}
 
 spotless {
   java {
