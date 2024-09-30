@@ -107,22 +107,28 @@ public class PhotonvisionTelemetry {
    * @param detectedTags The list of detected AprilTags.
    */
   private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
-    for (int i = 0; i < detectedTags.size(); i++) {
-      PhotonTrackedTarget tag = detectedTags.get(i);
-      Pose2d tagPose =
-          PhotonvisionSubsystemConstants.aprilTagFieldLayout
-              .getTagPose(tag.getFiducialId())
-              .get()
-              .toPose2d();
+    field.getObjects().clear(); // Clear previous lines
 
-      // Create a trajectory (line) from robot to tag
-      List<Trajectory.State> states = new ArrayList<>();
-      states.add(new Trajectory.State(0, 0, 0, robotPose, 0));
-      states.add(new Trajectory.State(1, 0, 0, tagPose, 0));
-      Trajectory line = new Trajectory(states);
+    for (PhotonTrackedTarget tag : detectedTags) {
+      Optional<Pose3d> tagPoseOptional = PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+      if (tagPoseOptional.isPresent()) {
+        Pose2d tagPose = tagPoseOptional.get().toPose2d();
 
-      // Add the line to the field
-      field.getObject("Tag" + tag.getFiducialId() + "Line").setTrajectory(line);
+        // Create a trajectory (line) from robot to tag with more than 8 points
+        List<Trajectory.State> states = new ArrayList<>();
+        for (int i = 0; i <= 8; i++) {
+          double t = i / 8.0;
+          double x = robotPose.getX() + (tagPose.getX() - robotPose.getX()) * t;
+          double y = robotPose.getY() + (tagPose.getY() - robotPose.getY()) * t;
+          double rotation = robotPose.getRotation().interpolate(tagPose.getRotation(), t).getRadians();
+          states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation().interpolate(tagPose.getRotation(), t)), 0));
+        }
+        Trajectory line = new Trajectory(states);
+
+        // Add the line to the field with a unique name
+        String lineName = "Tag" + tag.getFiducialId() + "Line";
+        field.getObject(lineName).setTrajectory(line);
+      }
     }
   }
 
