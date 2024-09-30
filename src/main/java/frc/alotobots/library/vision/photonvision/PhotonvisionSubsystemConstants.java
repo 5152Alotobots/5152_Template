@@ -1,5 +1,7 @@
 package frc.alotobots.library.vision.photonvision;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -14,6 +16,11 @@ import org.photonvision.PhotonCamera;
 @SuppressWarnings("resource")
 @UtilityClass
 public class PhotonvisionSubsystemConstants {
+
+  public static final AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+  public static final double FIELD_LENGTH = 16.54175; // in meters
 
   // OFFSETS
   // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)

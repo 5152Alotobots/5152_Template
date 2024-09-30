@@ -1,11 +1,16 @@
 package frc.alotobots.library.vision.photonvision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the Photonvision subsystem. */
 public class PhotonvisionTelemetry {
@@ -71,8 +76,10 @@ public class PhotonvisionTelemetry {
    * Updates the Shuffleboard with the latest telemetry data.
    *
    * @param estimatedPose The estimated pose from Photonvision.
+   * @param detectedTags The list of detected AprilTags.
    */
-  public void updateShuffleboard(Optional<Pose2d> estimatedPose) {
+  public void updateShuffleboard(
+      Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
     estimatedPose.ifPresent(
         pose -> {
           // Update pose entries with truncated values
@@ -82,12 +89,57 @@ public class PhotonvisionTelemetry {
 
           // Update field widget
           field.setRobotPose(pose);
+
+          // Draw tracer lines to detected tags
+          drawTracerLines(pose, detectedTags);
         });
 
-    if (!estimatedPose.isPresent()) {
+    if (estimatedPose.isEmpty()) {
       poseXEntry.setString("N/A");
       poseYEntry.setString("N/A");
       rotationEntry.setString("N/A");
+    }
+  }
+
+  /**
+   * Draws tracer lines from the robot pose to detected AprilTags.
+   *
+   * @param robotPose The current robot pose.
+   * @param detectedTags The list of detected AprilTags.
+   */
+  private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
+    for (PhotonTrackedTarget tag : detectedTags) {
+      Optional<Pose3d> tagPoseOptional =
+          PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+      if (tagPoseOptional.isPresent()) {
+        Pose2d tagPose = tagPoseOptional.get().toPose2d();
+
+        // Create a trajectory (line) from robot to tag with more than 8 points
+        List<Trajectory.State> states = new ArrayList<>();
+        for (int i = 0; i <= 8; i++) {
+          double t = i / 8.0;
+          double x = robotPose.getX() + (tagPose.getX() - robotPose.getX()) * t;
+          double y = robotPose.getY() + (tagPose.getY() - robotPose.getY()) * t;
+          double rotation =
+              robotPose.getRotation().interpolate(tagPose.getRotation(), t).getRadians();
+          states.add(
+              new Trajectory.State(
+                  t,
+                  0,
+                  0,
+                  new Pose2d(x, y, robotPose.getRotation().interpolate(tagPose.getRotation(), t)),
+                  0));
+        }
+        Trajectory line = new Trajectory(states);
+
+        // Add the line to the field with a unique name
+        String lineName = "Tag" + tag.getFiducialId() + "Line";
+        field.getObject(lineName).setTrajectory(line);
+
+        // Draw a box for the tag position
+        String boxName = "Tag" + tag.getFiducialId() + "Box";
+        field.getObject(boxName).setPose(tagPose);
+      }
     }
   }
 
