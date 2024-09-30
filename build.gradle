@@ -106,6 +106,14 @@ tasks.withType(JavaCompile) {
   options.compilerArgs.add '-XDstringConcat=inline'
 }
 
+// Make deploy and build tasks depend on spotlessApply
+tasks.named('deploy') {
+  dependsOn spotlessApply
+}
+tasks.named('build') {
+  dependsOn spotlessApply
+}
+
 spotless {
   java {
     target fileTree('.') {
