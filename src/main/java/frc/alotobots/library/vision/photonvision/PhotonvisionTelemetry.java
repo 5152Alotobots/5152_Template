@@ -1,6 +1,7 @@
 package frc.alotobots.library.vision.photonvision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
@@ -107,10 +108,10 @@ public class PhotonvisionTelemetry {
    * @param detectedTags The list of detected AprilTags.
    */
   private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
-    field.getObjects().clear(); // Clear previous lines
 
     for (PhotonTrackedTarget tag : detectedTags) {
-      Optional<Pose3d> tagPoseOptional = PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+      Optional<Pose3d> tagPoseOptional =
+          PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
       if (tagPoseOptional.isPresent()) {
         Pose2d tagPose = tagPoseOptional.get().toPose2d();
 
@@ -120,8 +121,15 @@ public class PhotonvisionTelemetry {
           double t = i / 8.0;
           double x = robotPose.getX() + (tagPose.getX() - robotPose.getX()) * t;
           double y = robotPose.getY() + (tagPose.getY() - robotPose.getY()) * t;
-          double rotation = robotPose.getRotation().interpolate(tagPose.getRotation(), t).getRadians();
-          states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation().interpolate(tagPose.getRotation(), t)), 0));
+          double rotation =
+              robotPose.getRotation().interpolate(tagPose.getRotation(), t).getRadians();
+          states.add(
+              new Trajectory.State(
+                  t,
+                  0,
+                  0,
+                  new Pose2d(x, y, robotPose.getRotation().interpolate(tagPose.getRotation(), t)),
+                  0));
         }
         Trajectory line = new Trajectory(states);
 

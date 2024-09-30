@@ -17,7 +17,8 @@ import org.photonvision.PhotonCamera;
 @UtilityClass
 public class PhotonvisionSubsystemConstants {
 
-  public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  public static final AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   // OFFSETS
   // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)
