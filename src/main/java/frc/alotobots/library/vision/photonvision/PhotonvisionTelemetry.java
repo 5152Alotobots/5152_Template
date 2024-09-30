@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /** Handles telemetry for the Photonvision subsystem. */
 public class PhotonvisionTelemetry {
