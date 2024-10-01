@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the Photonvision subsystem. */
@@ -78,7 +77,7 @@ public class PhotonvisionTelemetry {
       for (int j = 0; j < PhotonvisionSubsystemConstants.STREAM_PORTS.length; j++) {
         int port = PhotonvisionSubsystemConstants.STREAM_PORTS[j];
         String streamName = "http://" + coprocessorName + ".local:" + port + "/?action=stream";
-        
+
         photonvisionTab
             .add("PhotonVision Camera " + (i * 2 + j + 1), streamName)
             .withWidget(BuiltInWidgets.kCameraStream)
