@@ -88,7 +88,7 @@ public class PhotonvisionTelemetry {
                 .withWidget(BuiltInWidgets.kCameraStream)
                 .withPosition(8, cameraIndex * 4)
                 .withSize(6, 4);
-            
+
             cameraIndex++;
           }
         }
