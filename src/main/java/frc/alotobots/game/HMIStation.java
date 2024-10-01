@@ -19,6 +19,15 @@ import frc.alotobots.library.driverstation.JoystickUtilities;
  */
 public class HMIStation {
 
+  public static class Constants {
+    public static final double DRIVER_FWD_AXIS_DEADBAND = 0.1;
+    public static final double DRIVER_STR_AXIS_DEADBAND = 0.1;
+    public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
+    public static final double CODRIVER_SHOOTER_ARM_AXIS_DEADBAND = 0.1;
+    public static final double CODRIVER_INTAKE_ARM_AXIS_DEADBAND = 0.1;
+    public static final double TRIGGER_DEADBAND = 0.3;
+  }
+
   final SlewRateLimiter driveXSpdFilter =
       new SlewRateLimiter(DriveTrain.DRIVE_TRAIN_MAX_ACCEL, DriveTrain.DRIVE_TRAIN_MAX_DECCEL, 0);
   final SlewRateLimiter driveYSpdFilter =
@@ -33,18 +42,18 @@ public class HMIStation {
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
-  public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  // public final JoystickButton robotCentric = new JoystickButton(driverController, 2);
-  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
+  public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
+  public final JoystickButton driverButton2 = new JoystickButton(driverController, 2);
+  public final JoystickButton driverButton3 = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
 
   // Driver POV
-  public final POVButton climberUp = new POVButton(driverController, 0);
-  // public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
-  public final POVButton climberDn = new POVButton(driverController, 180);
-  public final POVButton shooterSlowButton = new POVButton(driverController, 270);
+  public final POVButton driverPOVUp = new POVButton(driverController, 0);
+  public final POVButton driverPOVRight = new POVButton(driverController, 90);
+  public final POVButton driverPOVDown = new POVButton(driverController, 180);
+  public final POVButton driverPOVLeft = new POVButton(driverController, 270);
 
   // Driver Axes
   /**
@@ -53,7 +62,9 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified.
    */
   public double driveFwdAxisRaw() {
-    return -1 * driverController.getRawAxis(1);
+    return -1
+        * JoystickUtilities.joyDeadBnd(
+            driverController.getRawAxis(1), Constants.DRIVER_FWD_AXIS_DEADBAND);
   }
 
   /**
@@ -62,16 +73,18 @@ public class HMIStation {
    * @return double Forward Axis with deadband, squared and rate limited
    */
   public double driveFwdAxis() {
-    return driveXSpdFilter.calculate(-1 * driverController.getRawAxis(1));
+    return driveXSpdFilter.calculate(driveFwdAxisRaw());
   }
 
   /**
-   * Gets the strafe raw axis value for driving. unmodified.
+   * Gets the strafe raw axis value for driving with deadband applied.
    *
    * @return The strafe axis value.
    */
   public double driveStrAxisRaw() {
-    return -1 * driverController.getRawAxis(0);
+    return -1
+        * JoystickUtilities.joyDeadBnd(
+            driverController.getRawAxis(0), Constants.DRIVER_STR_AXIS_DEADBAND);
   }
 
   /**
@@ -80,16 +93,18 @@ public class HMIStation {
    * @return double Strafe Axis with deadband, squared and rate limited
    */
   public double driveStrAxis() {
-    return driveYSpdFilter.calculate(-1 * driverController.getRawAxis(0));
+    return driveYSpdFilter.calculate(driveStrAxisRaw());
   }
 
   /**
-   * Gets the rotation axis value for driving. unmodified.
+   * Gets the rotation axis value for driving with deadband applied.
    *
    * @return The rotation axis value.
    */
   public double driveRotAxisRaw() {
-    return -1 * driverController.getRawAxis(4);
+    return -1
+        * JoystickUtilities.joyDeadBnd(
+            driverController.getRawAxis(4), Constants.DRIVER_ROT_AXIS_DEADBAND);
   }
 
   /**
@@ -98,18 +113,18 @@ public class HMIStation {
    * @return double Rotation Axis with deadband and squared
    */
   public double driveRotAxis() {
-    return -1 * JoystickUtilities.joyDeadBndSqrd(driverController.getRawAxis(4), 0.2);
+    return JoystickUtilities.joySqrd(driveRotAxisRaw());
   }
 
   // Driver Trigger Axes
   public boolean robotCentricTrigger() {
-    return (driverController.getRawAxis(2) > 0.3);
+    return (driverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
   }
 
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
   public boolean shooterOutTrigger() {
-    return (driverController.getRawAxis(3) > 0.3);
+    return (driverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
   }
 
   public final Trigger shooterShoot = new Trigger(this::shooterOutTrigger);
@@ -118,18 +133,18 @@ public class HMIStation {
   private final XboxController coDriverController = new XboxController(1);
 
   // Co-Driver Buttons
-  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  public final JoystickButton pickupNoteTransferToShooter =
-      new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterAutoShoot = new JoystickButton(coDriverController, 4);
-  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
-  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+  public final JoystickButton coDriverButton1 = new JoystickButton(coDriverController, 1);
+  public final JoystickButton coDriverButton2 = new JoystickButton(coDriverController, 2);
+  public final JoystickButton coDriverButton3 = new JoystickButton(coDriverController, 3);
+  public final JoystickButton coDriverButton4 = new JoystickButton(coDriverController, 4);
+  public final JoystickButton coDriverButton5 = new JoystickButton(coDriverController, 5);
+  public final JoystickButton coDriverButton6 = new JoystickButton(coDriverController, 6);
 
   // Co-Driver POV
-  public final POVButton sliderOut = new POVButton(coDriverController, 0);
-  public final POVButton climberSupportExtend = new POVButton(coDriverController, 90);
-  public final POVButton sliderIn = new POVButton(coDriverController, 180);
-  public final POVButton climberSupportRetract = new POVButton(coDriverController, 270);
+  public final POVButton coDriverPOVUp = new POVButton(coDriverController, 0);
+  public final POVButton coDriverPOVRight = new POVButton(coDriverController, 90);
+  public final POVButton coDriverPOVDown = new POVButton(coDriverController, 180);
+  public final POVButton coDriverPOVLeft = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
   /**
@@ -138,34 +153,37 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified.
    */
   public double shooterArmAxisRaw() {
-    return -1 * coDriverController.getRawAxis(5);
+    return -1
+        * JoystickUtilities.joyDeadBnd(
+            coDriverController.getRawAxis(5), Constants.CODRIVER_SHOOTER_ARM_AXIS_DEADBAND);
   }
 
   public double shooterArmAxis() {
-    return JoystickUtilities.joyDeadBndScaled(shooterArmAxisRaw(), .5, 1);
+    return JoystickUtilities.joyScaled(shooterArmAxisRaw(), 1);
   }
 
   /**
-   * Gets the rotation axis value for driving. unmodified.
+   * Gets the rotation axis value for driving with deadband applied.
    *
    * @return The rotation axis value.
    */
   public double intakeArmAxisRaw() {
-    return coDriverController.getRawAxis(1);
+    return JoystickUtilities.joyDeadBnd(
+        coDriverController.getRawAxis(1), Constants.CODRIVER_INTAKE_ARM_AXIS_DEADBAND);
   }
 
   // Co Driver Trigger Axes
-  public boolean shooterSpeakerPosTrigger() {
-    return (coDriverController.getRawAxis(2) > 0.3);
+  public boolean coDriverLeftTrigger() {
+    return (coDriverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
   }
 
-  public final Trigger shooterSpeakerPos = new Trigger(this::shooterSpeakerPosTrigger);
+  public final Trigger coDriverLeftTriggerTrigger = new Trigger(this::coDriverLeftTrigger);
 
-  public boolean shooterAmpPosTrigger() {
-    return (coDriverController.getRawAxis(3) > 0.3);
+  public boolean coDriverRightTrigger() {
+    return (coDriverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
   }
 
-  public final Trigger shooterAmpPos = new Trigger(this::shooterAmpPosTrigger);
+  public final Trigger coDriverRightTriggerTrigger = new Trigger(this::coDriverRightTrigger);
 
   // Aux Driver Controller
   private final XboxController auxdriverController = new XboxController(2);
