@@ -70,6 +70,14 @@ public class PhotonvisionTelemetry {
             () -> PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
         .withPosition(0, 3)
         .withSize(2, 1);
+
+    // Add PhotonVision camera stream
+    if (PhotonvisionSubsystemConstants.CAMERAS.length > 0) {
+      photonvisionTab
+          .add("PhotonVision Camera", PhotonvisionSubsystemConstants.CAMERAS[0].getVideoSource())
+          .withPosition(8, 0)
+          .withSize(3, 3);
+    }
   }
 
   /**
