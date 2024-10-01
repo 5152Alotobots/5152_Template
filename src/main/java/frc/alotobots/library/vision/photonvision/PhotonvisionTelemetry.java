@@ -76,9 +76,10 @@ public class PhotonvisionTelemetry {
     if (PhotonvisionSubsystemConstants.CAMERAS.length > 0) {
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[0];
       String cameraName = camera.getName();
+      String streamName = "photonvision_Port_1184_Output_MJPEG_Server";
       
       photonvisionTab
-          .add("PhotonVision Camera", camera)
+          .add("PhotonVision Camera", streamName)
           .withWidget(BuiltInWidgets.kCameraStream)
           .withPosition(8, 0)
           .withSize(6, 4);
