@@ -62,13 +62,13 @@ public class PhotonvisionTelemetry {
         .addBoolean(
             "Vision Pose Estimation Enabled",
             () -> PhotonvisionSubsystemConstants.USE_VISION_POSE_ESTIMATION)
-        .withPosition(0, 3)
+        .withPosition(0, 2)
         .withSize(2, 1);
     photonvisionTab
         .addBoolean(
             "Only Use Pose Estimation in Teleop",
             () -> PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
-        .withPosition(0, 4)
+        .withPosition(0, 3)
         .withSize(2, 1);
   }
 
