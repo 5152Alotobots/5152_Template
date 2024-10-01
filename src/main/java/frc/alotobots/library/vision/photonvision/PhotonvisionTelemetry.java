@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the Photonvision subsystem. */
@@ -76,7 +77,7 @@ public class PhotonvisionTelemetry {
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[0];
       String cameraName = camera.getName();
       String streamUrl = "http://photonvision.local:5800/" + cameraName;
-      
+
       photonvisionTab
           .addCamera("PhotonVision Camera", cameraName, streamUrl)
           .withPosition(8, 0)
