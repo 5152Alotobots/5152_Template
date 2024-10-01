@@ -44,14 +44,18 @@ public class PhotonvisionSubsystem extends SubsystemBase {
             "PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
       }
       for (int i = 0; i < CAMERAS.length; i++) {
-        PhotonPoseEstimator estimator =
-            new PhotonPoseEstimator(
-                aprilTagFieldLayout,
-                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                CAMERAS[i],
-                CAMERA_OFFSETS[i]);
-        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-        photonPoseEstimators.add(estimator);
+        if (CAMERAS[i] != null && CAMERAS[i].isConnected()) {
+          PhotonPoseEstimator estimator =
+              new PhotonPoseEstimator(
+                  aprilTagFieldLayout,
+                  PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                  CAMERAS[i],
+                  CAMERA_OFFSETS[i]);
+          estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+          photonPoseEstimators.add(estimator);
+        } else {
+          System.out.println("Warning: Camera " + i + " is not connected or null. Skipping.");
+        }
       }
       System.out.println("PhotonPoseEstimators initialized");
     }

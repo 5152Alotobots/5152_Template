@@ -34,9 +34,9 @@ public class PhotonvisionSubsystemConstants {
   public static final PhotonCamera[] CAMERAS =
       new PhotonCamera[] {
         new PhotonCamera("FL_AprilTag"),
-        new PhotonCamera("FR_AprilTag"),
-        new PhotonCamera("BL_AprilTag"),
-        new PhotonCamera("BR_AprilTag")
+        // new PhotonCamera("FR_AprilTag"),
+        // new PhotonCamera("BL_AprilTag"),
+        // new PhotonCamera("BR_AprilTag")
       };
 
   public static final String[] COPROCESSOR_NAMES = new String[] {"apriltagFront", "apriltagBack"};
