@@ -33,18 +33,18 @@ public class HMIStation {
   private final XboxController driverController = new XboxController(0);
 
   // Driver Buttons
-  public final JoystickButton shooterRollerIn = new JoystickButton(driverController, 1);
-  // public final JoystickButton robotCentric = new JoystickButton(driverController, 2);
-  public final JoystickButton shooterTransfer = new JoystickButton(driverController, 3);
-  public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
+  public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
+  public final JoystickButton driverButton2 = new JoystickButton(driverController, 2);
+  public final JoystickButton driverButton3 = new JoystickButton(driverController, 3);
+  public final JoystickButton driverButton4 = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
 
   // Driver POV
-  public final POVButton climberUp = new POVButton(driverController, 0);
-  // public final POVButton blankDriverPOVRightButton = new POVButton(driverController, 90);
-  public final POVButton climberDn = new POVButton(driverController, 180);
-  public final POVButton shooterSlowButton = new POVButton(driverController, 270);
+  public final POVButton driverPOVUp = new POVButton(driverController, 0);
+  public final POVButton driverPOVRight = new POVButton(driverController, 90);
+  public final POVButton driverPOVDown = new POVButton(driverController, 180);
+  public final POVButton driverPOVLeft = new POVButton(driverController, 270);
 
   // Driver Axes
   /**
@@ -118,18 +118,18 @@ public class HMIStation {
   private final XboxController coDriverController = new XboxController(1);
 
   // Co-Driver Buttons
-  public final JoystickButton shooterRollerOutSlow = new JoystickButton(coDriverController, 1);
-  public final JoystickButton pickupNoteTransferToShooter =
-      new JoystickButton(coDriverController, 2);
-  public final JoystickButton shooterAutoShoot = new JoystickButton(coDriverController, 4);
-  public final JoystickButton intakeOut = new JoystickButton(coDriverController, 5);
-  public final JoystickButton intakeIn = new JoystickButton(coDriverController, 6);
+  public final JoystickButton coDriverButton1 = new JoystickButton(coDriverController, 1);
+  public final JoystickButton coDriverButton2 = new JoystickButton(coDriverController, 2);
+  public final JoystickButton coDriverButton3 = new JoystickButton(coDriverController, 3);
+  public final JoystickButton coDriverButton4 = new JoystickButton(coDriverController, 4);
+  public final JoystickButton coDriverButton5 = new JoystickButton(coDriverController, 5);
+  public final JoystickButton coDriverButton6 = new JoystickButton(coDriverController, 6);
 
   // Co-Driver POV
-  public final POVButton sliderOut = new POVButton(coDriverController, 0);
-  public final POVButton climberSupportExtend = new POVButton(coDriverController, 90);
-  public final POVButton sliderIn = new POVButton(coDriverController, 180);
-  public final POVButton climberSupportRetract = new POVButton(coDriverController, 270);
+  public final POVButton coDriverPOVUp = new POVButton(coDriverController, 0);
+  public final POVButton coDriverPOVRight = new POVButton(coDriverController, 90);
+  public final POVButton coDriverPOVDown = new POVButton(coDriverController, 180);
+  public final POVButton coDriverPOVLeft = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
   /**
@@ -155,17 +155,17 @@ public class HMIStation {
   }
 
   // Co Driver Trigger Axes
-  public boolean shooterSpeakerPosTrigger() {
+  public boolean coDriverLeftTrigger() {
     return (coDriverController.getRawAxis(2) > 0.3);
   }
 
-  public final Trigger shooterSpeakerPos = new Trigger(this::shooterSpeakerPosTrigger);
+  public final Trigger coDriverLeftTriggerTrigger = new Trigger(this::coDriverLeftTrigger);
 
-  public boolean shooterAmpPosTrigger() {
+  public boolean coDriverRightTrigger() {
     return (coDriverController.getRawAxis(3) > 0.3);
   }
 
-  public final Trigger shooterAmpPos = new Trigger(this::shooterAmpPosTrigger);
+  public final Trigger coDriverRightTriggerTrigger = new Trigger(this::coDriverRightTrigger);
 
   // Aux Driver Controller
   private final XboxController auxdriverController = new XboxController(2);
