@@ -73,25 +73,16 @@ public class PhotonvisionTelemetry {
         .withSize(2, 1);
 
     // Add PhotonVision camera streams
-    int cameraIndex = 0;
-    for (PhotonCamera camera : PhotonvisionSubsystemConstants.CAMERAS) {
-      if (camera != null && camera.isConnected()) {
-        String cameraName = camera.getName();
-        for (int i = 0; i < PhotonvisionSubsystemConstants.COPROCESSOR_NAMES.length; i++) {
-          String coprocessorName = PhotonvisionSubsystemConstants.COPROCESSOR_NAMES[i];
-          for (int j = 0; j < PhotonvisionSubsystemConstants.STREAM_PORTS.length; j++) {
-            int port = PhotonvisionSubsystemConstants.STREAM_PORTS[j];
-            String streamName = "http://" + coprocessorName + ".local:" + port + "/?action=stream";
-
-            photonvisionTab
-                .add("PhotonVision Camera " + cameraName + " " + cameraIndex, streamName)
-                .withWidget(BuiltInWidgets.kCameraStream)
-                .withPosition(8, cameraIndex * 4)
-                .withSize(6, 4);
-
-            cameraIndex++;
-          }
-        }
+    int streamIndex = 0;
+    for (String coprocessorName : PhotonvisionSubsystemConstants.COPROCESSOR_NAMES) {
+      for (int port : PhotonvisionSubsystemConstants.STREAM_PORTS) {
+        String streamName = "http://" + coprocessorName + ".local:" + port + "/?action=stream";
+        photonvisionTab
+            .add("PhotonVision Stream " + streamIndex, streamName)
+            .withWidget(BuiltInWidgets.kCameraStream)
+            .withPosition(8, streamIndex * 4)
+            .withSize(6, 4);
+        streamIndex++;
       }
     }
   }
