@@ -75,7 +75,7 @@ public class PhotonvisionTelemetry {
     int streamIndex = 0;
     for (String coprocessorName : PhotonvisionSubsystemConstants.COPROCESSOR_NAMES) {
       for (int port : PhotonvisionSubsystemConstants.STREAM_PORTS) {
-        String streamName = "http://" + coprocessorName + ".local:" + port + "/?action=stream";
+        String streamName = "/CameraPublisher/" + coprocessorName + "_Port_" + port + "_Output_MJPEG_Server";
         photonvisionTab
             .add("PhotonVision Stream " + streamIndex, streamName)
             .withWidget(BuiltInWidgets.kCameraStream)
