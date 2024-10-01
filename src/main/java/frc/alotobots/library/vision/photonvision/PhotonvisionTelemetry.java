@@ -77,7 +77,7 @@ public class PhotonvisionTelemetry {
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[i];
       String cameraName = camera.getName();
       String streamName = "photonvision_" + cameraName + "_Output_MJPEG_Server";
-      
+
       photonvisionTab
           .add("PhotonVision Camera " + (i + 1), streamName)
           .withWidget(BuiltInWidgets.kCameraStream)
