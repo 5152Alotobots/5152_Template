@@ -73,8 +73,12 @@ public class PhotonvisionTelemetry {
 
     // Add PhotonVision camera stream
     if (PhotonvisionSubsystemConstants.CAMERAS.length > 0) {
+      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[0];
+      String cameraName = camera.getName();
+      String streamUrl = "http://photonvision.local:5800/" + cameraName;
+      
       photonvisionTab
-          .add("PhotonVision Camera", PhotonvisionSubsystemConstants.CAMERAS[0].getVideoSource())
+          .addCamera("PhotonVision Camera", cameraName, streamUrl)
           .withPosition(8, 0)
           .withSize(3, 3);
     }
