@@ -76,12 +76,12 @@ public class PhotonvisionTelemetry {
     if (PhotonvisionSubsystemConstants.CAMERAS.length > 0) {
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[0];
       String cameraName = camera.getName();
-      String streamUrl = "http://photonvision.local:5800/" + cameraName;
-
+      
       photonvisionTab
-          .addCamera("PhotonVision Camera", cameraName, streamUrl)
+          .add("PhotonVision Camera", camera)
+          .withWidget(BuiltInWidgets.kCameraStream)
           .withPosition(8, 0)
-          .withSize(3, 3);
+          .withSize(6, 4);
     }
   }
 
