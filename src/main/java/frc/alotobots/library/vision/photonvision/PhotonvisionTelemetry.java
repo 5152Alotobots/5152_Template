@@ -72,16 +72,16 @@ public class PhotonvisionTelemetry {
         .withPosition(0, 3)
         .withSize(2, 1);
 
-    // Add PhotonVision camera stream
-    if (PhotonvisionSubsystemConstants.CAMERAS.length > 0) {
-      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[0];
+    // Add PhotonVision camera streams
+    for (int i = 0; i < PhotonvisionSubsystemConstants.CAMERAS.length; i++) {
+      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[i];
       String cameraName = camera.getName();
-      String streamName = "photonvision_Port_1184_Output_MJPEG_Server";
+      String streamName = "photonvision_" + cameraName + "_Output_MJPEG_Server";
       
       photonvisionTab
-          .add("PhotonVision Camera", streamName)
+          .add("PhotonVision Camera " + (i + 1), streamName)
           .withWidget(BuiltInWidgets.kCameraStream)
-          .withPosition(8, 0)
+          .withPosition(8, i * 4)
           .withSize(6, 4);
     }
   }
