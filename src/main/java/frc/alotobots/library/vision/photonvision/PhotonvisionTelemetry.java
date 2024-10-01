@@ -70,21 +70,6 @@ public class PhotonvisionTelemetry {
             () -> PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
         .withPosition(0, 3)
         .withSize(2, 1);
-
-    // Add PhotonVision camera streams
-    int streamIndex = 0;
-    for (String coprocessorName : PhotonvisionSubsystemConstants.COPROCESSOR_NAMES) {
-      for (int port : PhotonvisionSubsystemConstants.STREAM_PORTS) {
-        String streamName =
-            "/CameraPublisher/" + coprocessorName + "_Port_" + port + "_Output_MJPEG_Server";
-        photonvisionTab
-            .add(streamName, streamName)
-            .withWidget(BuiltInWidgets.kCameraStream)
-            .withPosition(8, streamIndex * 4)
-            .withSize(6, 4);
-        streamIndex++;
-      }
-    }
   }
 
   /**

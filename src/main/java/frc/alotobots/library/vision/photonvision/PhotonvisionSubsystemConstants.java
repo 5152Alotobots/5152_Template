@@ -39,10 +39,6 @@ public class PhotonvisionSubsystemConstants {
         // new PhotonCamera("BR_AprilTag")
       };
 
-  public static final String[] COPROCESSOR_NAMES = new String[] {"apriltagFront", "apriltagBack"};
-
-  public static final int[] STREAM_PORTS = new int[] {1184, 1186};
-
   public static final boolean USE_VISION_POSE_ESTIMATION = true;
   public static final boolean ONLY_USE_POSE_ESTIMATION_IN_TELEOP = false;
 
