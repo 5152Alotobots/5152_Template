@@ -44,7 +44,7 @@ public class Auto {
   /** Adds the auto chooser to the Shuffleboard. */
   private void addAutoChooserToShuffleboard() {
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
-    driveTab.add("Auto Chooser", autoChooser).withSize(2, 1).withPosition(2, 5);
+    driveTab.add("Auto Chooser", autoChooser).withSize(2, 1).withPosition(2, 4);
   }
 
   /**
