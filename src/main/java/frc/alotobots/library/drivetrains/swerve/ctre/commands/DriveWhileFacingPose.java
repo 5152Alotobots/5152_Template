@@ -27,6 +27,10 @@ public class DriveWhileFacingPose extends Command {
     this.subSysSwerve = subSysSwerve;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
+    if (subSysSwerve == null) {
+      System.out.println("ALERT: Not running "+this.getClass().getName()+" | Reason: One or more subsystem dependencies are not enabled!");
+      end(true);
+    }
     addRequirements(subSysSwerve);
     drive.HeadingController.setPID(7, 0, 0);
   }

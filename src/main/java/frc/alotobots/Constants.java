@@ -18,7 +18,7 @@ public final class Constants {
   public static final class SubsystemConfig {
     public static final boolean SWERVE_DRIVE_SUBSYSTEM_ENABLED = true;
     public static final boolean BLING_SUBSYSTEM_ENABLED = true;
-    public static final boolean LIMELIGHT_SUBSYSTEM_ENABLED = true;
+    public static final boolean LIMELIGHT_SUBSYSTEM_ENABLED = false;
     public static final boolean PHOTONVISION_SUBSYSTEM_ENABLED = true;
     public static final boolean PNEUMATICS_SUBSYSTEM_ENABLED = true;
   }
