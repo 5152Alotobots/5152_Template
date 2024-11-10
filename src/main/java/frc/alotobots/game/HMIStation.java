@@ -20,12 +20,13 @@ import frc.alotobots.library.driverstation.JoystickUtilities;
 public class HMIStation {
 
   public static class Constants {
+    // Basic drive control deadbands
     public static final double DRIVER_FWD_AXIS_DEADBAND = 0.1;
     public static final double DRIVER_STR_AXIS_DEADBAND = 0.1;
     public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
-    public static final double CODRIVER_SHOOTER_ARM_AXIS_DEADBAND = 0.1;
-    public static final double CODRIVER_INTAKE_ARM_AXIS_DEADBAND = 0.1;
     public static final double TRIGGER_DEADBAND = 0.3;
+    
+    // Add game-specific deadbands here following the pattern above
   }
 
   final SlewRateLimiter driveXSpdFilter =
@@ -123,11 +124,11 @@ public class HMIStation {
 
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
-  public boolean shooterOutTrigger() {
-    return (driverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
-  }
-
-  public final Trigger shooterShoot = new Trigger(this::shooterOutTrigger);
+  // Add game-specific trigger methods here following this pattern:
+  // public boolean mechanismTrigger() {
+  //   return (driverController.getRawAxis(X) > Constants.TRIGGER_DEADBAND);
+  // }
+  // public final Trigger mechanismTrigger = new Trigger(this::mechanismTrigger);
 
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
@@ -147,30 +148,15 @@ public class HMIStation {
   public final POVButton coDriverPOVLeft = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
-  /**
-   * Gets the forward axis value for driving.
-   *
-   * @return The value used for driving forward. unmodified.
-   */
-  public double shooterArmAxisRaw() {
-    return -1
-        * JoystickUtilities.joyDeadBnd(
-            coDriverController.getRawAxis(5), Constants.CODRIVER_SHOOTER_ARM_AXIS_DEADBAND);
-  }
-
-  public double shooterArmAxis() {
-    return JoystickUtilities.joyScaled(shooterArmAxisRaw(), 1);
-  }
-
-  /**
-   * Gets the rotation axis value for driving with deadband applied.
-   *
-   * @return The rotation axis value.
-   */
-  public double intakeArmAxisRaw() {
-    return JoystickUtilities.joyDeadBnd(
-        coDriverController.getRawAxis(1), Constants.CODRIVER_INTAKE_ARM_AXIS_DEADBAND);
-  }
+  // Add game-specific axis methods here following this pattern:
+  // public double mechanismAxisRaw() {
+  //   return JoystickUtilities.joyDeadBnd(
+  //       coDriverController.getRawAxis(X), Constants.MECHANISM_DEADBAND);
+  // }
+  //
+  // public double mechanismAxis() {
+  //   return JoystickUtilities.joyScaled(mechanismAxisRaw(), 1);
+  // }
 
   // Co Driver Trigger Axes
   public boolean coDriverLeftTrigger() {
