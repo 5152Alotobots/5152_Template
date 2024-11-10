@@ -124,11 +124,13 @@ public class HMIStation {
 
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
-  // Add game-specific trigger methods here following this pattern:
-  // public boolean mechanismTrigger() {
-  //   return (driverController.getRawAxis(X) > Constants.TRIGGER_DEADBAND);
-  // }
-  // public final Trigger mechanismTrigger = new Trigger(this::mechanismTrigger);
+  /* Add game-specific trigger methods here following this pattern:
+   * 
+   * public boolean mechanismTrigger() {
+   *   return (driverController.getRawAxis(X) > Constants.TRIGGER_DEADBAND);
+   * }
+   * public final Trigger mechanismTrigger = new Trigger(this::mechanismTrigger);
+   */
 
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
@@ -148,15 +150,17 @@ public class HMIStation {
   public final POVButton coDriverPOVLeft = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
-  // Add game-specific axis methods here following this pattern:
-  // public double mechanismAxisRaw() {
-  //   return JoystickUtilities.joyDeadBnd(
-  //       coDriverController.getRawAxis(X), Constants.MECHANISM_DEADBAND);
-  // }
-  //
-  // public double mechanismAxis() {
-  //   return JoystickUtilities.joyScaled(mechanismAxisRaw(), 1);
-  // }
+  /* Add game-specific axis methods here following this pattern:
+   *
+   * public double mechanismAxisRaw() {
+   *   return JoystickUtilities.joyDeadBnd(
+   *       coDriverController.getRawAxis(X), Constants.MECHANISM_DEADBAND);
+   * }
+   *
+   * public double mechanismAxis() {
+   *   return JoystickUtilities.joyScaled(mechanismAxisRaw(), 1);
+   * }
+   */
 
   // Co Driver Trigger Axes
   public boolean coDriverLeftTrigger() {
