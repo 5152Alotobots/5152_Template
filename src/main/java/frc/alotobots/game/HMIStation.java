@@ -73,6 +73,14 @@ public class HMIStation {
    *
    * @return The value used for driving forward. unmodified.
    */
+  /**
+   * Gets the raw forward axis value for driving.
+   * The -1 multiplication inverts the joystick value because pushing forward
+   * returns a positive value, but we want forward motion to be negative in our
+   * coordinate system.
+   *
+   * @return The value used for driving forward with deadband applied.
+   */
   public double driveFwdAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
@@ -93,6 +101,14 @@ public class HMIStation {
    *
    * @return The strafe axis value.
    */
+  /**
+   * Gets the strafe raw axis value for driving.
+   * The -1 multiplication inverts the joystick value because pushing right
+   * returns a positive value, but we want right motion to be negative in our
+   * coordinate system.
+   *
+   * @return The strafe axis value with deadband applied.
+   */
   public double driveStrAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
@@ -112,6 +128,14 @@ public class HMIStation {
    * Gets the rotation axis value for driving with deadband applied.
    *
    * @return The rotation axis value.
+   */
+  /**
+   * Gets the rotation axis value for driving.
+   * The -1 multiplication inverts the joystick value because pushing right
+   * returns a positive value, but we want clockwise rotation to be negative
+   * in our coordinate system.
+   *
+   * @return The rotation axis value with deadband applied.
    */
   public double driveRotAxisRaw() {
     return -1
