@@ -31,7 +31,13 @@ public class PhotonvisionSubsystemConstants {
             new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45)))
       };
   // CAMERAS
-  public static final PhotonCamera[] CAMERAS = new PhotonCamera[] {new PhotonCamera("FL_AprilTag")};
+  public static final PhotonCamera[] CAMERAS =
+      new PhotonCamera[] {
+        new PhotonCamera("FL_AprilTag"),
+        // new PhotonCamera("FR_AprilTag"),
+        // new PhotonCamera("BL_AprilTag"),
+        // new PhotonCamera("BR_AprilTag")
+      };
 
   public static final boolean USE_VISION_POSE_ESTIMATION = true;
   public static final boolean ONLY_USE_POSE_ESTIMATION_IN_TELEOP = false;

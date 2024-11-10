@@ -4,7 +4,6 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.alotobots.Constants.SubsystemConfig;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -34,29 +33,6 @@ public class Robot extends TimedRobot {
     // Limelight
     PortForwarder.add(5800, "10.51.52.12", 5800);
     PortForwarder.add(5801, "10.51.52.12", 5801);
-
-    // Log enabled subsystems
-    logEnabledSubsystems();
-  }
-
-  /** Logs the current state of enabled/disabled subsystems. */
-  private void logEnabledSubsystems() {
-    System.out.println("=== Subsystem Status ===");
-    System.out.println(
-        "Swerve Drive Subsystem: "
-            + (SubsystemConfig.SWERVE_DRIVE_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println(
-        "Bling Subsystem: " + (SubsystemConfig.BLING_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println(
-        "Limelight Subsystem: "
-            + (SubsystemConfig.LIMELIGHT_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println(
-        "Photonvision Subsystem: "
-            + (SubsystemConfig.PHOTONVISION_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println(
-        "Pneumatics Subsystem: "
-            + (SubsystemConfig.PNEUMATICS_SUBSYSTEM_ENABLED ? "Enabled" : "Disabled"));
-    System.out.println("========================");
   }
 
   /**

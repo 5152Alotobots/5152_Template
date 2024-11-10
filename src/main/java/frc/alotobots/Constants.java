@@ -13,16 +13,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Constants {
 
-  /** Subsystem enable/disable flags for debugging purposes. */
-  @UtilityClass
-  public static final class SubsystemConfig {
-    public static final boolean SWERVE_DRIVE_SUBSYSTEM_ENABLED = true;
-    public static final boolean BLING_SUBSYSTEM_ENABLED = true;
-    public static final boolean LIMELIGHT_SUBSYSTEM_ENABLED = true;
-    public static final boolean PHOTONVISION_SUBSYSTEM_ENABLED = true;
-    public static final boolean PNEUMATICS_SUBSYSTEM_ENABLED = true;
-  }
-
   @UtilityClass
   public static final class Robot {
     public static final boolean TUNE_MODE = false;

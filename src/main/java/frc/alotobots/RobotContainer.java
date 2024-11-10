@@ -2,7 +2,6 @@ package frc.alotobots;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.alotobots.Constants.SubsystemConfig;
 import frc.alotobots.game.HMIStation;
 import frc.alotobots.library.bling.BlingSubsystem;
 import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
@@ -40,17 +39,11 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Initialize subsystems
-    drivetrainSubsystem =
-        SubsystemConfig.SWERVE_DRIVE_SUBSYSTEM_ENABLED ? TunerConstants.DRIVE_TRAIN : null;
-    blingSubsystem = SubsystemConfig.BLING_SUBSYSTEM_ENABLED ? new BlingSubsystem() : null;
-    limelightSubsystem =
-        SubsystemConfig.LIMELIGHT_SUBSYSTEM_ENABLED
-            ? new LimelightSubsystem(blingSubsystem, drivetrainSubsystem)
-            : null;
-    photonvisionSubsystem =
-        SubsystemConfig.PHOTONVISION_SUBSYSTEM_ENABLED ? new PhotonvisionSubsystem() : null;
-    pneumaticsSubsystem =
-        SubsystemConfig.PNEUMATICS_SUBSYSTEM_ENABLED ? new PneumaticsSubsystem() : null;
+    drivetrainSubsystem = TunerConstants.DRIVE_TRAIN;
+    blingSubsystem = new BlingSubsystem();
+    limelightSubsystem = new LimelightSubsystem(blingSubsystem, drivetrainSubsystem);
+    photonvisionSubsystem = new PhotonvisionSubsystem();
+    pneumaticsSubsystem = new PneumaticsSubsystem();
 
     // Initialize HMI
     hmiStation = new HMIStation();
@@ -66,39 +59,32 @@ public class RobotContainer {
 
   /** Configures default commands for subsystems. */
   private void configureDefaultCommands() {
-    if (drivetrainSubsystem != null) {
-      drivetrainSubsystem.setDefaultCommand(
-          drivetrainSubsystem.applyRequest(
-              () ->
-                  driveFieldCentric
-                      .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                      .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                      .withRotationalRate(
-                          hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
-    }
-
-    if (blingSubsystem != null) {
-      blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
-    }
+    drivetrainSubsystem.setDefaultCommand(
+        drivetrainSubsystem.applyRequest(
+            () ->
+                driveFieldCentric
+                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                    .withRotationalRate(
+                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+    blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
 
     // Add other subsystem default commands here as needed
   }
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
-    if (drivetrainSubsystem != null) {
-      hmiStation.robotCentric.whileTrue(
-          drivetrainSubsystem.applyRequest(
-              () ->
-                  driveRobotCentric
-                      .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                      .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                      .withRotationalRate(
-                          hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+    hmiStation.robotCentric.whileTrue(
+        drivetrainSubsystem.applyRequest(
+            () ->
+                driveRobotCentric
+                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                    .withRotationalRate(
+                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
 
-      hmiStation.gyroResetButton.onTrue(
-          drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
-    }
+    hmiStation.gyroResetButton.onTrue(
+        drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
 
     // Add other logic-based commands here
   }
@@ -114,8 +100,6 @@ public class RobotContainer {
 
   /** Sets up the PhotonVision subsystem for the drivetrain. */
   public void setupVision() {
-    if (drivetrainSubsystem != null && photonvisionSubsystem != null) {
-      drivetrainSubsystem.setPhotonVisionSubSys(photonvisionSubsystem);
-    }
+    drivetrainSubsystem.setPhotonVisionSubSys(photonvisionSubsystem);
   }
 }
