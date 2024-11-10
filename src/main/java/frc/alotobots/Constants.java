@@ -13,7 +13,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Constants {
 
-
   @UtilityClass
   public static final class Robot {
     public static final boolean TUNE_MODE = false;

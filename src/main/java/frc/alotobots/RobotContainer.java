@@ -60,13 +60,13 @@ public class RobotContainer {
   /** Configures default commands for subsystems. */
   private void configureDefaultCommands() {
     drivetrainSubsystem.setDefaultCommand(
-          drivetrainSubsystem.applyRequest(
-              () ->
-                  driveFieldCentric
-                      .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                      .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                      .withRotationalRate(
-                          hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+        drivetrainSubsystem.applyRequest(
+            () ->
+                driveFieldCentric
+                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                    .withRotationalRate(
+                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
     blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
 
     // Add other subsystem default commands here as needed
@@ -75,13 +75,13 @@ public class RobotContainer {
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
     hmiStation.robotCentric.whileTrue(
-          drivetrainSubsystem.applyRequest(
-              () ->
-                  driveRobotCentric
-                      .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                      .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                      .withRotationalRate(
-                          hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+        drivetrainSubsystem.applyRequest(
+            () ->
+                driveRobotCentric
+                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                    .withRotationalRate(
+                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
 
     hmiStation.gyroResetButton.onTrue(
         drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
