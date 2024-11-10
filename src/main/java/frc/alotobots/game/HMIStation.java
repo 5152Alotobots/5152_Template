@@ -26,7 +26,11 @@ public class HMIStation {
     public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
     public static final double TRIGGER_DEADBAND = 0.3;
     
-    // Add game-specific deadbands here following the pattern above
+    /* Example game-specific deadbands:
+     * public static final double PRIMARY_MECHANISM_AXIS_DEADBAND = 0.1;
+     * public static final double SECONDARY_MECHANISM_AXIS_DEADBAND = 0.15;
+     * public static final double TERTIARY_MECHANISM_AXIS_DEADBAND = 0.2;
+     */
   }
 
   final SlewRateLimiter driveXSpdFilter =
@@ -42,7 +46,14 @@ public class HMIStation {
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
 
-  // Driver Buttons
+  /* Driver Buttons - Consider renaming these based on function rather than number
+   * Example naming pattern:
+   * Button 1 (A) -> primaryActionButton
+   * Button 2 (B) -> secondaryActionButton
+   * Button 3 (X) -> tertiaryActionButton
+   * Button 4 (Y) -> quaternaryActionButton
+   * etc.
+   */
   public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
   public final JoystickButton driverButton2 = new JoystickButton(driverController, 2);
   public final JoystickButton driverButton3 = new JoystickButton(driverController, 3);
@@ -135,7 +146,14 @@ public class HMIStation {
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
 
-  // Co-Driver Buttons
+  /* Co-Driver Buttons - Consider renaming these based on mechanism control
+   * Example naming pattern:
+   * Button 1 (A) -> primaryMechanismButton 
+   * Button 2 (B) -> secondaryMechanismButton
+   * Button 3 (X) -> tertiaryMechanismButton
+   * Button 4 (Y) -> quaternaryMechanismButton
+   * etc.
+   */
   public final JoystickButton coDriverButton1 = new JoystickButton(coDriverController, 1);
   public final JoystickButton coDriverButton2 = new JoystickButton(coDriverController, 2);
   public final JoystickButton coDriverButton3 = new JoystickButton(coDriverController, 3);
