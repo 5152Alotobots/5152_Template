@@ -25,7 +25,7 @@ public class HMIStation {
     public static final double DRIVER_STR_AXIS_DEADBAND = 0.1;
     public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
     public static final double TRIGGER_DEADBAND = 0.3;
-    
+
     /* Example game-specific deadbands:
      * public static final double PRIMARY_MECHANISM_AXIS_DEADBAND = 0.1;
      * public static final double SECONDARY_MECHANISM_AXIS_DEADBAND = 0.15;
@@ -74,10 +74,9 @@ public class HMIStation {
    * @return The value used for driving forward. unmodified.
    */
   /**
-   * Gets the raw forward axis value for driving.
-   * The -1 multiplication inverts the joystick value because pushing forward
-   * returns a positive value, but we want forward motion to be negative in our
-   * coordinate system.
+   * Gets the raw forward axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing forward returns a positive value, but we want forward motion to be negative in
+   * our coordinate system.
    *
    * @return The value used for driving forward with deadband applied.
    */
@@ -102,9 +101,8 @@ public class HMIStation {
    * @return The strafe axis value.
    */
   /**
-   * Gets the strafe raw axis value for driving.
-   * The -1 multiplication inverts the joystick value because pushing right
-   * returns a positive value, but we want right motion to be negative in our
+   * Gets the strafe raw axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing right returns a positive value, but we want right motion to be negative in our
    * coordinate system.
    *
    * @return The strafe axis value with deadband applied.
@@ -130,9 +128,8 @@ public class HMIStation {
    * @return The rotation axis value.
    */
   /**
-   * Gets the rotation axis value for driving.
-   * The -1 multiplication inverts the joystick value because pushing right
-   * returns a positive value, but we want clockwise rotation to be negative
+   * Gets the rotation axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing right returns a positive value, but we want clockwise rotation to be negative
    * in our coordinate system.
    *
    * @return The rotation axis value with deadband applied.
@@ -160,7 +157,7 @@ public class HMIStation {
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
   /* Add game-specific trigger methods here following this pattern:
-   * 
+   *
    * public boolean mechanismTrigger() {
    *   return (driverController.getRawAxis(X) > Constants.TRIGGER_DEADBAND);
    * }
@@ -172,7 +169,7 @@ public class HMIStation {
 
   /* Co-Driver Buttons - Consider renaming these based on mechanism control
    * Example naming pattern:
-   * Button 1 (A) -> primaryMechanismButton 
+   * Button 1 (A) -> primaryMechanismButton
    * Button 2 (B) -> secondaryMechanismButton
    * Button 3 (X) -> tertiaryMechanismButton
    * Button 4 (Y) -> quaternaryMechanismButton
