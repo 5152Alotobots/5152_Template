@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.ArrayList;
@@ -15,27 +16,54 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 /** Handles telemetry for the Photonvision subsystem. */
 public class PhotonvisionTelemetry {
   private final ShuffleboardTab photonvisionTab;
-  private final ShuffleboardLayout poseList;
+  private final ShuffleboardLayout mainPoseList;
   private final Field2d field;
-
-  // Pose entries
+  
+  // Main pose entries
   private final GenericEntry poseXEntry;
   private final GenericEntry poseYEntry;
   private final GenericEntry rotationEntry;
+
+  // Per-camera widgets
+  private final List<CameraWidget> cameraWidgets = new ArrayList<>();
+
+  private static class CameraWidget {
+    final ShuffleboardLayout poseList;
+    final GenericEntry poseXEntry;
+    final GenericEntry poseYEntry;
+    final GenericEntry rotationEntry;
+    final GenericEntry connectionStatus;
+    final GenericEntry enabledEntry;
+    
+    CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
+      poseList = tab
+          .getLayout("Camera " + cameraName, BuiltInLayouts.kList)
+          .withSize(2, 3)
+          .withPosition(0, position)
+          .withProperties(Map.of("Label position", "LEFT"));
+      
+      poseXEntry = poseList.add("Pose X", "N/A").getEntry();
+      poseYEntry = poseList.add("Pose Y", "N/A").getEntry();
+      rotationEntry = poseList.add("Rotation", "N/A").getEntry();
+      connectionStatus = poseList.add("Connected", false).getEntry();
+      enabledEntry = poseList.add("Enabled", true).getEntry();
+    }
+  }
 
   /** Constructs a new PhotonvisionTelemetry object. */
   public PhotonvisionTelemetry() {
     this.photonvisionTab = Shuffleboard.getTab("Photonvision");
     this.field = new Field2d();
-    this.poseList = initializePoseList();
+    this.mainPoseList = initializeMainPoseList();
 
-    // Initialize pose entries
-    this.poseXEntry = poseList.add("Pose X", 0.0).getEntry();
-    this.poseYEntry = poseList.add("Pose Y", 0.0).getEntry();
-    this.rotationEntry = poseList.add("Rotation", 0.0).getEntry();
+    // Initialize main pose entries
+    this.poseXEntry = mainPoseList.add("Pose X", 0.0).getEntry();
+    this.poseYEntry = mainPoseList.add("Pose Y", 0.0).getEntry();
+    this.rotationEntry = mainPoseList.add("Rotation", 0.0).getEntry();
 
     initializeField();
     initializeOtherWidgets();
+    initializeCameraWidgets();
   }
 
   /**
@@ -43,7 +71,7 @@ public class PhotonvisionTelemetry {
    *
    * @return The initialized ShuffleboardLayout for pose information.
    */
-  private ShuffleboardLayout initializePoseList() {
+  private ShuffleboardLayout initializeMainPoseList() {
     return photonvisionTab
         .getLayout("Pose", BuiltInLayouts.kList)
         .withSize(2, 2)
@@ -54,6 +82,16 @@ public class PhotonvisionTelemetry {
   /** Initializes the field widget in Shuffleboard. */
   private void initializeField() {
     photonvisionTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
+  }
+
+  /** Initializes camera-specific widgets in Shuffleboard. */
+  private void initializeCameraWidgets() {
+    for (int i = 0; i < PhotonvisionSubsystemConstants.CAMERAS.length; i++) {
+      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[i];
+      if (camera != null) {
+        cameraWidgets.add(new CameraWidget(photonvisionTab, camera.getName(), 4 + (i * 3)));
+      }
+    }
   }
 
   /** Initializes other widgets in Shuffleboard. */
@@ -73,6 +111,38 @@ public class PhotonvisionTelemetry {
   }
 
   /**
+   * Updates the camera-specific widgets with the latest data.
+   *
+   * @param cameras The array of PhotonCameras to get data from
+   */
+  private void updateCameraWidgets(PhotonCamera[] cameras) {
+    for (int i = 0; i < cameras.length && i < cameraWidgets.size(); i++) {
+      PhotonCamera camera = cameras[i];
+      CameraWidget widget = cameraWidgets.get(i);
+      
+      if (camera != null) {
+        var result = camera.getLatestResult();
+        boolean isConnected = camera.isConnected();
+        
+        widget.connectionStatus.setBoolean(isConnected);
+        
+        if (result.hasTargets()) {
+          var bestTarget = result.getBestTarget();
+          var camToTarget = bestTarget.getBestCameraToTarget();
+          
+          widget.poseXEntry.setDouble(truncate(camToTarget.getX(), 3));
+          widget.poseYEntry.setDouble(truncate(camToTarget.getY(), 3));
+          widget.rotationEntry.setDouble(truncate(camToTarget.getRotation().getZ(), 3));
+        } else {
+          widget.poseXEntry.setString("N/A");
+          widget.poseYEntry.setString("N/A");
+          widget.rotationEntry.setString("N/A");
+        }
+      }
+    }
+  }
+
+  /**
    * Updates the Shuffleboard with the latest telemetry data.
    *
    * @param estimatedPose The estimated pose from Photonvision.
@@ -80,6 +150,8 @@ public class PhotonvisionTelemetry {
    */
   public void updateShuffleboard(
       Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
+    // Update camera widgets
+    updateCameraWidgets(PhotonvisionSubsystemConstants.CAMERAS);
     estimatedPose.ifPresent(
         pose -> {
           // Update pose entries with truncated values

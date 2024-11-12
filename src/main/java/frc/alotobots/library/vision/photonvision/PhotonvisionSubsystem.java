@@ -22,13 +22,17 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  */
 public class PhotonvisionSubsystem extends SubsystemBase {
   private final AprilTagFieldLayout aprilTagFieldLayout;
-  private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
-  private PhotonvisionTelemetry telemetry;
+  private final ArrayList<PhotonPoseEstimator> photonPoseEstimators;
+  private final PhotonvisionTelemetry telemetry;
+  private final boolean[] cameraEnabled;
 
   /** Constructs a new PhotonvisionSubsystem. */
   public PhotonvisionSubsystem() {
     System.out.println("Initializing PhotonvisionSubsystem");
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    photonPoseEstimators = new ArrayList<>();
+    cameraEnabled = new boolean[CAMERAS.length];
+    Arrays.fill(cameraEnabled, true);
     initializePoseEstimators();
     telemetry = new PhotonvisionTelemetry();
     System.out.println("PhotonvisionSubsystem initialized");
