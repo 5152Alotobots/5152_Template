@@ -31,8 +31,6 @@ public class PhotonvisionSubsystem extends SubsystemBase {
 
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
-  private static final double POSITION_ALPHA = 0.3; // Lower = more smoothing
-  private static final double ROTATION_ALPHA = 0.2; // Lower = more smoothing
 
   /** Constructs a new PhotonvisionSubsystem. */
   public PhotonvisionSubsystem() {
@@ -174,10 +172,6 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         .map(pair -> new Pair<>(pair.getFirst().toPose2d(), pair.getSecond()));
   }
 
-  private static final double MAX_POSE_DEVIATION_METERS =
-      1.0; // Maximum allowed deviation from median
-  private static final double MIN_TAG_WEIGHT = 0.3; // Minimum weight for single tag poses
-  private static final double MAX_TAG_WEIGHT = 1.0; // Maximum weight for multi-tag poses
 
   /**
    * Processes and averages the estimated robot poses from multiple cameras with outlier rejection
@@ -242,28 +236,28 @@ public class PhotonvisionSubsystem extends SubsystemBase {
     } else {
       // Smooth position
       double smoothedX =
-          exponentialSmooth(lastSmoothedPose.getX(), averagePose.getX(), POSITION_ALPHA);
+          exponentialSmooth(lastSmoothedPose.getX(), averagePose.getX(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
       double smoothedY =
-          exponentialSmooth(lastSmoothedPose.getY(), averagePose.getY(), POSITION_ALPHA);
+          exponentialSmooth(lastSmoothedPose.getY(), averagePose.getY(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
       double smoothedZ =
-          exponentialSmooth(lastSmoothedPose.getZ(), averagePose.getZ(), POSITION_ALPHA);
+          exponentialSmooth(lastSmoothedPose.getZ(), averagePose.getZ(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
 
       // Smooth rotation
       double smoothedRotX =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getX(),
               averagePose.getRotation().getX(),
-              ROTATION_ALPHA);
+              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
       double smoothedRotY =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getY(),
               averagePose.getRotation().getY(),
-              ROTATION_ALPHA);
+              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
       double smoothedRotZ =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getZ(),
               averagePose.getRotation().getZ(),
-              ROTATION_ALPHA);
+              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
 
       lastSmoothedPose =
           new Pose3d(

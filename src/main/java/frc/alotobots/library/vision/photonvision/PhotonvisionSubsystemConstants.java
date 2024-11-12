@@ -60,4 +60,13 @@ public class PhotonvisionSubsystemConstants {
           1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset
           // correctly it is unnecessary to correct it with vision
           );
+
+  // Pose estimation constants
+  public static final double MAX_POSE_DEVIATION_METERS = 1.0; // Maximum allowed deviation from median
+  public static final double MIN_TAG_WEIGHT = 0.3; // Minimum weight for single tag poses
+  public static final double MAX_TAG_WEIGHT = 1.0; // Maximum weight for multi-tag poses
+  
+  // Smoothing constants
+  public static final double POSITION_ALPHA = 0.3; // Lower = more smoothing (0-1)
+  public static final double ROTATION_ALPHA = 0.2; // Lower = more smoothing (0-1)
 }
