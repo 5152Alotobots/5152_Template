@@ -28,7 +28,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
   private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
   private final PhotonvisionTelemetry telemetry;
   private final boolean[] cameraEnabled;
-  
+
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
   private static final double POSITION_ALPHA = 0.3; // Lower = more smoothing
@@ -241,18 +241,36 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       lastSmoothedPose = averagePose;
     } else {
       // Smooth position
-      double smoothedX = exponentialSmooth(lastSmoothedPose.getX(), averagePose.getX(), POSITION_ALPHA);
-      double smoothedY = exponentialSmooth(lastSmoothedPose.getY(), averagePose.getY(), POSITION_ALPHA);
-      double smoothedZ = exponentialSmooth(lastSmoothedPose.getZ(), averagePose.getZ(), POSITION_ALPHA);
-      
-      // Smooth rotation
-      double smoothedRotX = exponentialSmooth(lastSmoothedPose.getRotation().getX(), averagePose.getRotation().getX(), ROTATION_ALPHA);
-      double smoothedRotY = exponentialSmooth(lastSmoothedPose.getRotation().getY(), averagePose.getRotation().getY(), ROTATION_ALPHA);
-      double smoothedRotZ = exponentialSmooth(lastSmoothedPose.getRotation().getZ(), averagePose.getRotation().getZ(), ROTATION_ALPHA);
+      double smoothedX =
+          exponentialSmooth(lastSmoothedPose.getX(), averagePose.getX(), POSITION_ALPHA);
+      double smoothedY =
+          exponentialSmooth(lastSmoothedPose.getY(), averagePose.getY(), POSITION_ALPHA);
+      double smoothedZ =
+          exponentialSmooth(lastSmoothedPose.getZ(), averagePose.getZ(), POSITION_ALPHA);
 
-      lastSmoothedPose = new Pose3d(
-          smoothedX, smoothedY, smoothedZ,
-          new Rotation3d(smoothedRotX, smoothedRotY, smoothedRotZ));
+      // Smooth rotation
+      double smoothedRotX =
+          exponentialSmooth(
+              lastSmoothedPose.getRotation().getX(),
+              averagePose.getRotation().getX(),
+              ROTATION_ALPHA);
+      double smoothedRotY =
+          exponentialSmooth(
+              lastSmoothedPose.getRotation().getY(),
+              averagePose.getRotation().getY(),
+              ROTATION_ALPHA);
+      double smoothedRotZ =
+          exponentialSmooth(
+              lastSmoothedPose.getRotation().getZ(),
+              averagePose.getRotation().getZ(),
+              ROTATION_ALPHA);
+
+      lastSmoothedPose =
+          new Pose3d(
+              smoothedX,
+              smoothedY,
+              smoothedZ,
+              new Rotation3d(smoothedRotX, smoothedRotY, smoothedRotZ));
     }
 
     return Optional.of(new Pair<>(lastSmoothedPose, timestamp));
