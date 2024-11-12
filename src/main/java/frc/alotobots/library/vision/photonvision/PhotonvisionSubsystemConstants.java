@@ -26,15 +26,20 @@ public class PhotonvisionSubsystemConstants {
   // FORWARD: +, LEFT: +, UP: + (USED FOR APRILTAGS)
   public static final Transform3d[] CAMERA_OFFSETS =
       new Transform3d[] {
+        // Front Left
         new Transform3d(
-            new Translation3d(0.30, 0.23, 0.17),
-            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45)))
+            new Translation3d(0.245, 0.21, 0.17),
+            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))),
+        // Front Middle
+        new Transform3d(
+            new Translation3d(0.275, 0.0, 0.195),
+            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(0)))
       };
   // CAMERAS
   public static final PhotonCamera[] CAMERAS =
       new PhotonCamera[] {
-        new PhotonCamera("FL_AprilTag"),
-        // new PhotonCamera("FR_AprilTag"),
+        new PhotonCamera("FL_AprilTag"), // Front Left
+        new PhotonCamera("FM_AprilTag"), // Front Middle
         // new PhotonCamera("BL_AprilTag"),
         // new PhotonCamera("BR_AprilTag")
       };
