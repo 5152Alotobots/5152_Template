@@ -34,6 +34,11 @@ public class PhotonvisionTelemetry {
     final GenericEntry rotationEntry;
     final GenericEntry connectionStatus;
     final GenericEntry enabledEntry;
+    
+    // Track last known good values
+    private String lastPoseX = "N/A";
+    private String lastPoseY = "N/A";
+    private String lastRotation = "N/A";
 
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       poseList =
@@ -222,13 +227,18 @@ public class PhotonvisionTelemetry {
       }
     }
 
-    // Only reset widgets for cameras that didn't get updates
+    // For cameras that got updates, store their new values as last known good
     for (int i = 0; i < cameraWidgets.size(); i++) {
-      if (!updatedCameras[i]) {
-        CameraWidget widget = cameraWidgets.get(i);
-        widget.poseXEntry.setString("N/A");
-        widget.poseYEntry.setString("N/A");
-        widget.rotationEntry.setString("N/A");
+      CameraWidget widget = cameraWidgets.get(i);
+      if (updatedCameras[i]) {
+        widget.lastPoseX = widget.poseXEntry.getString();
+        widget.lastPoseY = widget.poseYEntry.getString();
+        widget.lastRotation = widget.rotationEntry.getString();
+      } else {
+        // Use last known good values instead of N/A
+        widget.poseXEntry.setString(widget.lastPoseX);
+        widget.poseYEntry.setString(widget.lastPoseY);
+        widget.rotationEntry.setString(widget.lastRotation);
       }
     }
   }
