@@ -126,7 +126,6 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
         var estimate = estimator.update();
         if (estimate.isPresent()) {
-          System.out.println("Camera " + i + " provided pose estimate");
           estimates.add(estimate.get());
         }
       }
