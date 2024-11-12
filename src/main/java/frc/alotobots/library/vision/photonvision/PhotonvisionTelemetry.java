@@ -44,7 +44,7 @@ public class PhotonvisionTelemetry {
       poseList =
           tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
               .withSize(2, 3)
-              .withPosition(0, position)
+              .withPosition(position, 4)
               .withProperties(Map.of("Label position", "LEFT"));
 
       poseXEntry = poseList.add("Pose X", "N/A").getEntry();
@@ -94,7 +94,7 @@ public class PhotonvisionTelemetry {
     for (int i = 0; i < PhotonvisionSubsystemConstants.CAMERAS.length; i++) {
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[i];
       if (camera != null) {
-        cameraWidgets.add(new CameraWidget(photonvisionTab, camera.getName(), 4 + (i * 3)));
+        cameraWidgets.add(new CameraWidget(photonvisionTab, camera.getName(), i * 2));
       }
     }
   }
