@@ -34,7 +34,7 @@ public class PhotonvisionTelemetry {
     final GenericEntry rotationEntry;
     final GenericEntry connectionStatus;
     final GenericEntry enabledEntry;
-    
+
     // Track last known good values
     private String lastPoseX = "N/A";
     private String lastPoseY = "N/A";
@@ -231,9 +231,9 @@ public class PhotonvisionTelemetry {
     for (int i = 0; i < cameraWidgets.size(); i++) {
       CameraWidget widget = cameraWidgets.get(i);
       if (updatedCameras[i]) {
-        widget.lastPoseX = widget.poseXEntry.getString();
-        widget.lastPoseY = widget.poseYEntry.getString();
-        widget.lastRotation = widget.rotationEntry.getString();
+        widget.lastPoseX = widget.poseXEntry.get().getString();
+        widget.lastPoseY = widget.poseYEntry.get().getString();
+        widget.lastRotation = widget.rotationEntry.get().getString();
       } else {
         // Use last known good values instead of N/A
         widget.poseXEntry.setString(widget.lastPoseX);

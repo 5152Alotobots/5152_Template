@@ -201,7 +201,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
     for (int i = 0; i < photonPoseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
       PhotonCamera camera = CAMERAS[i];
-      
+
       System.out.println(
           "Camera "
               + i
@@ -222,7 +222,8 @@ public class PhotonvisionSubsystem extends SubsystemBase {
 
           if (estimate.isPresent()) {
             EstimatedRobotPose pose = estimate.get();
-            perCameraPoses.add(new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
+            perCameraPoses.add(
+                new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
             System.out.println(
                 "Camera "
                     + i
