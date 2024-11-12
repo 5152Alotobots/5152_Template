@@ -85,18 +85,18 @@ public class PhotonvisionTelemetry {
   }
 
   /** Initializes the field widget in Shuffleboard. */
-  /** 
-   * Initializes the field widget in Shuffleboard.
-   * Creates and configures a Field2d widget to display robot position and AprilTag locations.
+  /**
+   * Initializes the field widget in Shuffleboard. Creates and configures a Field2d widget to
+   * display robot position and AprilTag locations.
    */
   private void initializeField() {
     photonvisionTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
   }
 
   /** Initializes camera-specific widgets in Shuffleboard. */
-  /** 
-   * Initializes camera-specific widgets in Shuffleboard.
-   * Creates a widget for each camera in the CAMERAS array, displaying its pose and status information.
+  /**
+   * Initializes camera-specific widgets in Shuffleboard. Creates a widget for each camera in the
+   * CAMERAS array, displaying its pose and status information.
    */
   private void initializeCameraWidgets() {
     for (int i = 0; i < PhotonvisionSubsystemConstants.CAMERAS.length; i++) {
@@ -129,8 +129,8 @@ public class PhotonvisionTelemetry {
    * @param cameras The array of PhotonCameras to get data from
    */
   /**
-   * Updates the camera-specific widgets with the latest data from each camera.
-   * Displays connection status, target detection results, and pose information.
+   * Updates the camera-specific widgets with the latest data from each camera. Displays connection
+   * status, target detection results, and pose information.
    *
    * @param cameras Array of PhotonCameras to get data from
    */
@@ -287,8 +287,8 @@ public class PhotonvisionTelemetry {
    * @return The truncated value.
    */
   /**
-   * Truncates a double value to a specified number of decimal places.
-   * Used to format numeric values for display in Shuffleboard widgets.
+   * Truncates a double value to a specified number of decimal places. Used to format numeric values
+   * for display in Shuffleboard widgets.
    *
    * @param value The value to truncate
    * @param places The number of decimal places to keep

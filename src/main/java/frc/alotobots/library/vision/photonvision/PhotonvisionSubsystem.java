@@ -38,9 +38,9 @@ public class PhotonvisionSubsystem extends SubsystemBase {
   }
 
   /**
-   * Initializes pose estimators for each camera in the system.
-   * Creates PhotonPoseEstimator objects configured for multi-tag detection and sets up fallback strategies.
-   * Throws RuntimeException if camera offsets are not properly configured.
+   * Initializes pose estimators for each camera in the system. Creates PhotonPoseEstimator objects
+   * configured for multi-tag detection and sets up fallback strategies. Throws RuntimeException if
+   * camera offsets are not properly configured.
    */
   private void initializePoseEstimators() {
     photonPoseEstimators = new ArrayList<>();
@@ -86,8 +86,8 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    * @return A list of PhotonTrackedTarget objects representing the detected AprilTags.
    */
   /**
-   * Returns a list of all detected AprilTags from all enabled and connected cameras.
-   * Combines results from multiple cameras into a single list.
+   * Returns a list of all detected AprilTags from all enabled and connected cameras. Combines
+   * results from multiple cameras into a single list.
    *
    * @return A list of PhotonTrackedTarget objects representing all detected AprilTags
    */
