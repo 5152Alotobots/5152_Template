@@ -40,30 +40,36 @@ public class PhotonvisionSubsystem extends SubsystemBase {
   }
 
   private void initializePoseEstimators() {
-    if (photonPoseEstimators == null) {
-      System.out.println("Initializing PhotonPoseEstimators");
-      photonPoseEstimators = new ArrayList<>();
+    System.out.println("Initializing PhotonPoseEstimators");
+    photonPoseEstimators = new ArrayList<>();
 
-      if (CAMERAS.length != CAMERA_OFFSETS.length) {
-        throw new RuntimeException(
-            "PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
-      }
-      for (int i = 0; i < CAMERAS.length; i++) {
-        if (CAMERAS[i] != null && CAMERAS[i].isConnected()) {
-          PhotonPoseEstimator estimator =
-              new PhotonPoseEstimator(
-                  aprilTagFieldLayout,
-                  PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                  CAMERAS[i],
-                  CAMERA_OFFSETS[i]);
-          estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-          photonPoseEstimators.add(estimator);
-        } else {
-          System.out.println("Warning: Camera " + i + " is not connected or null. Skipping.");
-        }
-      }
-      System.out.println("PhotonPoseEstimators initialized");
+    if (CAMERAS.length != CAMERA_OFFSETS.length) {
+      throw new RuntimeException(
+          "PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
     }
+    
+    // Initialize one estimator per camera, even if not connected
+    for (int i = 0; i < CAMERAS.length; i++) {
+      if (CAMERAS[i] != null) {
+        PhotonPoseEstimator estimator =
+            new PhotonPoseEstimator(
+                aprilTagFieldLayout,
+                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+                CAMERAS[i],
+                CAMERA_OFFSETS[i]);
+        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+        photonPoseEstimators.add(estimator);
+        
+        // Set initial enabled state based on connection
+        cameraEnabled[i] = CAMERAS[i].isConnected();
+        System.out.println("Camera " + i + " initialized, connected: " + cameraEnabled[i]);
+      } else {
+        photonPoseEstimators.add(null);
+        cameraEnabled[i] = false;
+        System.out.println("Warning: Camera " + i + " is null. Disabled.");
+      }
+    }
+    System.out.println("PhotonPoseEstimators initialized");
   }
 
   @Override
@@ -100,9 +106,16 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d(Pose2d previousPose) {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (PhotonPoseEstimator estimator : photonPoseEstimators) {
-      estimator.setLastPose(previousPose);
-      estimator.update().ifPresent(estimates::add);
+    for (int i = 0; i < photonPoseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
+      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+        estimator.setLastPose(previousPose);
+        var estimate = estimator.update();
+        if (estimate.isPresent()) {
+          System.out.println("Camera " + i + " provided pose estimate");
+          estimates.add(estimate.get());
+        }
+      }
     }
     return averageEstimates(estimates);
   }
@@ -115,8 +128,15 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d() {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (PhotonPoseEstimator estimator : photonPoseEstimators) {
-      estimator.update().ifPresent(estimates::add);
+    for (int i = 0; i < photonPoseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
+      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+        var estimate = estimator.update();
+        if (estimate.isPresent()) {
+          System.out.println("Camera " + i + " provided pose estimate");
+          estimates.add(estimate.get());
+        }
+      }
     }
     return averageEstimates(estimates);
   }
