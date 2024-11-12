@@ -167,27 +167,136 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         .map(pair -> new Pair<>(pair.getFirst().toPose2d(), pair.getSecond()));
   }
 
+  private static final double MAX_POSE_DEVIATION_METERS = 1.0; // Maximum allowed deviation from median
+  private static final double MIN_TAG_WEIGHT = 0.3; // Minimum weight for single tag poses
+  private static final double MAX_TAG_WEIGHT = 1.0; // Maximum weight for multi-tag poses
+
   /**
-   * Averages the estimated robot poses from multiple cameras.
+   * Processes and averages the estimated robot poses from multiple cameras with outlier rejection
+   * and tag-count weighting.
    *
    * @param estimates An ArrayList of EstimatedRobotPose objects.
-   * @return A Pair containing the average Pose3d and timestamp, or an empty Optional if the list is
-   *     empty.
+   * @return A Pair containing the weighted average Pose3d and timestamp, or an empty Optional if no valid poses.
    */
   private Optional<Pair<Pose3d, Double>> averageEstimates(ArrayList<EstimatedRobotPose> estimates) {
     if (estimates.isEmpty()) {
       return Optional.empty();
     }
 
-    Pose3d averagePose = estimates.get(0).estimatedPose;
-    double timestamp = estimates.get(0).timestampSeconds;
-    for (int i = 1; i < estimates.size(); i++) {
-      averagePose = averagePose.interpolate(estimates.get(i).estimatedPose, 1.0 / (i + 1));
-      timestamp += estimates.get(i).timestampSeconds;
+    // First, filter out obvious outliers based on position
+    List<EstimatedRobotPose> validEstimates = removeOutliers(estimates);
+    
+    if (validEstimates.isEmpty()) {
+      return Optional.empty();
     }
-    timestamp /= estimates.size();
+
+    // Calculate weights based on number of tags and ambiguity
+    double[] weights = calculateWeights(validEstimates);
+    
+    // Compute weighted average pose
+    double x = 0, y = 0, z = 0;
+    double rotX = 0, rotY = 0, rotZ = 0;
+    double timestamp = 0;
+    double totalWeight = 0;
+
+    for (int i = 0; i < validEstimates.size(); i++) {
+      Pose3d pose = validEstimates.get(i).estimatedPose;
+      double weight = weights[i];
+
+      x += pose.getX() * weight;
+      y += pose.getY() * weight;
+      z += pose.getZ() * weight;
+      
+      // Handle rotation averaging properly
+      rotX += pose.getRotation().getX() * weight;
+      rotY += pose.getRotation().getY() * weight;
+      rotZ += pose.getRotation().getZ() * weight;
+      
+      timestamp += validEstimates.get(i).timestampSeconds * weight;
+      totalWeight += weight;
+    }
+
+    // Normalize by total weight
+    x /= totalWeight;
+    y /= totalWeight;
+    z /= totalWeight;
+    rotX /= totalWeight;
+    rotY /= totalWeight;
+    rotZ /= totalWeight;
+    timestamp /= totalWeight;
+
+    Pose3d averagePose = new Pose3d(
+        x, y, z,
+        new Rotation3d(rotX, rotY, rotZ)
+    );
 
     return Optional.of(new Pair<>(averagePose, timestamp));
+  }
+
+  /**
+   * Removes outlier poses based on their distance from the median position.
+   *
+   * @param estimates List of pose estimates to filter
+   * @return Filtered list with outliers removed
+   */
+  private List<EstimatedRobotPose> removeOutliers(List<EstimatedRobotPose> estimates) {
+    if (estimates.size() <= 2) {
+      return estimates;
+    }
+
+    // Calculate median X and Y positions
+    double[] xPositions = estimates.stream()
+        .mapToDouble(e -> e.estimatedPose.getX())
+        .sorted()
+        .toArray();
+    double[] yPositions = estimates.stream()
+        .mapToDouble(e -> e.estimatedPose.getY())
+        .sorted()
+        .toArray();
+
+    double medianX = xPositions[xPositions.length / 2];
+    double medianY = yPositions[yPositions.length / 2];
+
+    // Filter out poses that are too far from the median
+    return estimates.stream()
+        .filter(estimate -> {
+          double dx = estimate.estimatedPose.getX() - medianX;
+          double dy = estimate.estimatedPose.getY() - medianY;
+          double distance = Math.sqrt(dx * dx + dy * dy);
+          return distance <= MAX_POSE_DEVIATION_METERS;
+        })
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Calculates weights for each pose estimate based on number of tags and ambiguity.
+   *
+   * @param estimates List of pose estimates
+   * @return Array of weights corresponding to each estimate
+   */
+  private double[] calculateWeights(List<EstimatedRobotPose> estimates) {
+    double[] weights = new double[estimates.size()];
+    
+    for (int i = 0; i < estimates.size(); i++) {
+      EstimatedRobotPose estimate = estimates.get(i);
+      int numTags = estimate.targetsUsed.size();
+      
+      // Base weight on number of tags seen
+      double weight = MIN_TAG_WEIGHT + 
+          (MAX_TAG_WEIGHT - MIN_TAG_WEIGHT) * 
+          Math.min(1.0, (numTags - 1) / 3.0);
+      
+      // Reduce weight if ambiguity is high
+      double avgAmbiguity = estimate.targetsUsed.stream()
+          .mapToDouble(target -> target.getPoseAmbiguity())
+          .average()
+          .orElse(0.0);
+      weight *= (1.0 - Math.min(1.0, avgAmbiguity));
+      
+      weights[i] = weight;
+    }
+    
+    return weights;
   }
 
   /**
