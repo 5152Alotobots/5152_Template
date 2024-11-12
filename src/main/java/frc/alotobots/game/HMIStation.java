@@ -12,26 +12,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.alotobots.Constants.Robot.Calibrations.DriveTrain;
 import frc.alotobots.library.driverstation.JoystickUtilities;
+import frc.alotobots.game.constants.HMIDeadbands;
 
 /**
  * The DriverStation class represents the available inputs to the robot, providing access to
  * controllers and defining buttons for various commands.
  */
 public class HMIStation {
-
-  public static class Constants {
-    // Basic drive control deadbands
-    public static final double DRIVER_FWD_AXIS_DEADBAND = 0.1;
-    public static final double DRIVER_STR_AXIS_DEADBAND = 0.1;
-    public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
-    public static final double TRIGGER_DEADBAND = 0.3;
-
-    /* Example game-specific deadbands:
-     * public static final double PRIMARY_MECHANISM_AXIS_DEADBAND = 0.1;
-     * public static final double SECONDARY_MECHANISM_AXIS_DEADBAND = 0.15;
-     * public static final double TERTIARY_MECHANISM_AXIS_DEADBAND = 0.2;
-     */
-  }
 
   final SlewRateLimiter driveXSpdFilter =
       new SlewRateLimiter(DriveTrain.DRIVE_TRAIN_MAX_ACCEL, DriveTrain.DRIVE_TRAIN_MAX_DECCEL, 0);
@@ -83,7 +70,7 @@ public class HMIStation {
   public double driveFwdAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(1), Constants.DRIVER_FWD_AXIS_DEADBAND);
+            driverController.getRawAxis(1), HMIDeadbands.DRIVER_FWD_AXIS_DEADBAND);
   }
 
   /**
@@ -110,7 +97,7 @@ public class HMIStation {
   public double driveStrAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(0), Constants.DRIVER_STR_AXIS_DEADBAND);
+            driverController.getRawAxis(0), HMIDeadbands.DRIVER_STR_AXIS_DEADBAND);
   }
 
   /**
@@ -137,7 +124,7 @@ public class HMIStation {
   public double driveRotAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(4), Constants.DRIVER_ROT_AXIS_DEADBAND);
+            driverController.getRawAxis(4), HMIDeadbands.DRIVER_ROT_AXIS_DEADBAND);
   }
 
   /**
@@ -151,7 +138,7 @@ public class HMIStation {
 
   // Driver Trigger Axes
   public boolean robotCentricTrigger() {
-    return (driverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
+    return (driverController.getRawAxis(2) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
@@ -203,13 +190,13 @@ public class HMIStation {
 
   // Co Driver Trigger Axes
   public boolean coDriverLeftTrigger() {
-    return (coDriverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
+    return (coDriverController.getRawAxis(2) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger coDriverLeftTriggerTrigger = new Trigger(this::coDriverLeftTrigger);
 
   public boolean coDriverRightTrigger() {
-    return (coDriverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
+    return (coDriverController.getRawAxis(3) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger coDriverRightTriggerTrigger = new Trigger(this::coDriverRightTrigger);
