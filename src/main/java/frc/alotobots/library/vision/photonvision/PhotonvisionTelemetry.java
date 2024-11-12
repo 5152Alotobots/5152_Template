@@ -1,5 +1,6 @@
 package frc.alotobots.library.vision.photonvision;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -151,7 +152,7 @@ public class PhotonvisionTelemetry {
   public void updateShuffleboard(
       Optional<Pose2d> estimatedPose, 
       List<PhotonTrackedTarget> detectedTags,
-      List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses) {
+      List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>> perCameraPoses) {
     // Update camera widgets
     updateCameraWidgets(PhotonvisionSubsystemConstants.CAMERAS);
     
@@ -177,7 +178,7 @@ public class PhotonvisionTelemetry {
     }
 
     // Update per-camera poses
-    for (Pair<Integer, Pair<Pose3d, Double>> cameraPose : perCameraPoses) {
+    for (edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>> cameraPose : perCameraPoses) {
       int cameraIndex = cameraPose.getFirst();
       if (cameraIndex < cameraWidgets.size()) {
         CameraWidget widget = cameraWidgets.get(cameraIndex);
