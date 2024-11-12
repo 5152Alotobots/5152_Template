@@ -47,7 +47,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       throw new RuntimeException(
           "PhotonCamera object is missing offset! Did you add an offset in Photonvision_Constants?");
     }
-    
+
     // Initialize one estimator per camera, even if not connected
     for (int i = 0; i < CAMERAS.length; i++) {
       if (CAMERAS[i] != null) {
@@ -59,7 +59,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
                 CAMERA_OFFSETS[i]);
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimators.add(estimator);
-        
+
         // Set initial enabled state based on connection
         cameraEnabled[i] = CAMERAS[i].isConnected();
         System.out.println("Camera " + i + " initialized, connected: " + cameraEnabled[i]);
