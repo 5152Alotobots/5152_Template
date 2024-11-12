@@ -149,9 +149,13 @@ public class PhotonvisionTelemetry {
    * @param detectedTags The list of detected AprilTags.
    */
   public void updateShuffleboard(
-      Optional<Pose2d> estimatedPose, List<PhotonTrackedTarget> detectedTags) {
+      Optional<Pose2d> estimatedPose, 
+      List<PhotonTrackedTarget> detectedTags,
+      List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses) {
     // Update camera widgets
     updateCameraWidgets(PhotonvisionSubsystemConstants.CAMERAS);
+    
+    // Update main pose display
     estimatedPose.ifPresent(
         pose -> {
           // Update pose entries with truncated values
@@ -170,6 +174,23 @@ public class PhotonvisionTelemetry {
       poseXEntry.setString("N/A");
       poseYEntry.setString("N/A");
       rotationEntry.setString("N/A");
+    }
+
+    // Update per-camera poses
+    for (Pair<Integer, Pair<Pose3d, Double>> cameraPose : perCameraPoses) {
+      int cameraIndex = cameraPose.getFirst();
+      if (cameraIndex < cameraWidgets.size()) {
+        CameraWidget widget = cameraWidgets.get(cameraIndex);
+        Pose3d pose = cameraPose.getSecond().getFirst();
+        
+        widget.poseXEntry.setDouble(truncate(pose.getX(), 3));
+        widget.poseYEntry.setDouble(truncate(pose.getY(), 3));
+        widget.rotationEntry.setDouble(truncate(pose.getRotation().getZ(), 3));
+        
+        // Draw individual camera poses on field
+        String poseName = "Camera" + cameraIndex + "Pose";
+        field.getObject(poseName).setPose(pose.toPose2d());
+      }
     }
   }
 
