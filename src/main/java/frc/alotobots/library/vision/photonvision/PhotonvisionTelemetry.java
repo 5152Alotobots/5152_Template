@@ -177,6 +177,13 @@ public class PhotonvisionTelemetry {
       rotationEntry.setString("N/A");
     }
 
+    // First reset all camera widgets to N/A
+    for (CameraWidget widget : cameraWidgets) {
+      widget.poseXEntry.setString("N/A");
+      widget.poseYEntry.setString("N/A");
+      widget.rotationEntry.setString("N/A");
+    }
+
     // Update per-camera poses
     System.out.println("Telemetry updating per-camera poses. Count: " + perCameraPoses.size());
 
@@ -204,9 +211,10 @@ public class PhotonvisionTelemetry {
                 + ", Rot="
                 + truncate(pose.getRotation().getZ(), 3));
 
-        widget.poseXEntry.setDouble(truncate(pose.getX(), 3));
-        widget.poseYEntry.setDouble(truncate(pose.getY(), 3));
-        widget.rotationEntry.setDouble(truncate(pose.getRotation().getZ(), 3));
+        // Update the widget entries with string values to ensure they display
+        widget.poseXEntry.setString(String.valueOf(truncate(pose.getX(), 3)));
+        widget.poseYEntry.setString(String.valueOf(truncate(pose.getY(), 3)));
+        widget.rotationEntry.setString(String.valueOf(truncate(pose.getRotation().getZ(), 3)));
 
         // Draw individual camera poses on field
         String poseName = "Camera" + cameraIndex + "Pose";
