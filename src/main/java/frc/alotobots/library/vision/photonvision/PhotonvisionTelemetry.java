@@ -186,34 +186,15 @@ public class PhotonvisionTelemetry {
     boolean[] updatedCameras = new boolean[cameraWidgets.size()];
 
     // Update per-camera poses
-    System.out.println("Telemetry updating per-camera poses. Count: " + perCameraPoses.size());
-
     for (edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>> cameraPose :
         perCameraPoses) {
       int cameraIndex = cameraPose.getFirst();
-      System.out.println(
-          "Processing camera index: "
-              + cameraIndex
-              + " (widgets size: "
-              + cameraWidgets.size()
-              + ")");
-
       if (cameraIndex < cameraWidgets.size()) {
         CameraWidget widget = cameraWidgets.get(cameraIndex);
         Pose3d pose = cameraPose.getSecond().getFirst();
 
         // Mark this camera as updated
         updatedCameras[cameraIndex] = true;
-
-        System.out.println(
-            "Updating widget for camera "
-                + cameraIndex
-                + " with pose: X="
-                + truncate(pose.getX(), 3)
-                + ", Y="
-                + truncate(pose.getY(), 3)
-                + ", Rot="
-                + truncate(pose.getRotation().getZ(), 3));
 
         // Update the widget entries with string values to ensure they display
         widget.poseXEntry.setString(String.valueOf(truncate(pose.getX(), 3)));
@@ -223,7 +204,6 @@ public class PhotonvisionTelemetry {
         // Draw individual camera poses on field
         String poseName = "Camera" + cameraIndex + "Pose";
         field.getObject(poseName).setPose(pose.toPose2d());
-        System.out.println("Drew pose on field: " + poseName);
       }
     }
 

@@ -29,18 +29,15 @@ public class PhotonvisionSubsystem extends SubsystemBase {
 
   /** Constructs a new PhotonvisionSubsystem. */
   public PhotonvisionSubsystem() {
-    System.out.println("Initializing PhotonvisionSubsystem");
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     photonPoseEstimators = new ArrayList<>();
     cameraEnabled = new boolean[CAMERAS.length];
     Arrays.fill(cameraEnabled, true);
     initializePoseEstimators();
     telemetry = new PhotonvisionTelemetry();
-    System.out.println("PhotonvisionSubsystem initialized");
   }
 
   private void initializePoseEstimators() {
-    System.out.println("Initializing PhotonPoseEstimators");
     photonPoseEstimators = new ArrayList<>();
 
     if (CAMERAS.length != CAMERA_OFFSETS.length) {
@@ -60,16 +57,12 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         photonPoseEstimators.add(estimator);
 
-        // Set initial enabled state based on connection
         cameraEnabled[i] = CAMERAS[i].isConnected();
-        System.out.println("Camera " + i + " initialized, connected: " + cameraEnabled[i]);
       } else {
         photonPoseEstimators.add(null);
         cameraEnabled[i] = false;
-        System.out.println("Warning: Camera " + i + " is null. Disabled.");
       }
     }
-    System.out.println("PhotonPoseEstimators initialized");
   }
 
   @Override
@@ -113,7 +106,6 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         estimator.setLastPose(previousPose);
         var estimate = estimator.update();
         if (estimate.isPresent()) {
-          System.out.println("Camera " + i + " provided pose estimate");
           estimates.add(estimate.get());
         }
       }
@@ -195,22 +187,9 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public List<Pair<Integer, Pair<Pose3d, Double>>> getPerCameraEstimatedPoses() {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
-    System.out.println(
-        "Getting per-camera poses. Number of estimators: " + photonPoseEstimators.size());
-
     for (int i = 0; i < photonPoseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
       PhotonCamera camera = CAMERAS[i];
-
-      System.out.println(
-          "Camera "
-              + i
-              + " - Estimator null?: "
-              + (estimator == null)
-              + ", Enabled?: "
-              + cameraEnabled[i]
-              + ", Connected?: "
-              + (camera != null ? camera.isConnected() : false));
 
       if (estimator != null && cameraEnabled[i] && camera != null && camera.isConnected()) {
         // Get the latest result directly from the camera first
@@ -218,31 +197,15 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         if (result.hasTargets()) {
           // Only update the estimator if we actually have targets
           var estimate = estimator.update();
-          System.out.println("Camera " + i + " - Got estimate present?: " + estimate.isPresent());
-
           if (estimate.isPresent()) {
             EstimatedRobotPose pose = estimate.get();
             perCameraPoses.add(
                 new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
-            System.out.println(
-                "Camera "
-                    + i
-                    + " - Added pose: X="
-                    + pose.estimatedPose.getX()
-                    + ", Y="
-                    + pose.estimatedPose.getY()
-                    + ", Z="
-                    + pose.estimatedPose.getZ()
-                    + ", Targets: "
-                    + result.getTargets().size());
           }
-        } else {
-          System.out.println("Camera " + i + " - No targets detected in latest result");
         }
       }
     }
 
-    System.out.println("Returning " + perCameraPoses.size() + " camera poses");
     return perCameraPoses;
   }
 }
