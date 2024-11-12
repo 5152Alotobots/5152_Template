@@ -172,7 +172,6 @@ public class PhotonvisionSubsystem extends SubsystemBase {
         .map(pair -> new Pair<>(pair.getFirst().toPose2d(), pair.getSecond()));
   }
 
-
   /**
    * Processes and averages the estimated robot poses from multiple cameras with outlier rejection
    * and tag-count weighting.
@@ -236,11 +235,20 @@ public class PhotonvisionSubsystem extends SubsystemBase {
     } else {
       // Smooth position
       double smoothedX =
-          exponentialSmooth(lastSmoothedPose.getX(), averagePose.getX(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
+          exponentialSmooth(
+              lastSmoothedPose.getX(),
+              averagePose.getX(),
+              PhotonvisionSubsystemConstants.POSITION_ALPHA);
       double smoothedY =
-          exponentialSmooth(lastSmoothedPose.getY(), averagePose.getY(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
+          exponentialSmooth(
+              lastSmoothedPose.getY(),
+              averagePose.getY(),
+              PhotonvisionSubsystemConstants.POSITION_ALPHA);
       double smoothedZ =
-          exponentialSmooth(lastSmoothedPose.getZ(), averagePose.getZ(), PhotonvisionSubsystemConstants.POSITION_ALPHA);
+          exponentialSmooth(
+              lastSmoothedPose.getZ(),
+              averagePose.getZ(),
+              PhotonvisionSubsystemConstants.POSITION_ALPHA);
 
       // Smooth rotation
       double smoothedRotX =

@@ -246,19 +246,19 @@ public class PhotonvisionTelemetry {
       List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>> cameraPoses) {
     // Clear previous lines
     field.getObject("tracerLines").setPoses();
-    
+
     for (var cameraPose : cameraPoses) {
       int cameraIndex = cameraPose.getFirst();
       Pose2d cameraPose2d = cameraPose.getSecond().getFirst().toPose2d();
       PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[cameraIndex];
-      
+
       if (camera != null) {
         var result = camera.getLatestResult();
         if (result.hasTargets()) {
           for (PhotonTrackedTarget tag : result.getTargets()) {
             Optional<Pose3d> tagPoseOptional =
                 PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
-            
+
             if (tagPoseOptional.isPresent()) {
               Pose2d tagPose = tagPoseOptional.get().toPose2d();
 
@@ -269,12 +269,7 @@ public class PhotonvisionTelemetry {
                 double x = cameraPose2d.getX() + (tagPose.getX() - cameraPose2d.getX()) * t;
                 double y = cameraPose2d.getY() + (tagPose.getY() - cameraPose2d.getY()) * t;
                 states.add(
-                    new Trajectory.State(
-                        t,
-                        0,
-                        0,
-                        new Pose2d(x, y, cameraPose2d.getRotation()),
-                        0));
+                    new Trajectory.State(t, 0, 0, new Pose2d(x, y, cameraPose2d.getRotation()), 0));
               }
               Trajectory line = new Trajectory(states);
 
