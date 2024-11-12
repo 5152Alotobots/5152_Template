@@ -185,9 +185,6 @@ public class PhotonvisionTelemetry {
 
           // Update field widget
           field.setRobotPose(pose);
-
-          // Draw tracer lines to detected tags
-          drawTracerLines(pose, detectedTags);
         });
 
     if (estimatedPose.isEmpty()) {
@@ -198,6 +195,9 @@ public class PhotonvisionTelemetry {
 
     // Create a set to track which cameras have updates
     boolean[] updatedCameras = new boolean[cameraWidgets.size()];
+
+    // Draw tracer lines from each camera to its detected tags
+    drawTracerLines(perCameraPoses);
 
     // Update per-camera poses
     for (edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>> cameraPose :
@@ -238,43 +238,56 @@ public class PhotonvisionTelemetry {
   }
 
   /**
-   * Draws tracer lines from the robot pose to detected AprilTags.
+   * Draws tracer lines from each camera's detected pose to its detected AprilTags.
    *
-   * @param robotPose The current robot pose.
-   * @param detectedTags The list of detected AprilTags.
+   * @param cameraPoses List of camera poses and their indices
    */
-  private void drawTracerLines(Pose2d robotPose, List<PhotonTrackedTarget> detectedTags) {
-    for (PhotonTrackedTarget tag : detectedTags) {
-      Optional<Pose3d> tagPoseOptional =
-          PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
-      if (tagPoseOptional.isPresent()) {
-        Pose2d tagPose = tagPoseOptional.get().toPose2d();
+  private void drawTracerLines(
+      List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>> cameraPoses) {
+    // Clear previous lines
+    field.getObject("tracerLines").setPoses();
+    
+    for (var cameraPose : cameraPoses) {
+      int cameraIndex = cameraPose.getFirst();
+      Pose2d cameraPose2d = cameraPose.getSecond().getFirst().toPose2d();
+      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[cameraIndex];
+      
+      if (camera != null) {
+        var result = camera.getLatestResult();
+        if (result.hasTargets()) {
+          for (PhotonTrackedTarget tag : result.getTargets()) {
+            Optional<Pose3d> tagPoseOptional =
+                PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+            
+            if (tagPoseOptional.isPresent()) {
+              Pose2d tagPose = tagPoseOptional.get().toPose2d();
 
-        // Create a trajectory (line) from robot to tag with more than 8 points
-        List<Trajectory.State> states = new ArrayList<>();
-        for (int i = 0; i <= 8; i++) {
-          double t = i / 8.0;
-          double x = robotPose.getX() + (tagPose.getX() - robotPose.getX()) * t;
-          double y = robotPose.getY() + (tagPose.getY() - robotPose.getY()) * t;
-          double rotation =
-              robotPose.getRotation().interpolate(tagPose.getRotation(), t).getRadians();
-          states.add(
-              new Trajectory.State(
-                  t,
-                  0,
-                  0,
-                  new Pose2d(x, y, robotPose.getRotation().interpolate(tagPose.getRotation(), t)),
-                  0));
+              // Create a trajectory (line) from camera to tag
+              List<Trajectory.State> states = new ArrayList<>();
+              for (int i = 0; i <= 8; i++) {
+                double t = i / 8.0;
+                double x = cameraPose2d.getX() + (tagPose.getX() - cameraPose2d.getX()) * t;
+                double y = cameraPose2d.getY() + (tagPose.getY() - cameraPose2d.getY()) * t;
+                states.add(
+                    new Trajectory.State(
+                        t,
+                        0,
+                        0,
+                        new Pose2d(x, y, cameraPose2d.getRotation()),
+                        0));
+              }
+              Trajectory line = new Trajectory(states);
+
+              // Add the line to the field with a unique name for this camera-tag pair
+              String lineName = "Camera" + cameraIndex + "Tag" + tag.getFiducialId() + "Line";
+              field.getObject(lineName).setTrajectory(line);
+
+              // Draw a box for the tag position
+              String boxName = "Tag" + tag.getFiducialId() + "Box";
+              field.getObject(boxName).setPose(tagPose);
+            }
+          }
         }
-        Trajectory line = new Trajectory(states);
-
-        // Add the line to the field with a unique name
-        String lineName = "Tag" + tag.getFiducialId() + "Line";
-        field.getObject(lineName).setTrajectory(line);
-
-        // Draw a box for the tag position
-        String boxName = "Tag" + tag.getFiducialId() + "Box";
-        field.getObject(boxName).setPose(tagPose);
       }
     }
   }
