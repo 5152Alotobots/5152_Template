@@ -200,6 +200,8 @@ public class PhotonvisionSubsystem extends SubsystemBase {
 
     for (int i = 0; i < photonPoseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
+      PhotonCamera camera = CAMERAS[i];
+      
       System.out.println(
           "Camera "
               + i
@@ -208,24 +210,33 @@ public class PhotonvisionSubsystem extends SubsystemBase {
               + ", Enabled?: "
               + cameraEnabled[i]
               + ", Connected?: "
-              + (CAMERAS[i] != null ? CAMERAS[i].isConnected() : false));
+              + (camera != null ? camera.isConnected() : false));
 
-      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
-        var estimate = estimator.update();
-        System.out.println("Camera " + i + " - Got estimate present?: " + estimate.isPresent());
+      if (estimator != null && cameraEnabled[i] && camera != null && camera.isConnected()) {
+        // Get the latest result directly from the camera first
+        var result = camera.getLatestResult();
+        if (result.hasTargets()) {
+          // Only update the estimator if we actually have targets
+          var estimate = estimator.update();
+          System.out.println("Camera " + i + " - Got estimate present?: " + estimate.isPresent());
 
-        if (estimate.isPresent()) {
-          EstimatedRobotPose pose = estimate.get();
-          perCameraPoses.add(new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
-          System.out.println(
-              "Camera "
-                  + i
-                  + " - Added pose: X="
-                  + pose.estimatedPose.getX()
-                  + ", Y="
-                  + pose.estimatedPose.getY()
-                  + ", Z="
-                  + pose.estimatedPose.getZ());
+          if (estimate.isPresent()) {
+            EstimatedRobotPose pose = estimate.get();
+            perCameraPoses.add(new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
+            System.out.println(
+                "Camera "
+                    + i
+                    + " - Added pose: X="
+                    + pose.estimatedPose.getX()
+                    + ", Y="
+                    + pose.estimatedPose.getY()
+                    + ", Z="
+                    + pose.estimatedPose.getZ()
+                    + ", Targets: "
+                    + result.getTargets().size());
+          }
+        } else {
+          System.out.println("Camera " + i + " - No targets detected in latest result");
         }
       }
     }
