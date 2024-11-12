@@ -195,24 +195,37 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public List<Pair<Integer, Pair<Pose3d, Double>>> getPerCameraEstimatedPoses() {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
-    System.out.println("Getting per-camera poses. Number of estimators: " + photonPoseEstimators.size());
+    System.out.println(
+        "Getting per-camera poses. Number of estimators: " + photonPoseEstimators.size());
 
     for (int i = 0; i < photonPoseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
-      System.out.println("Camera " + i + " - Estimator null?: " + (estimator == null) 
-          + ", Enabled?: " + cameraEnabled[i] 
-          + ", Connected?: " + (CAMERAS[i] != null ? CAMERAS[i].isConnected() : false));
-      
+      System.out.println(
+          "Camera "
+              + i
+              + " - Estimator null?: "
+              + (estimator == null)
+              + ", Enabled?: "
+              + cameraEnabled[i]
+              + ", Connected?: "
+              + (CAMERAS[i] != null ? CAMERAS[i].isConnected() : false));
+
       if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
         var estimate = estimator.update();
         System.out.println("Camera " + i + " - Got estimate present?: " + estimate.isPresent());
-        
+
         if (estimate.isPresent()) {
           EstimatedRobotPose pose = estimate.get();
           perCameraPoses.add(new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
-          System.out.println("Camera " + i + " - Added pose: X=" + pose.estimatedPose.getX() 
-              + ", Y=" + pose.estimatedPose.getY() 
-              + ", Z=" + pose.estimatedPose.getZ());
+          System.out.println(
+              "Camera "
+                  + i
+                  + " - Added pose: X="
+                  + pose.estimatedPose.getX()
+                  + ", Y="
+                  + pose.estimatedPose.getY()
+                  + ", Z="
+                  + pose.estimatedPose.getZ());
         }
       }
     }
