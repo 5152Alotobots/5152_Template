@@ -78,10 +78,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
       List<PhotonTrackedTarget> detectedTags = getDetectedTags();
       List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
-      telemetry.updateShuffleboard(
-          estimatedPose.map(Pair::getFirst), 
-          detectedTags,
-          perCameraPoses);
+      telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
     }
   }
 
@@ -198,19 +195,18 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public List<Pair<Integer, Pair<Pose3d, Double>>> getPerCameraEstimatedPoses() {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
-    
+
     for (int i = 0; i < photonPoseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
       if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
         var estimate = estimator.update();
         if (estimate.isPresent()) {
           EstimatedRobotPose pose = estimate.get();
-          perCameraPoses.add(
-              new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
+          perCameraPoses.add(new Pair<>(i, new Pair<>(pose.estimatedPose, pose.timestampSeconds)));
         }
       }
     }
-    
+
     return perCameraPoses;
   }
 }

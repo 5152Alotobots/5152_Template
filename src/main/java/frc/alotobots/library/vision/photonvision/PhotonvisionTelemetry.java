@@ -1,6 +1,5 @@
 package frc.alotobots.library.vision.photonvision;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -150,12 +149,13 @@ public class PhotonvisionTelemetry {
    * @param detectedTags The list of detected AprilTags.
    */
   public void updateShuffleboard(
-      Optional<Pose2d> estimatedPose, 
+      Optional<Pose2d> estimatedPose,
       List<PhotonTrackedTarget> detectedTags,
-      List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>> perCameraPoses) {
+      List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>>
+          perCameraPoses) {
     // Update camera widgets
     updateCameraWidgets(PhotonvisionSubsystemConstants.CAMERAS);
-    
+
     // Update main pose display
     estimatedPose.ifPresent(
         pose -> {
@@ -178,16 +178,17 @@ public class PhotonvisionTelemetry {
     }
 
     // Update per-camera poses
-    for (edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>> cameraPose : perCameraPoses) {
+    for (edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>> cameraPose :
+        perCameraPoses) {
       int cameraIndex = cameraPose.getFirst();
       if (cameraIndex < cameraWidgets.size()) {
         CameraWidget widget = cameraWidgets.get(cameraIndex);
         Pose3d pose = cameraPose.getSecond().getFirst();
-        
+
         widget.poseXEntry.setDouble(truncate(pose.getX(), 3));
         widget.poseYEntry.setDouble(truncate(pose.getY(), 3));
         widget.rotationEntry.setDouble(truncate(pose.getRotation().getZ(), 3));
-        
+
         // Draw individual camera poses on field
         String poseName = "Camera" + cameraIndex + "Pose";
         field.getObject(poseName).setPose(pose.toPose2d());
