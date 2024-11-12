@@ -177,12 +177,8 @@ public class PhotonvisionTelemetry {
       rotationEntry.setString("N/A");
     }
 
-    // First reset all camera widgets to N/A
-    for (CameraWidget widget : cameraWidgets) {
-      widget.poseXEntry.setString("N/A");
-      widget.poseYEntry.setString("N/A");
-      widget.rotationEntry.setString("N/A");
-    }
+    // Create a set to track which cameras have updates
+    boolean[] updatedCameras = new boolean[cameraWidgets.size()];
 
     // Update per-camera poses
     System.out.println("Telemetry updating per-camera poses. Count: " + perCameraPoses.size());
@@ -200,6 +196,9 @@ public class PhotonvisionTelemetry {
       if (cameraIndex < cameraWidgets.size()) {
         CameraWidget widget = cameraWidgets.get(cameraIndex);
         Pose3d pose = cameraPose.getSecond().getFirst();
+
+        // Mark this camera as updated
+        updatedCameras[cameraIndex] = true;
 
         System.out.println(
             "Updating widget for camera "
@@ -220,6 +219,16 @@ public class PhotonvisionTelemetry {
         String poseName = "Camera" + cameraIndex + "Pose";
         field.getObject(poseName).setPose(pose.toPose2d());
         System.out.println("Drew pose on field: " + poseName);
+      }
+    }
+
+    // Only reset widgets for cameras that didn't get updates
+    for (int i = 0; i < cameraWidgets.size(); i++) {
+      if (!updatedCameras[i]) {
+        CameraWidget widget = cameraWidgets.get(i);
+        widget.poseXEntry.setString("N/A");
+        widget.poseYEntry.setString("N/A");
+        widget.rotationEntry.setString("N/A");
       }
     }
   }
