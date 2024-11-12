@@ -4,13 +4,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the Photonvision subsystem. */
@@ -18,7 +18,7 @@ public class PhotonvisionTelemetry {
   private final ShuffleboardTab photonvisionTab;
   private final ShuffleboardLayout mainPoseList;
   private final Field2d field;
-  
+
   // Main pose entries
   private final GenericEntry poseXEntry;
   private final GenericEntry poseYEntry;
@@ -34,14 +34,14 @@ public class PhotonvisionTelemetry {
     final GenericEntry rotationEntry;
     final GenericEntry connectionStatus;
     final GenericEntry enabledEntry;
-    
+
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
-      poseList = tab
-          .getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-          .withSize(2, 3)
-          .withPosition(0, position)
-          .withProperties(Map.of("Label position", "LEFT"));
-      
+      poseList =
+          tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
+              .withSize(2, 3)
+              .withPosition(0, position)
+              .withProperties(Map.of("Label position", "LEFT"));
+
       poseXEntry = poseList.add("Pose X", "N/A").getEntry();
       poseYEntry = poseList.add("Pose Y", "N/A").getEntry();
       rotationEntry = poseList.add("Rotation", "N/A").getEntry();
@@ -119,17 +119,17 @@ public class PhotonvisionTelemetry {
     for (int i = 0; i < cameras.length && i < cameraWidgets.size(); i++) {
       PhotonCamera camera = cameras[i];
       CameraWidget widget = cameraWidgets.get(i);
-      
+
       if (camera != null) {
         var result = camera.getLatestResult();
         boolean isConnected = camera.isConnected();
-        
+
         widget.connectionStatus.setBoolean(isConnected);
-        
+
         if (result.hasTargets()) {
           var bestTarget = result.getBestTarget();
           var camToTarget = bestTarget.getBestCameraToTarget();
-          
+
           widget.poseXEntry.setDouble(truncate(camToTarget.getX(), 3));
           widget.poseYEntry.setDouble(truncate(camToTarget.getY(), 3));
           widget.rotationEntry.setDouble(truncate(camToTarget.getRotation().getZ(), 3));

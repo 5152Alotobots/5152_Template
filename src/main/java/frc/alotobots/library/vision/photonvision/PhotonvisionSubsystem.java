@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -22,7 +23,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  */
 public class PhotonvisionSubsystem extends SubsystemBase {
   private final AprilTagFieldLayout aprilTagFieldLayout;
-  private final ArrayList<PhotonPoseEstimator> photonPoseEstimators;
+  private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
   private final PhotonvisionTelemetry telemetry;
   private final boolean[] cameraEnabled;
 
