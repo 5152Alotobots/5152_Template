@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.List;
-import static frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionConstants.*;
+import static frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystemConstants.*;
 
 public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     private final PhotonCamera camera;
