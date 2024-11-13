@@ -12,21 +12,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.alotobots.Constants.Robot.Calibrations.DriveTrain;
 import frc.alotobots.library.driverstation.JoystickUtilities;
+import frc.alotobots.game.constants.HMIDeadbands;
 
 /**
  * The DriverStation class represents the available inputs to the robot, providing access to
  * controllers and defining buttons for various commands.
  */
 public class HMIStation {
-
-  public static class Constants {
-    public static final double DRIVER_FWD_AXIS_DEADBAND = 0.1;
-    public static final double DRIVER_STR_AXIS_DEADBAND = 0.1;
-    public static final double DRIVER_ROT_AXIS_DEADBAND = 0.1;
-    public static final double CODRIVER_SHOOTER_ARM_AXIS_DEADBAND = 0.1;
-    public static final double CODRIVER_INTAKE_ARM_AXIS_DEADBAND = 0.1;
-    public static final double TRIGGER_DEADBAND = 0.3;
-  }
 
   final SlewRateLimiter driveXSpdFilter =
       new SlewRateLimiter(DriveTrain.DRIVE_TRAIN_MAX_ACCEL, DriveTrain.DRIVE_TRAIN_MAX_DECCEL, 0);
@@ -41,7 +33,14 @@ public class HMIStation {
   // **** Driver Controller ****
   private final XboxController driverController = new XboxController(0);
 
-  // Driver Buttons
+  /* Driver Buttons - Consider renaming these based on function rather than number
+   * Example naming pattern:
+   * Button 1 (A) -> primaryActionButton
+   * Button 2 (B) -> secondaryActionButton
+   * Button 3 (X) -> tertiaryActionButton
+   * Button 4 (Y) -> quaternaryActionButton
+   * etc.
+   */
   public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
   public final JoystickButton driverButton2 = new JoystickButton(driverController, 2);
   public final JoystickButton driverButton3 = new JoystickButton(driverController, 3);
@@ -61,10 +60,17 @@ public class HMIStation {
    *
    * @return The value used for driving forward. unmodified.
    */
+  /**
+   * Gets the raw forward axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing forward returns a positive value, but we want forward motion to be negative in
+   * our coordinate system.
+   *
+   * @return The value used for driving forward with deadband applied.
+   */
   public double driveFwdAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(1), Constants.DRIVER_FWD_AXIS_DEADBAND);
+            driverController.getRawAxis(1), HMIDeadbands.DRIVER_FWD_AXIS_DEADBAND);
   }
 
   /**
@@ -81,10 +87,17 @@ public class HMIStation {
    *
    * @return The strafe axis value.
    */
+  /**
+   * Gets the strafe raw axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing right returns a positive value, but we want right motion to be negative in our
+   * coordinate system.
+   *
+   * @return The strafe axis value with deadband applied.
+   */
   public double driveStrAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(0), Constants.DRIVER_STR_AXIS_DEADBAND);
+            driverController.getRawAxis(0), HMIDeadbands.DRIVER_STR_AXIS_DEADBAND);
   }
 
   /**
@@ -101,10 +114,17 @@ public class HMIStation {
    *
    * @return The rotation axis value.
    */
+  /**
+   * Gets the rotation axis value for driving. The -1 multiplication inverts the joystick value
+   * because pushing right returns a positive value, but we want clockwise rotation to be negative
+   * in our coordinate system.
+   *
+   * @return The rotation axis value with deadband applied.
+   */
   public double driveRotAxisRaw() {
     return -1
         * JoystickUtilities.joyDeadBnd(
-            driverController.getRawAxis(4), Constants.DRIVER_ROT_AXIS_DEADBAND);
+            driverController.getRawAxis(4), HMIDeadbands.DRIVER_ROT_AXIS_DEADBAND);
   }
 
   /**
@@ -118,21 +138,30 @@ public class HMIStation {
 
   // Driver Trigger Axes
   public boolean robotCentricTrigger() {
-    return (driverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
+    return (driverController.getRawAxis(2) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
 
-  public boolean shooterOutTrigger() {
-    return (driverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
-  }
-
-  public final Trigger shooterShoot = new Trigger(this::shooterOutTrigger);
+  /* Add game-specific trigger methods here following this pattern:
+   *
+   * public boolean mechanismTrigger() {
+   *   return (driverController.getRawAxis(X) > Constants.TRIGGER_DEADBAND);
+   * }
+   * public final Trigger mechanismTrigger = new Trigger(this::mechanismTrigger);
+   */
 
   // **** Co-Driver Controller ****
   private final XboxController coDriverController = new XboxController(1);
 
-  // Co-Driver Buttons
+  /* Co-Driver Buttons - Consider renaming these based on mechanism control
+   * Example naming pattern:
+   * Button 1 (A) -> primaryMechanismButton
+   * Button 2 (B) -> secondaryMechanismButton
+   * Button 3 (X) -> tertiaryMechanismButton
+   * Button 4 (Y) -> quaternaryMechanismButton
+   * etc.
+   */
   public final JoystickButton coDriverButton1 = new JoystickButton(coDriverController, 1);
   public final JoystickButton coDriverButton2 = new JoystickButton(coDriverController, 2);
   public final JoystickButton coDriverButton3 = new JoystickButton(coDriverController, 3);
@@ -147,40 +176,27 @@ public class HMIStation {
   public final POVButton coDriverPOVLeft = new POVButton(coDriverController, 270);
 
   // Co-Driver Axes
-  /**
-   * Gets the forward axis value for driving.
+  /* Add game-specific axis methods here following this pattern:
    *
-   * @return The value used for driving forward. unmodified.
-   */
-  public double shooterArmAxisRaw() {
-    return -1
-        * JoystickUtilities.joyDeadBnd(
-            coDriverController.getRawAxis(5), Constants.CODRIVER_SHOOTER_ARM_AXIS_DEADBAND);
-  }
-
-  public double shooterArmAxis() {
-    return JoystickUtilities.joyScaled(shooterArmAxisRaw(), 1);
-  }
-
-  /**
-   * Gets the rotation axis value for driving with deadband applied.
+   * public double mechanismAxisRaw() {
+   *   return JoystickUtilities.joyDeadBnd(
+   *       coDriverController.getRawAxis(X), Constants.MECHANISM_DEADBAND);
+   * }
    *
-   * @return The rotation axis value.
+   * public double mechanismAxis() {
+   *   return JoystickUtilities.joyScaled(mechanismAxisRaw(), 1);
+   * }
    */
-  public double intakeArmAxisRaw() {
-    return JoystickUtilities.joyDeadBnd(
-        coDriverController.getRawAxis(1), Constants.CODRIVER_INTAKE_ARM_AXIS_DEADBAND);
-  }
 
   // Co Driver Trigger Axes
   public boolean coDriverLeftTrigger() {
-    return (coDriverController.getRawAxis(2) > Constants.TRIGGER_DEADBAND);
+    return (coDriverController.getRawAxis(2) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger coDriverLeftTriggerTrigger = new Trigger(this::coDriverLeftTrigger);
 
   public boolean coDriverRightTrigger() {
-    return (coDriverController.getRawAxis(3) > Constants.TRIGGER_DEADBAND);
+    return (coDriverController.getRawAxis(3) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
   public final Trigger coDriverRightTriggerTrigger = new Trigger(this::coDriverRightTrigger);
