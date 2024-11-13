@@ -115,7 +115,7 @@ public class PhotonvisionAprilTagTelemetry {
             () -> PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION)
         .withPosition(0, 2)
         .withSize(2, 1);
-    photonvisionTab
+    aprilTagTab
         .addBoolean(
             "Only Use Pose Estimation in Teleop",
             () -> PhotonvisionAprilTagSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
@@ -257,7 +257,7 @@ public class PhotonvisionAprilTagTelemetry {
         if (result.hasTargets()) {
           for (PhotonTrackedTarget tag : result.getTargets()) {
             Optional<Pose3d> tagPoseOptional =
-                PhotonvisionAprilTagSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+                PhotonvisionAprilTagSubsystemConstants.fieldLayout.getTagPose(tag.getFiducialId());
 
             if (tagPoseOptional.isPresent()) {
               Pose2d tagPose = tagPoseOptional.get().toPose2d();

@@ -137,9 +137,9 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d() {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
-      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
+      if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         var estimate = estimator.update();
         if (estimate.isPresent()) {
           estimates.add(estimate.get());
