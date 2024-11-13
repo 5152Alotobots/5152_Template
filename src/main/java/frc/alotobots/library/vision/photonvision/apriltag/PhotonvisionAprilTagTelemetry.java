@@ -15,7 +15,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Handles telemetry for the PhotonVision AprilTag detection subsystem. */
 public class PhotonvisionAprilTagTelemetry {
-  private final ShuffleboardTab photonvisionTab;
+  private final ShuffleboardTab aprilTagTab;
   private final ShuffleboardLayout mainPoseList;
   private final Field2d field;
 
@@ -57,7 +57,7 @@ public class PhotonvisionAprilTagTelemetry {
 
   /** Constructs a new PhotonvisionTelemetry object. */
   public PhotonvisionAprilTagTelemetry() {
-    this.photonvisionTab = Shuffleboard.getTab("AprilTag Vision");
+    this.aprilTagTab = Shuffleboard.getTab("AprilTag Vision");
     this.field = new Field2d();
     this.mainPoseList = initializeMainPoseList();
 
@@ -77,7 +77,7 @@ public class PhotonvisionAprilTagTelemetry {
    * @return The initialized ShuffleboardLayout for pose information.
    */
   private ShuffleboardLayout initializeMainPoseList() {
-    return photonvisionTab
+    return aprilTagTab
         .getLayout("Pose", BuiltInLayouts.kList)
         .withSize(2, 2)
         .withPosition(0, 0)
@@ -90,7 +90,7 @@ public class PhotonvisionAprilTagTelemetry {
    * display robot position and AprilTag locations.
    */
   private void initializeField() {
-    photonvisionTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
+    aprilTagTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
   }
 
   /** Initializes camera-specific widgets in Shuffleboard. */
@@ -109,7 +109,7 @@ public class PhotonvisionAprilTagTelemetry {
 
   /** Initializes other widgets in Shuffleboard. */
   private void initializeOtherWidgets() {
-    photonvisionTab
+    aprilTagTab
         .addBoolean(
             "Vision Pose Estimation Enabled",
             () -> PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION)
