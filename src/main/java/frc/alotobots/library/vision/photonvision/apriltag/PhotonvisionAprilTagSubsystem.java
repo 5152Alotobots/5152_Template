@@ -20,8 +20,8 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * A subsystem that manages multiple PhotonVision cameras and provides pose estimation
- * functionality.
+ * A subsystem that manages multiple PhotonVision cameras specifically for AprilTag detection and 
+ * provides pose estimation functionality using AprilTag fiducial markers.
  */
 public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   private final AprilTagFieldLayout aprilTagFieldLayout;
@@ -32,7 +32,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
 
-  /** Constructs a new PhotonvisionSubsystem. */
+  /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
   public PhotonvisionAprilTagSubsystem() {
     aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
     photonPoseEstimators = new ArrayList<>();

@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-/** Handles telemetry for the Photonvision subsystem. */
+/** Handles telemetry for the PhotonVision AprilTag detection subsystem. */
 public class PhotonvisionAprilTagTelemetry {
   private final ShuffleboardTab photonvisionTab;
   private final ShuffleboardLayout mainPoseList;
@@ -57,7 +57,7 @@ public class PhotonvisionAprilTagTelemetry {
 
   /** Constructs a new PhotonvisionTelemetry object. */
   public PhotonvisionAprilTagTelemetry() {
-    this.photonvisionTab = Shuffleboard.getTab("Photonvision");
+    this.photonvisionTab = Shuffleboard.getTab("AprilTag Vision");
     this.field = new Field2d();
     this.mainPoseList = initializeMainPoseList();
 
