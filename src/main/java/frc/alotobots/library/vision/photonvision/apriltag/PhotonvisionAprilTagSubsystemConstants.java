@@ -17,7 +17,7 @@ import org.photonvision.PhotonCamera;
 @UtilityClass
 public class PhotonvisionAprilTagSubsystemConstants {
 
-  public static final AprilTagFieldLayout aprilTagFieldLayout =
+  public static final AprilTagFieldLayout fieldLayout =
       AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   public static final double FIELD_LENGTH = 16.54175; // in meters
