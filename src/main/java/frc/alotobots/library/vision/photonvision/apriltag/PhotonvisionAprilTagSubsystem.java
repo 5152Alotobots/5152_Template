@@ -24,20 +24,20 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  * provides pose estimation functionality using AprilTag fiducial markers.
  */
 public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
-  private final AprilTagFieldLayout aprilTagFieldLayout;
-  private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
+  private final AprilTagFieldLayout fieldLayout;
+  private ArrayList<PhotonPoseEstimator> poseEstimators;
   private final PhotonvisionAprilTagTelemetry telemetry;
-  private final boolean[] cameraEnabled;
+  private final boolean[] camerasEnabled;
 
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
 
   /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
   public PhotonvisionAprilTagSubsystem() {
-    aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-    photonPoseEstimators = new ArrayList<>();
-    cameraEnabled = new boolean[CAMERAS.length];
-    Arrays.fill(cameraEnabled, true);
+    fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    poseEstimators = new ArrayList<>();
+    camerasEnabled = new boolean[CAMERAS.length];
+    Arrays.fill(camerasEnabled, true);
     initializePoseEstimators();
     telemetry = new PhotonvisionAprilTagTelemetry();
   }
@@ -48,7 +48,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    * camera offsets are not properly configured.
    */
   private void initializePoseEstimators() {
-    photonPoseEstimators = new ArrayList<>();
+    poseEstimators = new ArrayList<>();
 
     if (CAMERAS.length != CAMERA_OFFSETS.length) {
       throw new RuntimeException(
@@ -60,17 +60,17 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
       if (CAMERAS[i] != null) {
         PhotonPoseEstimator estimator =
             new PhotonPoseEstimator(
-                aprilTagFieldLayout,
+                fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 CAMERAS[i],
                 CAMERA_OFFSETS[i]);
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-        photonPoseEstimators.add(estimator);
+        poseEstimators.add(estimator);
 
-        cameraEnabled[i] = CAMERAS[i].isConnected();
+        camerasEnabled[i] = CAMERAS[i].isConnected();
       } else {
-        photonPoseEstimators.add(null);
-        cameraEnabled[i] = false;
+        poseEstimators.add(null);
+        camerasEnabled[i] = false;
       }
     }
   }
@@ -116,9 +116,9 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d(Pose2d previousPose) {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
-      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
+      if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         estimator.setLastPose(previousPose);
         var estimate = estimator.update();
         if (estimate.isPresent()) {
@@ -376,11 +376,11 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    */
   public List<Pair<Integer, Pair<Pose3d, Double>>> getPerCameraEstimatedPoses() {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
       PhotonCamera camera = CAMERAS[i];
 
-      if (estimator != null && cameraEnabled[i] && camera != null && camera.isConnected()) {
+      if (estimator != null && camerasEnabled[i] && camera != null && camera.isConnected()) {
         // Get the latest result directly from the camera first
         var result = camera.getLatestResult();
         if (result.hasTargets()) {
