@@ -218,6 +218,11 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       totalWeight += weight;
     }
 
+    // Check for zero total weight to avoid division by zero
+    if (totalWeight <= 0) {
+      return Optional.empty();
+    }
+
     // Normalize by total weight
     x /= totalWeight;
     y /= totalWeight;
@@ -295,8 +300,19 @@ public class PhotonvisionSubsystem extends SubsystemBase {
     double[] yPositions =
         estimates.stream().mapToDouble(e -> e.estimatedPose.getY()).sorted().toArray();
 
-    double medianX = xPositions[xPositions.length / 2];
-    double medianY = yPositions[yPositions.length / 2];
+    double medianX;
+    if (xPositions.length % 2 == 0) {
+      medianX = (xPositions[xPositions.length / 2 - 1] + xPositions[xPositions.length / 2]) / 2.0;
+    } else {
+      medianX = xPositions[xPositions.length / 2];
+    }
+
+    double medianY;
+    if (yPositions.length % 2 == 0) {
+      medianY = (yPositions[yPositions.length / 2 - 1] + yPositions[yPositions.length / 2]) / 2.0;
+    } else {
+      medianY = yPositions[yPositions.length / 2];
+    }
 
     // Filter out poses that are too far from the median
     return estimates.stream()
