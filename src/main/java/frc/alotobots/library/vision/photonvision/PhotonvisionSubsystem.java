@@ -218,6 +218,11 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       totalWeight += weight;
     }
 
+    // Check for zero total weight to avoid division by zero
+    if (totalWeight <= 0) {
+      return Optional.empty();
+    }
+
     // Normalize by total weight
     x /= totalWeight;
     y /= totalWeight;
