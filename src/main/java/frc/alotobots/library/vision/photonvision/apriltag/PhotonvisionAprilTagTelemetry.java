@@ -102,7 +102,7 @@ public class PhotonvisionAprilTagTelemetry {
     for (int i = 0; i < PhotonvisionAprilTagSubsystemConstants.CAMERAS.length; i++) {
       PhotonCamera camera = PhotonvisionAprilTagSubsystemConstants.CAMERAS[i];
       if (camera != null) {
-        cameraWidgets.add(new CameraWidget(photonvisionTab, camera.getName(), i * 2));
+        cameraWidgets.add(new CameraWidget(aprilTagTab, camera.getName(), i * 2));
       }
     }
   }

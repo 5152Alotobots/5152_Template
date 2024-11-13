@@ -1,7 +1,7 @@
 package frc.alotobots.library.drivetrains.swerve.ctre;
 
-import static frc.alotobots.library.vision.photonvision.PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP;
-import static frc.alotobots.library.vision.photonvision.PhotonvisionSubsystemConstants.USE_VISION_POSE_ESTIMATION;
+import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP;
+import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
-import frc.alotobots.library.vision.photonvision.PhotonvisionSubsystem;
+import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.Getter;
@@ -35,7 +35,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   private final SwerveRequest.ApplyChassisSpeeds autoRequest =
       new SwerveRequest.ApplyChassisSpeeds();
 
-  private PhotonvisionSubsystem subSysPhotonvision;
+  private PhotonvisionAprilTagSubsystem subSysPhotonvision;
   private SwerveDriveTelemetry telemetry;
   private SwerveDrivePathPlanner pathPlanner;
 
@@ -143,7 +143,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
    *
    * @param subSysPhotonvision The PhotonVision subsystem to use.
    */
-  public void setPhotonVisionSubSys(PhotonvisionSubsystem subSysPhotonvision) {
+  public void setPhotonVisionSubSys(PhotonvisionAprilTagSubsystem subSysPhotonvision) {
     this.subSysPhotonvision = subSysPhotonvision;
   }
 

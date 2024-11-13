@@ -20,7 +20,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * A subsystem that manages multiple PhotonVision cameras specifically for AprilTag detection and 
+ * A subsystem that manages multiple PhotonVision cameras specifically for AprilTag detection and
  * provides pose estimation functionality using AprilTag fiducial markers.
  */
 public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
