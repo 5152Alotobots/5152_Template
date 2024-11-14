@@ -23,7 +23,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
   }
 
   private final List<DetectedObject> detectedObjects = new ArrayList<>();
-  
+
   /**
    * Gets the list of currently detected objects from enabled cameras only.
    *
