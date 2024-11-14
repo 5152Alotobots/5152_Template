@@ -65,14 +65,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
         var result = camera.getLatestResult();
 
         if (result.hasTargets()) {
-          // Get the best target (closest/largest)
-          PhotonTrackedTarget target = result.getBestTarget();
-          // Create DetectedObject using camera transform
-          DetectedObject object =
-              DetectedObject.fromPhotonTarget(
-                  target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
+          // Get all targets from this camera
+          for (PhotonTrackedTarget target : result.getTargets()) {
+            // Create DetectedObject using camera transform for each target
+            DetectedObject object =
+                DetectedObject.fromPhotonTarget(
+                    target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
 
-          detectedObjects.add(object);
+            detectedObjects.add(object);
+          }
         }
       }
     }

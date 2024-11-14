@@ -83,33 +83,24 @@ public class PhotonVisionObjectDetectionTelemetry {
    *
    * @param objects List of detected objects to draw lines to
    */
-  private void drawTracerLines(List<DetectedObject> objects) {
-    // Clear any existing tracer lines
-    field.getObject("tracerLines").setPoses();
+  private void drawTracerLine(DetectedObject obj, int objIndex) {
+    if (obj != null && obj.getPose() != null && obj.getDrive() != null) {
+      var robotPose = obj.getDrive().getState().Pose;
+      var targetPose = obj.getPose().toPose2d();
 
-    for (DetectedObject obj : objects) {
-      if (obj != null && obj.getPose() != null) {
-        int objIndex = objects.indexOf(obj);
-        field.getObject("Target" + objIndex).setPose(obj.getPose().toPose2d());
-
-        // Draw tracer line from robot to object
-        var robotPose = obj.getDrive().getState().Pose;
-        var targetPose = obj.getPose().toPose2d();
-
-        // Create trajectory points for the line
-        List<Trajectory.State> states = new ArrayList<>();
-        for (int i = 0; i <= 8; i++) {
-          double t = i / 8.0;
-          double x = robotPose.getX() + (targetPose.getX() - robotPose.getX()) * t;
-          double y = robotPose.getY() + (targetPose.getY() - robotPose.getY()) * t;
-          states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation()), 0));
-        }
-        Trajectory line = new Trajectory(states);
-
-        // Add the line to the field with a unique name for this object
-        String lineName = "TracerLine" + objIndex;
-        field.getObject(lineName).setTrajectory(line);
+      // Create trajectory points for the line
+      List<Trajectory.State> states = new ArrayList<>();
+      for (int i = 0; i <= 8; i++) {
+        double t = i / 8.0;
+        double x = robotPose.getX() + (targetPose.getX() - robotPose.getX()) * t;
+        double y = robotPose.getY() + (targetPose.getY() - robotPose.getY()) * t;
+        states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation()), 0));
       }
+      Trajectory line = new Trajectory(states);
+
+      // Add the line to the field with a unique name for this object
+      String lineName = "TracerLine" + objIndex;
+      field.getObject(lineName).setTrajectory(line);
     }
   }
 
@@ -164,7 +155,9 @@ public class PhotonVisionObjectDetectionTelemetry {
 
     // Remove all existing objects and tracer lines from the field
     field.getObject("tracerLines").setPoses(new ArrayList<>());
-    for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
+
+    // Clear all previous object markers
+    for (int i = 0; i < 20; i++) { // Support up to 20 simultaneous objects
       field.getObject("Target" + i).setPoses(new ArrayList<>());
       field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
     }
@@ -172,7 +165,18 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update field visualization if we have valid data
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
-      drawTracerLines(objects); // Objects list already only contains enabled camera data
+
+      // Plot each detected object on the field
+      for (int i = 0; i < objects.size(); i++) {
+        DetectedObject obj = objects.get(i);
+        if (obj != null && obj.getPose() != null) {
+          // Set the object's pose on the field
+          field.getObject("Target" + i).setPose(obj.getPose().toPose2d());
+
+          // Draw tracer line from robot to this object
+          drawTracerLine(obj, i);
+        }
+      }
     }
 
     // Update camera widgets
