@@ -44,7 +44,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
 
     // Check if we should only run in teleop
-    if (PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP 
+    if (PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP
         && !DriverStation.isTeleopEnabled()) {
       detectedObjects.clear();
       telemetry.updateObjects(detectedObjects);
