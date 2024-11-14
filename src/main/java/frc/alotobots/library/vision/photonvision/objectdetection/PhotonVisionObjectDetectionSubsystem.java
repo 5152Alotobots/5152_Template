@@ -1,5 +1,6 @@
 package frc.alotobots.library.vision.photonvision.objectdetection;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.ArrayList;
@@ -35,6 +36,21 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Check if object detection should be running
+    if (!PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION) {
+      detectedObjects.clear();
+      telemetry.updateObjects(detectedObjects);
+      return;
+    }
+
+    // Check if we should only run in teleop
+    if (PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP 
+        && !DriverStation.isTeleopEnabled()) {
+      detectedObjects.clear();
+      telemetry.updateObjects(detectedObjects);
+      return;
+    }
+
     detectedObjects.clear();
     System.out.println("PhotonVision periodic update starting...");
 

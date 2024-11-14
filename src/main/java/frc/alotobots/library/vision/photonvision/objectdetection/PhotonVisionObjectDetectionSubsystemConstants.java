@@ -9,6 +9,8 @@ import org.photonvision.PhotonCamera;
 @SuppressWarnings("resource")
 @UtilityClass
 public class PhotonVisionObjectDetectionSubsystemConstants {
+  public static final boolean USE_OBJECT_DETECTION = true;
+  public static final boolean ONLY_USE_OBJECT_DETECTION_IN_TELEOP = false;
   // Camera Configuration
   public static final PhotonCamera[] CAMERAS =
       new PhotonCamera[] {

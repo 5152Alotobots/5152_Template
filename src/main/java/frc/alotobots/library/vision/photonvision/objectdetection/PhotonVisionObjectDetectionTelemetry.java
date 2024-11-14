@@ -14,6 +14,8 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final ShuffleboardTab tab;
   private final Field2d field;
   private final List<CameraWidget> cameraWidgets = new ArrayList<>();
+  private final ShuffleboardLayout globalStatsList;
+  private final GenericEntry totalObjectsEntry;
 
   private static class CameraWidget {
     final ShuffleboardLayout layout;
@@ -92,6 +94,27 @@ public class PhotonVisionObjectDetectionTelemetry {
   public PhotonVisionObjectDetectionTelemetry() {
     tab = Shuffleboard.getTab("Object Detection");
 
+    // Initialize global stats widget
+    globalStatsList = tab.getLayout("Global Stats", BuiltInLayouts.kList)
+        .withSize(2, 2)
+        .withPosition(0, 0)
+        .withProperties(Map.of("Label position", "LEFT"));
+    
+    totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
+
+    // Add global settings
+    tab.addBoolean(
+            "Object Detection Enabled",
+            () -> PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION)
+        .withPosition(0, 2)
+        .withSize(2, 1);
+    
+    tab.addBoolean(
+            "Only Use in Teleop",
+            () -> PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP)
+        .withPosition(0, 3)
+        .withSize(2, 1);
+
     // Initialize camera widgets
     for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
       PhotonCamera camera = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i];
@@ -106,6 +129,9 @@ public class PhotonVisionObjectDetectionTelemetry {
   }
 
   public void updateObjects(List<DetectedObject> objects) {
+    // Update global stats
+    totalObjectsEntry.setDouble(objects.size());
+
     // Remove all existing objects and tracer lines from the field
     field.getObject("tracerLines").setPoses(new ArrayList<>());
     for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
