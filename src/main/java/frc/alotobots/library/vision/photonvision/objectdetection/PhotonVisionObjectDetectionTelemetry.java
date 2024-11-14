@@ -106,10 +106,10 @@ public class PhotonVisionObjectDetectionTelemetry {
   }
 
   public void updateObjects(List<DetectedObject> objects) {
-    // Clear all existing objects and tracer lines from the field
-    field.getObject("tracerLines").setPoses();
+    // Remove all existing objects and tracer lines from the field
+    field.getObject("tracerLines").setPoses(new ArrayList<>());
     for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
-      field.getObject("Target" + i).setPose(new Pose2d());
+      field.getObject("Target" + i).setPoses(new ArrayList<>());
       field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
     }
 
