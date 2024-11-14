@@ -32,7 +32,7 @@ public class PhotonVisionObjectDetectionTelemetry {
               .withProperties(Map.of("Label position", "LEFT"));
 
       connectionStatus = layout.add("Connected", false).getEntry();
-      enabledEntry = layout.addBoolean("Enabled", true)
+      enabledEntry = layout.add("Enabled", true)
           .withWidget(BuiltInWidgets.kToggleSwitch)
           .getEntry();
       distanceEntry = layout.add("Target Distance (m)", 0.0).getEntry();
