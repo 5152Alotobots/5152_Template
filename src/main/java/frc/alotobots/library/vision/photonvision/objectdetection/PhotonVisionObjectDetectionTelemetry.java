@@ -126,7 +126,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
 
     // Add global settings with persistent toggle switches
-    GenericEntry objectDetectionEnabled =
+    this.objectDetectionEnabled =
         tab.add(
                 "Object Detection Enabled",
                 PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION)
@@ -135,7 +135,7 @@ public class PhotonVisionObjectDetectionTelemetry {
             .withSize(2, 1)
             .getEntry();
 
-    GenericEntry teleopOnlyEnabled =
+    this.teleopOnlyEnabled =
         tab.add(
                 "Only Use in Teleop",
                 PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP)
