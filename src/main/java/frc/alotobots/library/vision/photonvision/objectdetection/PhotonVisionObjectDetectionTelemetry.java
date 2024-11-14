@@ -95,11 +95,12 @@ public class PhotonVisionObjectDetectionTelemetry {
     tab = Shuffleboard.getTab("Object Detection");
 
     // Initialize global stats widget
-    globalStatsList = tab.getLayout("Global Stats", BuiltInLayouts.kList)
-        .withSize(2, 2)
-        .withPosition(0, 0)
-        .withProperties(Map.of("Label position", "LEFT"));
-    
+    globalStatsList =
+        tab.getLayout("Global Stats", BuiltInLayouts.kList)
+            .withSize(2, 2)
+            .withPosition(0, 0)
+            .withProperties(Map.of("Label position", "LEFT"));
+
     totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
 
     // Add global settings
@@ -108,7 +109,7 @@ public class PhotonVisionObjectDetectionTelemetry {
             () -> PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION)
         .withPosition(0, 2)
         .withSize(2, 1);
-    
+
     tab.addBoolean(
             "Only Use in Teleop",
             () -> PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP)
