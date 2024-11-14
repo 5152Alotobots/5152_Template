@@ -20,6 +20,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     this.cameras = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS;
     this.telemetry = new PhotonVisionObjectDetectionTelemetry();
     DetectedObject.setDrive(driveSubsystem);
+    System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
   private final List<DetectedObject> detectedObjects = new ArrayList<>();
