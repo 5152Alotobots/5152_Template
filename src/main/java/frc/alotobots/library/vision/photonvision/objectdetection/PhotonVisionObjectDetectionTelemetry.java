@@ -13,18 +13,6 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final Field2d field;
   private final List<CameraWidget> cameraWidgets = new ArrayList<>();
 
-  /**
-   * Truncates a double value to a specified number of decimal places.
-   *
-   * @param value The value to truncate.
-   * @param places The number of decimal places to keep.
-   * @return The truncated value.
-   */
-  private double truncate(double value, int places) {
-    double scale = Math.pow(10, places);
-    return Math.round(value * scale) / scale;
-  }
-
   private static class CameraWidget {
     final ShuffleboardLayout layout;
     final GenericEntry connectionStatus;
@@ -37,7 +25,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       layout =
           tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-              .withSize(2, 5)
+              .withSize(2, 4)
               .withPosition(position * 2, 0)
               .withProperties(Map.of("Label position", "LEFT"));
 
@@ -110,5 +98,17 @@ public class PhotonVisionObjectDetectionTelemetry {
         }
       }
     }
+  }
+
+  /**
+   * Truncates a double value to a specified number of decimal places.
+   *
+   * @param value The value to truncate.
+   * @param places The number of decimal places to keep.
+   * @return The truncated value.
+   */
+  private double truncate(double value, int places) {
+    double scale = Math.pow(10, places);
+    return Math.round(value * scale) / scale;
   }
 }
