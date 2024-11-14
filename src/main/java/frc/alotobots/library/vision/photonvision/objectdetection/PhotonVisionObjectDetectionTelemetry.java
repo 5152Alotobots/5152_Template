@@ -29,8 +29,8 @@ public class PhotonVisionObjectDetectionTelemetry {
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       layout =
           tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-              .withSize(2, 4)
-              .withPosition(position * 2, 0)
+              .withSize(2, 3)
+              .withPosition(position, 4)
               .withProperties(Map.of("Label position", "LEFT"));
 
       connectionStatus = layout.add("Connected", false).getEntry();
@@ -117,16 +117,17 @@ public class PhotonVisionObjectDetectionTelemetry {
         .withSize(2, 1);
 
     // Initialize camera widgets
+    // Initialize camera widgets - position them below the field
     for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
       PhotonCamera camera = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i];
       if (camera != null) {
-        cameraWidgets.add(new CameraWidget(tab, camera.getName(), i));
+        cameraWidgets.add(new CameraWidget(tab, camera.getName(), i * 2));
       }
     }
 
     // Initialize Field2d widget
     field = new Field2d();
-    tab.add("Field", field).withPosition(0, 4).withSize(6, 4);
+    tab.add("Field", field).withPosition(2, 0).withSize(6, 4);
   }
 
   public void updateObjects(List<DetectedObject> objects) {
