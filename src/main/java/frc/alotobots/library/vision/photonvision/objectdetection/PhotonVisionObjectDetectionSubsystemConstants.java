@@ -26,8 +26,4 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
   public static final GameElement[] GAME_ELEMENTS =
       new GameElement[] {new GameElement("Note", .36, .36, .05, 0)};
 
-  // Telemetry Update Rate (matches AprilTag subsystem)
-  public static final double TELEMETRY_UPDATE_RATE = 0.05; // 50ms update rate
-  public static final long TELEMETRY_UPDATE_TIME =
-      (long) (TELEMETRY_UPDATE_RATE * 1000); // in milliseconds
 }
