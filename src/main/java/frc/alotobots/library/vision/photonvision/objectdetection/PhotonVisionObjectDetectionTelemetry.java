@@ -12,6 +12,7 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final ShuffleboardTab tab;
   private final Field2d field;
   private final List<CameraWidget> cameraWidgets = new ArrayList<>();
+  private long lastUpdateTime = 0;
 
   private static class CameraWidget {
     final ShuffleboardLayout layout;
@@ -53,6 +54,12 @@ public class PhotonVisionObjectDetectionTelemetry {
   }
 
   public void updateObjects(List<DetectedObject> objects) {
+    // Check if enough time has passed since last update
+    long currentTime = System.currentTimeMillis();
+    if (currentTime - lastUpdateTime < PhotonVisionObjectDetectionSubsystemConstants.TELEMETRY_UPDATE_TIME) {
+      return;
+    }
+    lastUpdateTime = currentTime;
     // Update field visualization if we have valid data
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
@@ -84,7 +91,7 @@ public class PhotonVisionObjectDetectionTelemetry {
         }
 
         if (cameraObject != null) {
-          widget.distanceEntry.setDouble(cameraObject.getDistance());
+          widget.distanceEntry.setDouble(Math.round(cameraObject.getDistance() * 100.0) / 100.0);
           widget.poseEntry.setString(cameraObject.getPose().toString());
           widget.targetIdEntry.setDouble(cameraObject.getTarget().getFiducialId());
         } else {
