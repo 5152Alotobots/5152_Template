@@ -1,10 +1,10 @@
 package frc.alotobots.library.vision.photonvision.objectdetection;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +40,41 @@ public class PhotonVisionObjectDetectionTelemetry {
     }
   }
 
+  /**
+   * Draws tracer lines from robot to each detected object.
+   *
+   * @param objects List of detected objects to draw lines to
+   */
+  private void drawTracerLines(List<DetectedObject> objects) {
+    // Clear any existing tracer lines
+    field.getObject("tracerLines").setPoses();
+
+    for (DetectedObject obj : objects) {
+      if (obj != null && obj.getPose() != null) {
+        int objIndex = objects.indexOf(obj);
+        field.getObject("Target" + objIndex).setPose(obj.getPose().toPose2d());
+
+        // Draw tracer line from robot to object
+        var robotPose = obj.getDrive().getState().Pose;
+        var targetPose = obj.getPose().toPose2d();
+
+        // Create trajectory points for the line
+        List<Trajectory.State> states = new ArrayList<>();
+        for (int i = 0; i <= 8; i++) {
+          double t = i / 8.0;
+          double x = robotPose.getX() + (targetPose.getX() - robotPose.getX()) * t;
+          double y = robotPose.getY() + (targetPose.getY() - robotPose.getY()) * t;
+          states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation()), 0));
+        }
+        Trajectory line = new Trajectory(states);
+
+        // Add the line to the field with a unique name for this object
+        String lineName = "TracerLine" + objIndex;
+        field.getObject(lineName).setTrajectory(line);
+      }
+    }
+  }
+
   public PhotonVisionObjectDetectionTelemetry() {
     tab = Shuffleboard.getTab("Object Detection");
 
@@ -61,28 +96,8 @@ public class PhotonVisionObjectDetectionTelemetry {
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
 
-      // Update target poses and draw tracer lines on field
-      for (DetectedObject obj : objects) {
-        if (obj != null && obj.getPose() != null) {
-          int objIndex = objects.indexOf(obj);
-          field.getObject("Target" + objIndex).setPose(obj.getPose().toPose2d());
-          
-          // Draw tracer line from robot to object
-          var robotPose = obj.getDrive().getState().Pose;
-          var targetPose = obj.getPose().toPose2d();
-          
-          // Create trajectory points for the line
-          List<Trajectory.State> states = new ArrayList<>();
-          for (int i = 0; i <= 8; i++) {
-            double t = i / 8.0;
-            double x = robotPose.getX() + (targetPose.getX() - robotPose.getX()) * t;
-            double y = robotPose.getY() + (targetPose.getY() - robotPose.getY()) * t;
-            states.add(new Trajectory.State(t, 0, 0, new Pose2d(x, y, robotPose.getRotation()), 0));
-          }
-          Trajectory line = new Trajectory(states);
-          field.getObject("TracerLine" + objIndex).setTrajectory(line);
-        }
-      }
+      // Update target poses and draw tracer lines
+      drawTracerLines(objects);
     }
 
     // Update camera widgets

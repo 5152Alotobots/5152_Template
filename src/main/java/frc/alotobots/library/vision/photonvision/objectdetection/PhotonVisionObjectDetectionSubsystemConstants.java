@@ -25,5 +25,4 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
       };
   public static final GameElement[] GAME_ELEMENTS =
       new GameElement[] {new GameElement("Note", .36, .36, .05, 0)};
-
 }
