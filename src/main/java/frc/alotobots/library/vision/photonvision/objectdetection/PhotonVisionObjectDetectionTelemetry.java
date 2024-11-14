@@ -56,7 +56,8 @@ public class PhotonVisionObjectDetectionTelemetry {
   public void updateObjects(List<DetectedObject> objects) {
     // Check if enough time has passed since last update
     long currentTime = System.currentTimeMillis();
-    if (currentTime - lastUpdateTime < PhotonVisionObjectDetectionSubsystemConstants.TELEMETRY_UPDATE_TIME) {
+    if (currentTime - lastUpdateTime
+        < PhotonVisionObjectDetectionSubsystemConstants.TELEMETRY_UPDATE_TIME) {
       return;
     }
     lastUpdateTime = currentTime;

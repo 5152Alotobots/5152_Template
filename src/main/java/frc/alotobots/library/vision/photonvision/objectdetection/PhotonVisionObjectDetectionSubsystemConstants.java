@@ -28,5 +28,6 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
 
   // Telemetry Update Rate (matches AprilTag subsystem)
   public static final double TELEMETRY_UPDATE_RATE = 0.05; // 50ms update rate
-  public static final long TELEMETRY_UPDATE_TIME = (long)(TELEMETRY_UPDATE_RATE * 1000); // in milliseconds
+  public static final long TELEMETRY_UPDATE_TIME =
+      (long) (TELEMETRY_UPDATE_RATE * 1000); // in milliseconds
 }
