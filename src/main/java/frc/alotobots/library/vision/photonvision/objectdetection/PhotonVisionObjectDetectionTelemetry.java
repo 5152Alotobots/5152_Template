@@ -22,10 +22,11 @@ public class PhotonVisionObjectDetectionTelemetry {
     final GenericEntry targetIdEntry;
 
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
-      layout = tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-          .withSize(2, 4)
-          .withPosition(position * 2, 0)
-          .withProperties(Map.of("Label position", "LEFT"));
+      layout =
+          tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
+              .withSize(2, 4)
+              .withPosition(position * 2, 0)
+              .withProperties(Map.of("Label position", "LEFT"));
 
       connectionStatus = layout.add("Connected", false).getEntry();
       enabledEntry = layout.add("Enabled", true).getEntry();
@@ -37,7 +38,7 @@ public class PhotonVisionObjectDetectionTelemetry {
 
   public PhotonVisionObjectDetectionTelemetry() {
     tab = Shuffleboard.getTab("Object Detection");
-    
+
     // Initialize camera widgets
     for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
       PhotonCamera camera = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i];
@@ -55,7 +56,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update field visualization if we have valid data
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
-      
+
       // Update target poses on field
       for (DetectedObject obj : objects) {
         if (obj != null && obj.getPose() != null) {
@@ -69,10 +70,10 @@ public class PhotonVisionObjectDetectionTelemetry {
       PhotonCamera camera = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i];
       if (camera != null && i < cameraWidgets.size()) {
         CameraWidget widget = cameraWidgets.get(i);
-        
+
         // Update connection status
         widget.connectionStatus.setBoolean(camera.isConnected());
-        
+
         // Find corresponding detected object for this camera
         DetectedObject cameraObject = null;
         for (DetectedObject obj : objects) {
@@ -81,7 +82,7 @@ public class PhotonVisionObjectDetectionTelemetry {
             break;
           }
         }
-        
+
         if (cameraObject != null) {
           widget.distanceEntry.setDouble(cameraObject.getDistance());
           widget.poseEntry.setString(cameraObject.getPose().toString());
