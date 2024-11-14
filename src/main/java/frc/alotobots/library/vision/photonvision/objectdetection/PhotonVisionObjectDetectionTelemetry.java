@@ -18,20 +18,24 @@ public class PhotonVisionObjectDetectionTelemetry {
     final GenericEntry connectionStatus;
     final GenericEntry enabledEntry;
     final GenericEntry distanceEntry;
-    final GenericEntry poseEntry;
+    final GenericEntry poseXEntry;
+    final GenericEntry poseYEntry;
+    final GenericEntry poseZEntry;
     final GenericEntry targetIdEntry;
 
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       layout =
           tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-              .withSize(2, 4)
+              .withSize(2, 6)
               .withPosition(position * 2, 0)
               .withProperties(Map.of("Label position", "LEFT"));
 
       connectionStatus = layout.add("Connected", false).getEntry();
       enabledEntry = layout.add("Enabled", true).getEntry();
       distanceEntry = layout.add("Target Distance (m)", 0.0).getEntry();
-      poseEntry = layout.add("Target Pose", "No target").getEntry();
+      poseXEntry = layout.add("Target X", 0.0).getEntry();
+      poseYEntry = layout.add("Target Y", 0.0).getEntry();
+      poseZEntry = layout.add("Target Z", 0.0).getEntry();
       targetIdEntry = layout.add("Target ID", -1).getEntry();
     }
   }
@@ -85,11 +89,15 @@ public class PhotonVisionObjectDetectionTelemetry {
 
         if (cameraObject != null) {
           widget.distanceEntry.setDouble(Math.round(cameraObject.getDistance() * 100.0) / 100.0);
-          widget.poseEntry.setString(cameraObject.getPose().toString());
+          widget.poseXEntry.setDouble(Math.round(cameraObject.getPose().getX() * 1000.0) / 1000.0);
+          widget.poseYEntry.setDouble(Math.round(cameraObject.getPose().getY() * 1000.0) / 1000.0);
+          widget.poseZEntry.setDouble(Math.round(cameraObject.getPose().getZ() * 1000.0) / 1000.0);
           widget.targetIdEntry.setDouble(cameraObject.getTarget().getFiducialId());
         } else {
           widget.distanceEntry.setDouble(0.0);
-          widget.poseEntry.setString("No target");
+          widget.poseXEntry.setDouble(0.0);
+          widget.poseYEntry.setDouble(0.0);
+          widget.poseZEntry.setDouble(0.0);
           widget.targetIdEntry.setDouble(-1);
         }
       }
