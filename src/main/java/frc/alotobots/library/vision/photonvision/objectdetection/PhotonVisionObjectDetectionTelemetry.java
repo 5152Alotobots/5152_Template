@@ -122,7 +122,7 @@ public class PhotonVisionObjectDetectionTelemetry {
       for (DetectedObject obj : objects) {
         // Find which camera this object came from
         for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
-          if (PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i] != null 
+          if (PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i] != null
               && i < cameraWidgets.size()
               && cameraWidgets.get(i).enabledEntry.getBoolean(true)) {
             enabledObjects.add(obj);
@@ -130,7 +130,7 @@ public class PhotonVisionObjectDetectionTelemetry {
           }
         }
       }
-      
+
       // Update target poses and draw tracer lines only for enabled cameras
       drawTracerLines(enabledObjects);
     }
