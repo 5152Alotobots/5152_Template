@@ -16,6 +16,8 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final List<CameraWidget> cameraWidgets = new ArrayList<>();
   private final ShuffleboardLayout globalStatsList;
   private final GenericEntry totalObjectsEntry;
+  private GenericEntry objectDetectionEnabled;
+  private GenericEntry teleopOnlyEnabled;
 
   private static class CameraWidget {
     final ShuffleboardLayout layout;
@@ -41,6 +43,24 @@ public class PhotonVisionObjectDetectionTelemetry {
       poseYEntry = layout.add("Target Y", 0.0).getEntry();
       targetIdEntry = layout.add("Target ID", -1).getEntry();
     }
+  }
+
+  /**
+   * Gets the current state of the object detection enabled toggle.
+   *
+   * @return true if object detection is enabled, false otherwise
+   */
+  public boolean isObjectDetectionEnabled() {
+    return objectDetectionEnabled.getBoolean(PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION);
+  }
+
+  /**
+   * Gets the current state of the teleop-only toggle.
+   *
+   * @return true if teleop-only mode is enabled, false otherwise
+   */
+  public boolean isTeleopOnlyEnabled() {
+    return teleopOnlyEnabled.getBoolean(PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP);
   }
 
   /**
@@ -103,18 +123,20 @@ public class PhotonVisionObjectDetectionTelemetry {
 
     totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
 
-    // Add global settings
-    tab.addBoolean(
-            "Object Detection Enabled",
-            () -> PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION)
-        .withPosition(0, 2)
-        .withSize(2, 1);
+    // Add global settings with persistent toggle switches
+    GenericEntry objectDetectionEnabled = 
+        tab.add("Object Detection Enabled", PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION)
+           .withWidget(BuiltInWidgets.kToggleSwitch)
+           .withPosition(0, 2)
+           .withSize(2, 1)
+           .getEntry();
 
-    tab.addBoolean(
-            "Only Use in Teleop",
-            () -> PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP)
-        .withPosition(0, 3)
-        .withSize(2, 1);
+    GenericEntry teleopOnlyEnabled =
+        tab.add("Only Use in Teleop", PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP)
+           .withWidget(BuiltInWidgets.kToggleSwitch)
+           .withPosition(0, 3)
+           .withSize(2, 1)
+           .getEntry();
 
     // Initialize camera widgets
     // Initialize camera widgets - position them below the field

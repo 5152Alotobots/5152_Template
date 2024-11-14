@@ -36,16 +36,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // Check if object detection should be running
-    if (!PhotonVisionObjectDetectionSubsystemConstants.USE_OBJECT_DETECTION) {
+    // Check if object detection should be running based on dashboard toggle
+    if (!telemetry.isObjectDetectionEnabled()) {
       detectedObjects.clear();
       telemetry.updateObjects(detectedObjects);
       return;
     }
 
-    // Check if we should only run in teleop
-    if (PhotonVisionObjectDetectionSubsystemConstants.ONLY_USE_OBJECT_DETECTION_IN_TELEOP
-        && !DriverStation.isTeleopEnabled()) {
+    // Check if we should only run in teleop based on dashboard toggle
+    if (telemetry.isTeleopOnlyEnabled() && !DriverStation.isTeleopEnabled()) {
       detectedObjects.clear();
       telemetry.updateObjects(detectedObjects);
       return;
