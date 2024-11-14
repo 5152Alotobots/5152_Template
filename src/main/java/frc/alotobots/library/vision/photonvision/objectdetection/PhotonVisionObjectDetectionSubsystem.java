@@ -22,7 +22,16 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
-  private List<DetectedObject> detectedObjects = new ArrayList<>();
+  private final List<DetectedObject> detectedObjects = new ArrayList<>();
+  
+  /**
+   * Gets the list of currently detected objects from enabled cameras only.
+   *
+   * @return List of DetectedObject instances from enabled cameras
+   */
+  public List<DetectedObject> getDetectedObjects() {
+    return new ArrayList<>(detectedObjects);
+  }
 
   @Override
   public void periodic() {
@@ -36,17 +45,20 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
         continue;
       }
 
-      var result = cameras[i].getLatestResult();
+      PhotonCamera camera = cameras[i];
+      if (camera != null) {
+        var result = camera.getLatestResult();
 
-      if (result.hasTargets()) {
-        // Get the best target (closest/largest)
-        PhotonTrackedTarget target = result.getBestTarget();
-        // Create DetectedObject using camera transform
-        DetectedObject object =
-            DetectedObject.fromPhotonTarget(
-                target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
+        if (result.hasTargets()) {
+          // Get the best target (closest/largest)
+          PhotonTrackedTarget target = result.getBestTarget();
+          // Create DetectedObject using camera transform
+          DetectedObject object =
+              DetectedObject.fromPhotonTarget(
+                  target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
 
-        detectedObjects.add(object);
+          detectedObjects.add(object);
+        }
       }
     }
 

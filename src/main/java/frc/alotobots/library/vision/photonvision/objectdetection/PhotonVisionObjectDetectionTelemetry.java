@@ -116,23 +116,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update field visualization if we have valid data
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
-
-      // Only draw tracer lines for objects from enabled cameras
-      List<DetectedObject> enabledObjects = new ArrayList<>();
-      for (DetectedObject obj : objects) {
-        // Find which camera this object came from
-        for (int i = 0; i < PhotonVisionObjectDetectionSubsystemConstants.CAMERAS.length; i++) {
-          if (PhotonVisionObjectDetectionSubsystemConstants.CAMERAS[i] != null
-              && i < cameraWidgets.size()
-              && cameraWidgets.get(i).enabledEntry.getBoolean(true)) {
-            enabledObjects.add(obj);
-            break;
-          }
-        }
-      }
-
-      // Update target poses and draw tracer lines only for enabled cameras
-      drawTracerLines(enabledObjects);
+      drawTracerLines(objects); // Objects list already only contains enabled camera data
     }
 
     // Update camera widgets
