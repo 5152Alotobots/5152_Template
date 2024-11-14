@@ -31,6 +31,11 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
     // Process each camera
     for (int i = 0; i < cameras.length; i++) {
+      // Skip this camera if it's disabled in telemetry
+      if (!telemetry.isCameraEnabled(i)) {
+        continue;
+      }
+
       var result = cameras[i].getLatestResult();
 
       if (result.hasTargets()) {

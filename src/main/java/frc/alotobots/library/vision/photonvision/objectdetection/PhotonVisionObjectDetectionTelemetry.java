@@ -32,12 +32,27 @@ public class PhotonVisionObjectDetectionTelemetry {
               .withProperties(Map.of("Label position", "LEFT"));
 
       connectionStatus = layout.add("Connected", false).getEntry();
-      enabledEntry = layout.add("Enabled", true).getEntry();
+      enabledEntry = layout.addBoolean("Enabled", true)
+          .withWidget(BuiltInWidgets.kToggleSwitch)
+          .getEntry();
       distanceEntry = layout.add("Target Distance (m)", 0.0).getEntry();
       poseXEntry = layout.add("Target X", 0.0).getEntry();
       poseYEntry = layout.add("Target Y", 0.0).getEntry();
       targetIdEntry = layout.add("Target ID", -1).getEntry();
     }
+  }
+
+  /**
+   * Checks if a camera is enabled in the telemetry interface.
+   *
+   * @param cameraIndex The index of the camera to check
+   * @return true if the camera is enabled, false otherwise
+   */
+  public boolean isCameraEnabled(int cameraIndex) {
+    if (cameraIndex >= 0 && cameraIndex < cameraWidgets.size()) {
+      return cameraWidgets.get(cameraIndex).enabledEntry.getBoolean(true);
+    }
+    return false;
   }
 
   /**
