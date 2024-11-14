@@ -238,7 +238,7 @@ public class PhotonvisionAprilTagTelemetry {
   }
 
   /**
-   * Draws tracer lines from each camera's detected pose to its detected AprilTags.
+   * photonvisionTab Draws tracer lines from each camera's detected pose to its detected AprilTags.
    *
    * @param cameraPoses List of camera poses and their indices
    */

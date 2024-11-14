@@ -1,48 +1,51 @@
 package frc.alotobots.library.vision.photonvision.objectdetection;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import java.util.ArrayList;
+import java.util.List;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import java.util.List;
-import static frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystemConstants.*;
 
+/**
+ * A subsystem that manages multiple PhotonVision cameras for object detection. Handles game piece
+ * and robot detection using computer vision.
+ */
 public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
-    private final PhotonCamera camera;
-    private List<PhotonTrackedTarget> latestTargets;
-    private final PhotonVisionObjectDetectionTelemetry telemetry;
+  private final PhotonCamera[] cameras;
+  private final PhotonVisionObjectDetectionTelemetry telemetry;
 
-    public PhotonVisionObjectDetectionSubsystem() {
-        camera = new PhotonCamera(CAMERA_NAME);
-        telemetry = new PhotonVisionObjectDetectionTelemetry();
+  public PhotonVisionObjectDetectionSubsystem(SwerveDriveSubsystem driveSubsystem) {
+    this.cameras = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS;
+    this.telemetry = new PhotonVisionObjectDetectionTelemetry();
+    DetectedObject.setDrive(driveSubsystem);
+    System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
+  }
+
+  private List<DetectedObject> detectedObjects = new ArrayList<>();
+
+  @Override
+  public void periodic() {
+    detectedObjects.clear();
+    System.out.println("PhotonVision periodic update starting...");
+
+    // Process each camera
+    for (int i = 0; i < cameras.length; i++) {
+      var result = cameras[i].getLatestResult();
+
+      if (result.hasTargets()) {
+        // Get the best target (closest/largest)
+        PhotonTrackedTarget target = result.getBestTarget();
+        // Create DetectedObject using camera transform
+        DetectedObject object =
+            DetectedObject.fromPhotonTarget(
+                target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
+
+        detectedObjects.add(object);
+      }
     }
 
-    @Override
-    public void periodic() {
-        var result = camera.getLatestResult();
-        
-        if (result.hasTargets()) {
-            latestTargets = result.getTargets();
-            // Filter targets based on confidence and distance
-            latestTargets.removeIf(target -> 
-                target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY ||
-                target.getBestCameraToTarget().getTranslation().getNorm() > MAX_TRACK_DISTANCE
-            );
-        } else {
-            latestTargets = List.of();
-        }
-
-        telemetry.update(this);
-    }
-
-    public List<PhotonTrackedTarget> getLatestTargets() {
-        return latestTargets;
-    }
-
-    public boolean hasTargets() {
-        return latestTargets != null && !latestTargets.isEmpty();
-    }
-
-    public PhotonCamera getCamera() {
-        return camera;
-    }
+    // Update telemetry with latest data
+    telemetry.updateObjects(detectedObjects);
+  }
 }

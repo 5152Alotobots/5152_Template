@@ -40,6 +40,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     Arrays.fill(camerasEnabled, true);
     initializePoseEstimators();
     telemetry = new PhotonvisionAprilTagTelemetry();
+    System.out.println("PhotonVision AprilTag subsystem initialized");
   }
 
   /**
