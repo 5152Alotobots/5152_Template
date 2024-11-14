@@ -13,6 +13,18 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final Field2d field;
   private final List<CameraWidget> cameraWidgets = new ArrayList<>();
 
+  /**
+   * Truncates a double value to a specified number of decimal places.
+   *
+   * @param value The value to truncate.
+   * @param places The number of decimal places to keep.
+   * @return The truncated value.
+   */
+  private double truncate(double value, int places) {
+    double scale = Math.pow(10, places);
+    return Math.round(value * scale) / scale;
+  }
+
   private static class CameraWidget {
     final ShuffleboardLayout layout;
     final GenericEntry connectionStatus;
@@ -20,13 +32,12 @@ public class PhotonVisionObjectDetectionTelemetry {
     final GenericEntry distanceEntry;
     final GenericEntry poseXEntry;
     final GenericEntry poseYEntry;
-    final GenericEntry poseZEntry;
     final GenericEntry targetIdEntry;
 
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       layout =
           tab.getLayout("Camera " + cameraName, BuiltInLayouts.kList)
-              .withSize(2, 6)
+              .withSize(2, 5)
               .withPosition(position * 2, 0)
               .withProperties(Map.of("Label position", "LEFT"));
 
@@ -35,7 +46,6 @@ public class PhotonVisionObjectDetectionTelemetry {
       distanceEntry = layout.add("Target Distance (m)", 0.0).getEntry();
       poseXEntry = layout.add("Target X", 0.0).getEntry();
       poseYEntry = layout.add("Target Y", 0.0).getEntry();
-      poseZEntry = layout.add("Target Z", 0.0).getEntry();
       targetIdEntry = layout.add("Target ID", -1).getEntry();
     }
   }
@@ -88,16 +98,14 @@ public class PhotonVisionObjectDetectionTelemetry {
         }
 
         if (cameraObject != null) {
-          widget.distanceEntry.setDouble(Math.round(cameraObject.getDistance() * 100.0) / 100.0);
-          widget.poseXEntry.setDouble(Math.round(cameraObject.getPose().getX() * 1000.0) / 1000.0);
-          widget.poseYEntry.setDouble(Math.round(cameraObject.getPose().getY() * 1000.0) / 1000.0);
-          widget.poseZEntry.setDouble(Math.round(cameraObject.getPose().getZ() * 1000.0) / 1000.0);
+          widget.distanceEntry.setDouble(truncate(cameraObject.getDistance(), 3));
+          widget.poseXEntry.setDouble(truncate(cameraObject.getPose().getX(), 3));
+          widget.poseYEntry.setDouble(truncate(cameraObject.getPose().getY(), 3));
           widget.targetIdEntry.setDouble(cameraObject.getTarget().getFiducialId());
         } else {
           widget.distanceEntry.setDouble(0.0);
           widget.poseXEntry.setDouble(0.0);
           widget.poseYEntry.setDouble(0.0);
-          widget.poseZEntry.setDouble(0.0);
           widget.targetIdEntry.setDouble(-1);
         }
       }
