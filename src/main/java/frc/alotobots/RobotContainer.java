@@ -9,7 +9,8 @@ import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
 import frc.alotobots.library.vision.limelight.LimelightSubsystem;
-import frc.alotobots.library.vision.photonvision.PhotonvisionSubsystem;
+import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
+import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,7 +24,8 @@ public class RobotContainer {
   private final SwerveDriveSubsystem drivetrainSubsystem;
   private final LimelightSubsystem limelightSubsystem;
   private final BlingSubsystem blingSubsystem;
-  private final PhotonvisionSubsystem photonvisionSubsystem;
+  private final PhotonvisionAprilTagSubsystem photonvisionAprilTagSubsystem;
+  private final PhotonVisionObjectDetectionSubsystem photonvisionObjectDetectionSubsystem;
   private final PneumaticsSubsystem pneumaticsSubsystem;
 
   // Human-Machine Interface
@@ -42,7 +44,9 @@ public class RobotContainer {
     drivetrainSubsystem = TunerConstants.DRIVE_TRAIN;
     blingSubsystem = new BlingSubsystem();
     limelightSubsystem = new LimelightSubsystem(blingSubsystem, drivetrainSubsystem);
-    photonvisionSubsystem = new PhotonvisionSubsystem();
+    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem();
+    photonvisionObjectDetectionSubsystem =
+        new PhotonVisionObjectDetectionSubsystem(drivetrainSubsystem);
     pneumaticsSubsystem = new PneumaticsSubsystem();
 
     // Initialize HMI
@@ -100,6 +104,6 @@ public class RobotContainer {
 
   /** Sets up the PhotonVision subsystem for the drivetrain. */
   public void setupVision() {
-    drivetrainSubsystem.setPhotonVisionSubSys(photonvisionSubsystem);
+    drivetrainSubsystem.setPhotonVisionSubSys(photonvisionAprilTagSubsystem);
   }
 }

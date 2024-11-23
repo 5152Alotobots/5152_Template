@@ -1,6 +1,6 @@
-package frc.alotobots.library.vision.photonvision;
+package frc.alotobots.library.vision.photonvision.apriltag;
 
-import static frc.alotobots.library.vision.photonvision.PhotonvisionSubsystemConstants.*;
+import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.*;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -20,26 +20,40 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * A subsystem that manages multiple PhotonVision cameras and provides pose estimation
- * functionality.
+ * A subsystem that manages multiple PhotonVision cameras specifically for AprilTag detection and
+ * provides pose estimation functionality using AprilTag fiducial markers.
  */
-public class PhotonvisionSubsystem extends SubsystemBase {
-  private final AprilTagFieldLayout aprilTagFieldLayout;
-  private ArrayList<PhotonPoseEstimator> photonPoseEstimators;
-  private final PhotonvisionTelemetry telemetry;
-  private final boolean[] cameraEnabled;
+public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
+  private final AprilTagFieldLayout fieldLayout;
+  private ArrayList<PhotonPoseEstimator> poseEstimators;
+  private final PhotonvisionAprilTagTelemetry telemetry;
+  private final boolean[] camerasEnabled;
 
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
 
-  /** Constructs a new PhotonvisionSubsystem. */
-  public PhotonvisionSubsystem() {
-    aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-    photonPoseEstimators = new ArrayList<>();
-    cameraEnabled = new boolean[CAMERAS.length];
-    Arrays.fill(cameraEnabled, true);
-    initializePoseEstimators();
-    telemetry = new PhotonvisionTelemetry();
+  /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
+  public PhotonvisionAprilTagSubsystem() {
+    try {
+      this.fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    } catch (Exception e) {
+      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      throw new RuntimeException("Failed to load AprilTag field layout", e);
+    }
+
+    this.poseEstimators = new ArrayList<>();
+    this.camerasEnabled = new boolean[CAMERAS.length];
+    Arrays.fill(camerasEnabled, true);
+
+    try {
+      initializePoseEstimators();
+    } catch (Exception e) {
+      System.err.println("Failed to initialize pose estimators: " + e.getMessage());
+      throw new RuntimeException("Failed to initialize pose estimators", e);
+    }
+
+    telemetry = new PhotonvisionAprilTagTelemetry();
+    System.out.println("PhotonVision AprilTag subsystem initialized");
   }
 
   /**
@@ -48,7 +62,7 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    * camera offsets are not properly configured.
    */
   private void initializePoseEstimators() {
-    photonPoseEstimators = new ArrayList<>();
+    poseEstimators = new ArrayList<>();
 
     if (CAMERAS.length != CAMERA_OFFSETS.length) {
       throw new RuntimeException(
@@ -60,17 +74,17 @@ public class PhotonvisionSubsystem extends SubsystemBase {
       if (CAMERAS[i] != null) {
         PhotonPoseEstimator estimator =
             new PhotonPoseEstimator(
-                aprilTagFieldLayout,
+                fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 CAMERAS[i],
                 CAMERA_OFFSETS[i]);
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
-        photonPoseEstimators.add(estimator);
+        poseEstimators.add(estimator);
 
-        cameraEnabled[i] = CAMERAS[i].isConnected();
+        camerasEnabled[i] = CAMERAS[i].isConnected();
       } else {
-        photonPoseEstimators.add(null);
-        cameraEnabled[i] = false;
+        poseEstimators.add(null);
+        camerasEnabled[i] = false;
       }
     }
   }
@@ -116,9 +130,9 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d(Pose2d previousPose) {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
-      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
+      if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         estimator.setLastPose(previousPose);
         var estimate = estimator.update();
         if (estimate.isPresent()) {
@@ -137,9 +151,9 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d() {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
-      if (estimator != null && cameraEnabled[i] && CAMERAS[i].isConnected()) {
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
+      if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         var estimate = estimator.update();
         if (estimate.isPresent()) {
           estimates.add(estimate.get());
@@ -243,34 +257,34 @@ public class PhotonvisionSubsystem extends SubsystemBase {
           exponentialSmooth(
               lastSmoothedPose.getX(),
               averagePose.getX(),
-              PhotonvisionSubsystemConstants.POSITION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.POSITION_ALPHA);
       double smoothedY =
           exponentialSmooth(
               lastSmoothedPose.getY(),
               averagePose.getY(),
-              PhotonvisionSubsystemConstants.POSITION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.POSITION_ALPHA);
       double smoothedZ =
           exponentialSmooth(
               lastSmoothedPose.getZ(),
               averagePose.getZ(),
-              PhotonvisionSubsystemConstants.POSITION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.POSITION_ALPHA);
 
       // Smooth rotation
       double smoothedRotX =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getX(),
               averagePose.getRotation().getX(),
-              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.ROTATION_ALPHA);
       double smoothedRotY =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getY(),
               averagePose.getRotation().getY(),
-              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.ROTATION_ALPHA);
       double smoothedRotZ =
           exponentialSmooth(
               lastSmoothedPose.getRotation().getZ(),
               averagePose.getRotation().getZ(),
-              PhotonvisionSubsystemConstants.ROTATION_ALPHA);
+              PhotonvisionAprilTagSubsystemConstants.ROTATION_ALPHA);
 
       lastSmoothedPose =
           new Pose3d(
@@ -376,11 +390,11 @@ public class PhotonvisionSubsystem extends SubsystemBase {
    */
   public List<Pair<Integer, Pair<Pose3d, Double>>> getPerCameraEstimatedPoses() {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
-    for (int i = 0; i < photonPoseEstimators.size(); i++) {
-      PhotonPoseEstimator estimator = photonPoseEstimators.get(i);
+    for (int i = 0; i < poseEstimators.size(); i++) {
+      PhotonPoseEstimator estimator = poseEstimators.get(i);
       PhotonCamera camera = CAMERAS[i];
 
-      if (estimator != null && cameraEnabled[i] && camera != null && camera.isConnected()) {
+      if (estimator != null && camerasEnabled[i] && camera != null && camera.isConnected()) {
         // Get the latest result directly from the camera first
         var result = camera.getLatestResult();
         if (result.hasTargets()) {

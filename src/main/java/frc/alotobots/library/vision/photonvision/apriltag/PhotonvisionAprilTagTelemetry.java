@@ -1,4 +1,4 @@
-package frc.alotobots.library.vision.photonvision;
+package frc.alotobots.library.vision.photonvision.apriltag;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -13,9 +13,9 @@ import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-/** Handles telemetry for the Photonvision subsystem. */
-public class PhotonvisionTelemetry {
-  private final ShuffleboardTab photonvisionTab;
+/** Handles telemetry for the PhotonVision AprilTag detection subsystem. */
+public class PhotonvisionAprilTagTelemetry {
+  private final ShuffleboardTab aprilTagTab;
   private final ShuffleboardLayout mainPoseList;
   private final Field2d field;
 
@@ -56,8 +56,8 @@ public class PhotonvisionTelemetry {
   }
 
   /** Constructs a new PhotonvisionTelemetry object. */
-  public PhotonvisionTelemetry() {
-    this.photonvisionTab = Shuffleboard.getTab("Photonvision");
+  public PhotonvisionAprilTagTelemetry() {
+    this.aprilTagTab = Shuffleboard.getTab("AprilTag Vision");
     this.field = new Field2d();
     this.mainPoseList = initializeMainPoseList();
 
@@ -77,7 +77,7 @@ public class PhotonvisionTelemetry {
    * @return The initialized ShuffleboardLayout for pose information.
    */
   private ShuffleboardLayout initializeMainPoseList() {
-    return photonvisionTab
+    return aprilTagTab
         .getLayout("Pose", BuiltInLayouts.kList)
         .withSize(2, 2)
         .withPosition(0, 0)
@@ -90,7 +90,7 @@ public class PhotonvisionTelemetry {
    * display robot position and AprilTag locations.
    */
   private void initializeField() {
-    photonvisionTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
+    aprilTagTab.add("Field", field).withPosition(2, 0).withSize(6, 4);
   }
 
   /** Initializes camera-specific widgets in Shuffleboard. */
@@ -99,26 +99,26 @@ public class PhotonvisionTelemetry {
    * CAMERAS array, displaying its pose and status information.
    */
   private void initializeCameraWidgets() {
-    for (int i = 0; i < PhotonvisionSubsystemConstants.CAMERAS.length; i++) {
-      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[i];
+    for (int i = 0; i < PhotonvisionAprilTagSubsystemConstants.CAMERAS.length; i++) {
+      PhotonCamera camera = PhotonvisionAprilTagSubsystemConstants.CAMERAS[i];
       if (camera != null) {
-        cameraWidgets.add(new CameraWidget(photonvisionTab, camera.getName(), i * 2));
+        cameraWidgets.add(new CameraWidget(aprilTagTab, camera.getName(), i * 2));
       }
     }
   }
 
   /** Initializes other widgets in Shuffleboard. */
   private void initializeOtherWidgets() {
-    photonvisionTab
+    aprilTagTab
         .addBoolean(
             "Vision Pose Estimation Enabled",
-            () -> PhotonvisionSubsystemConstants.USE_VISION_POSE_ESTIMATION)
+            () -> PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION)
         .withPosition(0, 2)
         .withSize(2, 1);
-    photonvisionTab
+    aprilTagTab
         .addBoolean(
             "Only Use Pose Estimation in Teleop",
-            () -> PhotonvisionSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
+            () -> PhotonvisionAprilTagSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP)
         .withPosition(0, 3)
         .withSize(2, 1);
   }
@@ -173,7 +173,7 @@ public class PhotonvisionTelemetry {
       List<edu.wpi.first.math.Pair<Integer, edu.wpi.first.math.Pair<Pose3d, Double>>>
           perCameraPoses) {
     // Update camera widgets
-    updateCameraWidgets(PhotonvisionSubsystemConstants.CAMERAS);
+    updateCameraWidgets(PhotonvisionAprilTagSubsystemConstants.CAMERAS);
 
     // Update main pose display
     estimatedPose.ifPresent(
@@ -238,7 +238,7 @@ public class PhotonvisionTelemetry {
   }
 
   /**
-   * Draws tracer lines from each camera's detected pose to its detected AprilTags.
+   * photonvisionTab Draws tracer lines from each camera's detected pose to its detected AprilTags.
    *
    * @param cameraPoses List of camera poses and their indices
    */
@@ -250,14 +250,14 @@ public class PhotonvisionTelemetry {
     for (var cameraPose : cameraPoses) {
       int cameraIndex = cameraPose.getFirst();
       Pose2d cameraPose2d = cameraPose.getSecond().getFirst().toPose2d();
-      PhotonCamera camera = PhotonvisionSubsystemConstants.CAMERAS[cameraIndex];
+      PhotonCamera camera = PhotonvisionAprilTagSubsystemConstants.CAMERAS[cameraIndex];
 
       if (camera != null) {
         var result = camera.getLatestResult();
         if (result.hasTargets()) {
           for (PhotonTrackedTarget tag : result.getTargets()) {
             Optional<Pose3d> tagPoseOptional =
-                PhotonvisionSubsystemConstants.aprilTagFieldLayout.getTagPose(tag.getFiducialId());
+                PhotonvisionAprilTagSubsystemConstants.fieldLayout.getTagPose(tag.getFiducialId());
 
             if (tagPoseOptional.isPresent()) {
               Pose2d tagPose = tagPoseOptional.get().toPose2d();

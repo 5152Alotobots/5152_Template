@@ -1,4 +1,4 @@
-package frc.alotobots.library.vision.photonvision;
+package frc.alotobots.library.vision.photonvision.apriltag;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -15,9 +15,9 @@ import org.photonvision.PhotonCamera;
 
 @SuppressWarnings("resource")
 @UtilityClass
-public class PhotonvisionSubsystemConstants {
+public class PhotonvisionAprilTagSubsystemConstants {
 
-  public static final AprilTagFieldLayout aprilTagFieldLayout =
+  public static final AprilTagFieldLayout fieldLayout =
       AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   public static final double FIELD_LENGTH = 16.54175; // in meters
