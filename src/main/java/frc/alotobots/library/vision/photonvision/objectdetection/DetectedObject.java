@@ -51,12 +51,22 @@ public class DetectedObject {
    */
   public static DetectedObject fromPhotonTarget(
       PhotonTrackedTarget target, Transform3d robotToCamera) {
+    // Validate input parameters
+    if (target == null || robotToCamera == null) {
+      throw new IllegalArgumentException("Target and robotToCamera must not be null");
+    }
+
+    // Validate game element configuration
+    if (GAME_ELEMENTS.length == 0) {
+      throw new IllegalStateException("No game elements configured");
+    }
+
+    // Calculate distance from camera to target using the first game element's height
+    // Note: Currently using first game element until class-based sorting is implemented
     double targetToCameraDistance =
         PhotonUtils.calculateDistanceToTargetMeters(
             robotToCamera.getZ(),
-            GAME_ELEMENTS[0]
-                .getHeight(), // Right now, we just get the note as we need to still implement class
-            // sorting
+            GAME_ELEMENTS[0].getHeight(),
             robotToCamera.getRotation().getY(),
             Units.degreesToRadians(target.getPitch()));
 
