@@ -28,8 +28,7 @@ public class Auto {
     this.autoChooser = new SendableChooser<>();
     
     // Register named commands before configuring auto chooser
-    NamedCommands namedCommands = new NamedCommands(drivetrainSubsystem);
-    namedCommands.registerCommands();
+    new NamedCommands(drivetrainSubsystem).registerCommands();
     
     configureAutoChooser();
     addAutoChooserToShuffleboard();
