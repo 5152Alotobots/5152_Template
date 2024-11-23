@@ -70,7 +70,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
             // Create DetectedObject using camera transform for each target
             DetectedObject object =
                 DetectedObject.fromPhotonTarget(
-                    target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i], driveSubsystem);
+                    target,
+                    PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i],
+                    driveSubsystem);
 
             detectedObjects.add(object);
           }

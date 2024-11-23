@@ -44,7 +44,7 @@ public class RobotContainer {
     drivetrainSubsystem = TunerConstants.DRIVE_TRAIN;
     blingSubsystem = new BlingSubsystem();
     limelightSubsystem = new LimelightSubsystem(blingSubsystem, drivetrainSubsystem);
-    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem(drivetrainSubsystem);
+    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem();
     photonvisionObjectDetectionSubsystem =
         new PhotonVisionObjectDetectionSubsystem(drivetrainSubsystem);
     pneumaticsSubsystem = new PneumaticsSubsystem();
