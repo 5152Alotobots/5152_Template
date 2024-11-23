@@ -11,24 +11,14 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Represents an object detected by the PhotonVision system. */
 public class DetectedObject {
-  @Getter private static SwerveDriveSubsystem drive;
-
+  @Getter private final SwerveDriveSubsystem drive;
   @Getter private final Pose3d pose;
   @Getter private final PhotonTrackedTarget target;
   @Getter private final Transform3d robotToCamera;
 
-  /**
-   * Sets the drivetrain to use for pose calculations.
-   *
-   * @param drive The SwerveDrive subsystem.
-   */
-  public static void setDrive(SwerveDriveSubsystem drive) {
-    DetectedObject.drive = drive;
-  }
-
   /** Creates a new DetectedObject with default attributes. */
-  public DetectedObject() {
-    this(new Pose3d(), null, null);
+  public DetectedObject(SwerveDriveSubsystem drive) {
+    this(new Pose3d(), null, null, drive);
   }
 
   /**
@@ -36,10 +26,11 @@ public class DetectedObject {
    *
    * @param pose The 3D pose of the detected object.
    */
-  public DetectedObject(Pose3d pose, PhotonTrackedTarget target, Transform3d robotToCamera) {
+  public DetectedObject(Pose3d pose, PhotonTrackedTarget target, Transform3d robotToCamera, SwerveDriveSubsystem drive) {
     this.pose = pose;
     this.target = target;
     this.robotToCamera = robotToCamera;
+    this.drive = drive;
   }
 
   /**
@@ -50,7 +41,7 @@ public class DetectedObject {
    * @return A new DetectedObject representing the tracked target.
    */
   public static DetectedObject fromPhotonTarget(
-      PhotonTrackedTarget target, Transform3d robotToCamera) {
+      PhotonTrackedTarget target, Transform3d robotToCamera, SwerveDriveSubsystem drive) {
     // Validate input parameters
     if (target == null || robotToCamera == null) {
       throw new IllegalArgumentException("Target and robotToCamera must not be null");
@@ -101,11 +92,11 @@ public class DetectedObject {
               drive.getState().Pose.getY(),
               0.0,
               new Rotation3d(0, 0, drive.getState().Pose.getRotation().getRadians()));
-      return new DetectedObject(robotPose.transformBy(targetToRobot), target, robotToCamera);
+      return new DetectedObject(robotPose.transformBy(targetToRobot), target, robotToCamera, drive);
     }
 
     // If no drive data, return in robot space
-    return new DetectedObject(new Pose3d().transformBy(targetToRobot), target, robotToCamera);
+    return new DetectedObject(new Pose3d().transformBy(targetToRobot), target, robotToCamera, drive);
   }
 
   /**
