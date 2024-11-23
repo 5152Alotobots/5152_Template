@@ -8,7 +8,6 @@ import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
-import frc.alotobots.library.vision.limelight.LimelightSubsystem;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 
@@ -22,7 +21,6 @@ public class RobotContainer {
 
   // Subsystems
   private final SwerveDriveSubsystem drivetrainSubsystem;
-  private final LimelightSubsystem limelightSubsystem;
   private final BlingSubsystem blingSubsystem;
   private final PhotonvisionAprilTagSubsystem photonvisionAprilTagSubsystem;
   private final PhotonVisionObjectDetectionSubsystem photonvisionObjectDetectionSubsystem;
@@ -43,7 +41,6 @@ public class RobotContainer {
     // Initialize subsystems
     drivetrainSubsystem = TunerConstants.DRIVE_TRAIN;
     blingSubsystem = new BlingSubsystem();
-    limelightSubsystem = new LimelightSubsystem(blingSubsystem, drivetrainSubsystem);
     photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem();
     photonvisionObjectDetectionSubsystem =
         new PhotonVisionObjectDetectionSubsystem(drivetrainSubsystem);
