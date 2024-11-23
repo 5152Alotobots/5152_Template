@@ -26,10 +26,10 @@ public class Auto {
   public Auto(SwerveDriveSubsystem drivetrainSubsystem) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.autoChooser = new SendableChooser<>();
-    
-    // Register named commands before configuring auto chooser
-    new NamedCommands(drivetrainSubsystem).registerCommands();
-    
+
+    // Register named commands before configuring auto chooser. Add all dependencies here
+    new NamedCommandList(drivetrainSubsystem).registerCommands();
+
     configureAutoChooser();
     addAutoChooserToShuffleboard();
   }
