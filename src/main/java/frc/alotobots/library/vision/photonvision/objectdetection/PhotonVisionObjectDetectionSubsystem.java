@@ -15,11 +15,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
   private final PhotonCamera[] cameras;
   private final PhotonVisionObjectDetectionTelemetry telemetry;
+  private final SwerveDriveSubsystem driveSubsystem;
 
   public PhotonVisionObjectDetectionSubsystem(SwerveDriveSubsystem driveSubsystem) {
     this.cameras = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS;
     this.telemetry = new PhotonVisionObjectDetectionTelemetry();
-    DetectedObject.setDrive(driveSubsystem);
+    this.driveSubsystem = driveSubsystem;
     System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
@@ -69,7 +70,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
             // Create DetectedObject using camera transform for each target
             DetectedObject object =
                 DetectedObject.fromPhotonTarget(
-                    target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i]);
+                    target, PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i], driveSubsystem);
 
             detectedObjects.add(object);
           }
