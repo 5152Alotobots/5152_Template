@@ -62,7 +62,11 @@ public class DetectedObject {
     }
 
     // Find matching game element for this target's class ID
-    GameElement matchedElement = findGameElement(target.getFiducialId());
+    // Game elements are stored in array indexed by their class ID:
+    // Index 0 = Note (class ID 0)
+    // Index 1 = Red Robot (class ID 1) 
+    // Index 2 = Blue Robot (class ID 2)
+    GameElement matchedElement = findGameElement(getClassId(target));
     if (matchedElement == null) {
       throw new IllegalArgumentException(
           "No matching game element found for class ID: " + target.getFiducialId());
@@ -148,6 +152,17 @@ public class DetectedObject {
       }
     }
     return null;
+  }
+
+  /**
+   * Temporary method to get class ID from target.
+   * Currently always returns 0 for testing.
+   *
+   * @param target The PhotonTrackedTarget
+   * @return The class ID (currently always 0)
+   */
+  private static int getClassId(PhotonTrackedTarget target) {
+    return 0; // Temporarily always return 0 (Note)
   }
 
   @Override
