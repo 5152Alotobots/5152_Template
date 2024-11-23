@@ -16,9 +16,19 @@ public class DetectedObject {
   @Getter private final PhotonTrackedTarget target;
   @Getter private final Transform3d robotToCamera;
 
-  /** Creates a new DetectedObject with default attributes. */
+  /** 
+   * Creates a new DetectedObject with default attributes.
+   * 
+   * @param drive The SwerveDriveSubsystem to use for pose calculations
+   */
   public DetectedObject(SwerveDriveSubsystem drive) {
-    this(new Pose3d(), null, null, drive);
+    if (drive == null) {
+      throw new IllegalArgumentException("SwerveDriveSubsystem cannot be null");
+    }
+    this.drive = drive;
+    this.pose = new Pose3d();
+    this.target = null;
+    this.robotToCamera = null;
   }
 
   /**
