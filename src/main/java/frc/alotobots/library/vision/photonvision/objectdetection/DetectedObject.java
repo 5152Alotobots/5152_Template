@@ -61,12 +61,18 @@ public class DetectedObject {
       throw new IllegalStateException("No game elements configured");
     }
 
-    // Calculate distance from camera to target using the first game element's height
-    // Note: Currently using first game element until class-based sorting is implemented
+    // Find matching game element for this target's class ID
+    GameElement matchedElement = findGameElement(target.getFiducialId());
+    if (matchedElement == null) {
+      throw new IllegalArgumentException(
+          "No matching game element found for class ID: " + target.getFiducialId());
+    }
+
+    // Calculate distance using the matched element's height
     double targetToCameraDistance =
         PhotonUtils.calculateDistanceToTargetMeters(
             robotToCamera.getZ(),
-            GAME_ELEMENTS[0].getHeight(),
+            matchedElement.getHeight(),
             robotToCamera.getRotation().getY(),
             Units.degreesToRadians(target.getPitch()));
 
@@ -81,8 +87,7 @@ public class DetectedObject {
             new Translation3d(
                 targetToCamera2d.getX(),
                 targetToCamera2d.getY(),
-                GAME_ELEMENTS[0]
-                    .getHeight()), // You might want to calculate Z based on your target height
+                matchedElement.getHeight()),
             new Rotation3d() // If you need specific rotation, add it here
             );
 
@@ -128,6 +133,21 @@ public class DetectedObject {
           pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
     }
     return 0;
+  }
+
+  /**
+   * Finds the GameElement matching the given class ID.
+   *
+   * @param classId The class ID to match
+   * @return The matching GameElement or null if not found
+   */
+  private static GameElement findGameElement(int classId) {
+    for (GameElement element : GAME_ELEMENTS) {
+      if (element.getClassId() == classId) {
+        return element;
+      }
+    }
+    return null;
   }
 
   @Override
