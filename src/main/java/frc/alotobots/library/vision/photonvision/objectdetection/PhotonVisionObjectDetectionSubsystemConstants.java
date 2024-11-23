@@ -26,5 +26,9 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
             new Rotation3d(0, Math.toRadians(0), Math.toRadians(0)))
       };
   public static final GameElement[] GAME_ELEMENTS =
-      new GameElement[] {new GameElement("Note", .36, .36, .05, 0)};
+      new GameElement[] {
+        new GameElement("Note", .36, .36, .05, 0),        // Class ID 0
+        new GameElement("Red Robot", .75, .75, 0.5, 1),   // Class ID 1
+        new GameElement("Blue Robot", .75, .75, 0.5, 2)   // Class ID 2
+      };
 }
