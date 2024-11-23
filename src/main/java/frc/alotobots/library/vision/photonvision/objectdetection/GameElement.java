@@ -6,6 +6,7 @@ public class GameElement {
   private double length;
   private double width;
   private double height;
+
   /**
    * Represents a game element (measurements are in meters)
    *
@@ -36,5 +37,4 @@ public class GameElement {
   public double getHeight() {
     return height;
   }
-
 }

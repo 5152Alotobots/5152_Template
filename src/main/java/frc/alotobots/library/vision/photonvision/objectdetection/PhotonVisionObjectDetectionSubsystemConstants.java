@@ -29,6 +29,6 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
   // Index 0 = Note (class ID 0)
   public static final GameElement[] GAME_ELEMENTS =
       new GameElement[] {
-        new GameElement("Note", .36, .36, .05)  // Class ID 0 (represented by array index)
+        new GameElement("Note", .36, .36, .05) // Class ID 0 (represented by array index)
       };
 }

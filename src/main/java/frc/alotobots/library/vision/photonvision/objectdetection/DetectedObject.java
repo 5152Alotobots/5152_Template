@@ -61,16 +61,13 @@ public class DetectedObject {
       throw new IllegalStateException("No game elements configured");
     }
 
-    // Find matching game element for this target's class ID
-    // Game elements are stored in array indexed by their class ID:
-    // Index 0 = Note (class ID 0)
-    // Index 1 = Red Robot (class ID 1) 
-    // Index 2 = Blue Robot (class ID 2)
-    GameElement matchedElement = findGameElement(getClassId(target));
-    if (matchedElement == null) {
-      throw new IllegalArgumentException(
-          "No matching game element found for class ID: " + target.getFiducialId());
+    // Get game element from array (currently only Notes at index 0)
+    int classId = 0; // Currently only supporting Notes
+    // TODO: REPLACE THIS WITH target.getClassId(); once updated.
+    if (classId >= GAME_ELEMENTS.length) {
+      throw new IllegalArgumentException("Invalid class ID: " + classId);
     }
+    GameElement matchedElement = GAME_ELEMENTS[classId];
 
     // Calculate distance using the matched element's height
     double targetToCameraDistance =
@@ -89,9 +86,7 @@ public class DetectedObject {
     Transform3d cameraToTarget =
         new Transform3d(
             new Translation3d(
-                targetToCamera2d.getX(),
-                targetToCamera2d.getY(),
-                matchedElement.getHeight()),
+                targetToCamera2d.getX(), targetToCamera2d.getY(), matchedElement.getHeight()),
             new Rotation3d() // If you need specific rotation, add it here
             );
 
@@ -137,30 +132,6 @@ public class DetectedObject {
           pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
     }
     return 0;
-  }
-
-  /**
-   * Finds the GameElement matching the given class ID.
-   *
-   * @param classId The class ID to match
-   * @return The matching GameElement or null if not found
-   */
-  private static GameElement findGameElement(int classId) {
-    if (classId >= 0 && classId < GAME_ELEMENTS.length) {
-      return GAME_ELEMENTS[classId];
-    }
-    return null;
-  }
-
-  /**
-   * Temporary method to get class ID from target.
-   * Currently always returns 0 for testing.
-   *
-   * @param target The PhotonTrackedTarget
-   * @return The class ID (currently always 0)
-   */
-  private static int getClassId(PhotonTrackedTarget target) {
-    return 0; // Temporarily always return 0 (Note)
   }
 
   @Override
