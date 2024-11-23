@@ -146,10 +146,8 @@ public class DetectedObject {
    * @return The matching GameElement or null if not found
    */
   private static GameElement findGameElement(int classId) {
-    for (GameElement element : GAME_ELEMENTS) {
-      if (element.getClassId() == classId) {
-        return element;
-      }
+    if (classId >= 0 && classId < GAME_ELEMENTS.length) {
+      return GAME_ELEMENTS[classId];
     }
     return null;
   }
