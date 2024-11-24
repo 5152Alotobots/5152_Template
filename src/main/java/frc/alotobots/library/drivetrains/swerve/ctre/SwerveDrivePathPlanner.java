@@ -26,19 +26,25 @@ public class SwerveDrivePathPlanner {
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
 
-    AutoBuilder.configureHolonomic(
-        swerveDrive::getPose,
-        swerveDrive::seedFieldRelative,
-        swerveDrive::getCurrentRobotChassisSpeeds,
-        swerveDrive::setAutoRequest,
-        new HolonomicPathFollowerConfig(
-            new PIDConstants(10, 0, 0),
-            new PIDConstants(10, 0, 0),
-            TunerConstants.SPEED_AT_12_VOLTS_MPS,
-            driveBaseRadius,
-            new ReplanningConfig()),
-        () -> flipPath,
-        swerveDrive);
+    try {
+      var config = RobotConfig.fromGUISettings();
+      AutoBuilder.configureHolonomic(
+          swerveDrive::getPose,
+          swerveDrive::seedFieldRelative,
+          swerveDrive::getCurrentRobotChassisSpeeds,
+          swerveDrive::setAutoRequest,
+          new HolonomicPathFollowerConfig(
+              new PIDConstants(10, 0, 0), // Translation PID
+              new PIDConstants(7, 0, 0),  // Rotation PID
+              TunerConstants.SPEED_AT_12_VOLTS_MPS,
+              driveBaseRadius,
+              new ReplanningConfig()),
+          config,
+          () -> flipPath,
+          swerveDrive);
+    } catch (Exception ex) {
+      DriverStation.reportError("Failed to load PathPlanner config", ex.getStackTrace());
+    }
   }
 
   public boolean getFlipPath() {
