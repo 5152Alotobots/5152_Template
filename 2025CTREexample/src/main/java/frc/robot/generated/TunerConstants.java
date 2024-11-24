@@ -69,6 +69,9 @@ public class TunerConstants {
     // All swerve devices must share the same CAN bus
     public static final CANBus kCANBus = new CANBus("rio", "./logs/example.hoot");
 
+    // The frequency to run the odometry loop at
+    private static final double kOdometryFrequency = 250.0; // Hz
+
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
     public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.55);
