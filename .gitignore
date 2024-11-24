@@ -184,3 +184,6 @@ ctre_sim/
 compile_commands.json
 .aider*
 .env
+
+# Temp
+2025CTREexample
