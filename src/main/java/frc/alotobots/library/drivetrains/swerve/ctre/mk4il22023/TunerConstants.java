@@ -15,15 +15,16 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.ClosedLoopOutputType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
-import edu.wpi.first.units.Angle;
-import edu.wpi.first.units.Current;
-import edu.wpi.first.units.Distance;
-import edu.wpi.first.units.LinearVelocity;
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.CurrentUnit;
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.LinearVelocityUnit;
 import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
+import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.units.Units;
 import frc.alotobots.Constants;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import lombok.experimental.UtilityClass;
 
 /**
  * This class contains tuning constants for the MK4iL2 2023 Swerve Drive. It includes PID gains,
@@ -31,6 +32,9 @@ import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
  */
 @UtilityClass
 public class TunerConstants {
+
+  // CRITICAL:
+  private static final double ODOMETRY_UPDATE_FREQUENCY = 100; // In Hz. Default 100
 
   // PID gains for the steer motors
   private static final Slot0Configs STEER_GAINS =
@@ -57,7 +61,7 @@ public class TunerConstants {
   private static final double WHEEL_RADIUS_INCHES = 2;
 
   // Motor and side inversions
-  private static final boolean STEER_MOTOR_REVERSED = true;
+  private static final boolean STEER_MOTOR_INVERTED = true; // We are assuming that you are not mixing and matching mk4is with regular ones?
   private static final boolean INVERT_LEFT_SIDE = false;
   private static final boolean INVERT_RIGHT_SIDE = true;
 
@@ -74,7 +78,7 @@ public class TunerConstants {
   private static final SwerveDrivetrainConstants DRIVETRAIN_CONSTANTS =
       new SwerveDrivetrainConstants()
           .withPigeon2Id(Constants.Robot.CanId.PIGEON_2_ID)
-          .withCANbusName(CANBUS_NAME);
+          .withCANBusName(CANBUS_NAME);
 
   // Swerve module constants factory
   private static final SwerveModuleConstantsFactory CONSTANT_CREATOR =
@@ -87,14 +91,13 @@ public class TunerConstants {
           .withDriveMotorGains(DRIVE_GAINS)
           .withSteerMotorClosedLoopOutput(STEER_CLOSED_LOOP_OUTPUT)
           .withDriveMotorClosedLoopOutput(DRIVE_CLOSED_LOOP_OUTPUT)
-          .withSpeedAt12VoltsMps(SPEED_AT_12_VOLTS_MPS)
+          .withSpeedAt12Volts(SPEED_AT_12_VOLTS_MPS)
           .withSteerInertia(STEER_INERTIA)
           .withDriveInertia(DRIVE_INERTIA)
           .withSteerFrictionVoltage(STEER_FRICTION_VOLTAGE)
           .withDriveFrictionVoltage(DRIVE_FRICTION_VOLTAGE)
           .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-          .withCouplingGearRatio(COUPLE_RATIO)
-          .withSteerMotorInverted(STEER_MOTOR_REVERSED);
+          .withCouplingGearRatio(COUPLE_RATIO);
 
   // Encoder offsets for each module
   private static final double FRONT_LEFT_ENCODER_OFFSET = 0.491943359375;
@@ -119,9 +122,10 @@ public class TunerConstants {
           Constants.Robot.CanId.FRONT_LEFT_DRIVE_MTR_CAN_ID,
           Constants.Robot.CanId.FRONT_LEFT_STEER_CAN_CODER_CAN_ID,
           FRONT_LEFT_ENCODER_OFFSET,
-          Units.inchesToMeters(FRONT_LEFT_X_POS_INCHES),
-          Units.inchesToMeters(FRONT_LEFT_Y_POS_INCHES),
-          INVERT_LEFT_SIDE);
+          Meters.convertFrom(FRONT_LEFT_X_POS_INCHES, Inches),
+          Meters.convertFrom(FRONT_LEFT_Y_POS_INCHES, Inches),
+          INVERT_LEFT_SIDE,
+              STEER_MOTOR_INVERTED);
 
   private static final SwerveModuleConstants FRONT_RIGHT =
       CONSTANT_CREATOR.createModuleConstants(
@@ -129,9 +133,10 @@ public class TunerConstants {
           Constants.Robot.CanId.FRONT_RIGHT_DRIVE_MTR_CAN_ID,
           Constants.Robot.CanId.FRONT_RIGHT_STEER_CAN_CODER_CAN_ID,
           FRONT_RIGHT_ENCODER_OFFSET,
-          Units.inchesToMeters(FRONT_RIGHT_X_POS_INCHES),
-          Units.inchesToMeters(FRONT_RIGHT_Y_POS_INCHES),
-          INVERT_RIGHT_SIDE);
+          Meters.convertFrom(FRONT_RIGHT_X_POS_INCHES, Inches),
+          Meters.convertFrom(FRONT_RIGHT_Y_POS_INCHES, Inches),
+          INVERT_RIGHT_SIDE,
+              STEER_MOTOR_INVERTED);
 
   private static final SwerveModuleConstants BACK_LEFT =
       CONSTANT_CREATOR.createModuleConstants(
@@ -139,9 +144,10 @@ public class TunerConstants {
           Constants.Robot.CanId.BACK_LEFT_DRIVE_MTR_CAN_ID,
           Constants.Robot.CanId.BACK_LEFT_STEER_CAN_CODER_CAN_ID,
           BACK_LEFT_ENCODER_OFFSET,
-          Units.inchesToMeters(BACK_LEFT_X_POS_INCHES),
-          Units.inchesToMeters(BACK_LEFT_Y_POS_INCHES),
-          INVERT_LEFT_SIDE);
+          Meters.convertFrom(BACK_LEFT_X_POS_INCHES, Inches),
+          Meters.convertFrom(BACK_LEFT_Y_POS_INCHES, Inches),
+          INVERT_LEFT_SIDE,
+              STEER_MOTOR_INVERTED);
 
   private static final SwerveModuleConstants BACK_RIGHT =
       CONSTANT_CREATOR.createModuleConstants(
@@ -149,12 +155,13 @@ public class TunerConstants {
           Constants.Robot.CanId.BACK_RIGHT_DRIVE_MTR_CAN_ID,
           Constants.Robot.CanId.BACK_RIGHT_STEER_CAN_CODER_CAN_ID,
           BACK_RIGHT_ENCODER_OFFSET,
-          Units.inchesToMeters(BACK_RIGHT_X_POS_INCHES),
-          Units.inchesToMeters(BACK_RIGHT_Y_POS_INCHES),
-          INVERT_RIGHT_SIDE);
+          Meters.convertFrom(BACK_RIGHT_X_POS_INCHES, Inches),
+          Meters.convertFrom(BACK_RIGHT_Y_POS_INCHES, Inches),
+          INVERT_RIGHT_SIDE,
+              STEER_MOTOR_INVERTED);
 
   /** The swerve drivetrain subsystem, configured with the constants defined in this class. */
   public static final SwerveDriveSubsystem DRIVE_TRAIN =
       new SwerveDriveSubsystem(
-          DRIVETRAIN_CONSTANTS, FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+          DRIVETRAIN_CONSTANTS, ODOMETRY_UPDATE_FREQUENCY, FRONT_RIGHT, FRONT_LEFT, BACK_LEFT, BACK_RIGHT);
 }
