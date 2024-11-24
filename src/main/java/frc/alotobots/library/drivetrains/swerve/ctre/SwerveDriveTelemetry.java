@@ -2,6 +2,7 @@ package frc.alotobots.library.drivetrains.swerve.ctre;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.alotobots.Constants;
@@ -62,7 +63,7 @@ public class SwerveDriveTelemetry {
    * @param swerveDrive The SwerveDriveSubsystem to provide telemetry for.
    */
   private void initializeOtherWidgets(SwerveDriveSubsystem swerveDrive) {
-    driveTab.addBoolean("Flip Path", swerveDrive::getFlipPath).withPosition(0, 3).withSize(2, 1);
+    driveTab.addBoolean("Flip Pathplanner", () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red).withPosition(0, 3).withSize(2, 1);
   }
 
 
@@ -72,7 +73,7 @@ public class SwerveDriveTelemetry {
    * @param swerveDrive The SwerveDriveSubsystem to update telemetry for.
    */
   public void updateShuffleboard(SwerveDriveSubsystem swerveDrive) {
-    Pose2d currentPose = swerveDrive.getPose();
+    Pose2d currentPose = swerveDrive.getState().Pose;
 
     // Update pose entries with truncated values
     poseXEntry.setDouble(truncate(currentPose.getX(), 3));

@@ -1,6 +1,7 @@
 package frc.alotobots;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.game.HMIStation;
 import frc.alotobots.library.bling.BlingSubsystem;
@@ -33,17 +34,27 @@ public class RobotContainer {
   private final Auto auto;
 
   // Swerve drive requests
-  private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
-  private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric();
+  private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Initialize subsystems
-    drivetrainSubsystem = TunerConstants.DRIVE_TRAIN;
+    // ━━━━━━━━━━━━━━━━━━━━ [ Drive ] ━━━━━━━━━━━━━━━━━━━━
+    drivetrainSubsystem = TunerConstants.createDrivetrain(); // Currently using: 2023 L2 Version
+
+    // ━━━━━━━━━━━━━━━━━━━━ [ Bling ] ━━━━━━━━━━━━━━━━━━━━
     blingSubsystem = new BlingSubsystem();
+
+    // ━━━━━━━━━━━━━━━━━━━━ [ April Tag ] ━━━━━━━━━━━━━━━━━━━━
     photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem();
+
+    // ━━━━━━━━━━━━━━━━━━━━ [ Object Detection ] ━━━━━━━━━━━━━━━━━━━━
     photonvisionObjectDetectionSubsystem =
         new PhotonVisionObjectDetectionSubsystem(drivetrainSubsystem);
+
+    // ━━━━━━━━━━━━━━━━━━━━ [ Pneumatics ] ━━━━━━━━━━━━━━━━━━━━
     pneumaticsSubsystem = new PneumaticsSubsystem();
 
     // Initialize HMI
@@ -55,11 +66,11 @@ public class RobotContainer {
     // Configure commands and bindings
     configureDefaultCommands();
     configureLogicCommands();
-    setupVision();
   }
 
   /** Configures default commands for subsystems. */
   private void configureDefaultCommands() {
+    // ━━━━━━━━━━━━━━━━━━━━ [ Drive ] ━━━━━━━━━━━━━━━━━━━━
     drivetrainSubsystem.setDefaultCommand(
         drivetrainSubsystem.applyRequest(
             () ->
@@ -68,6 +79,8 @@ public class RobotContainer {
                     .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
                     .withRotationalRate(
                         hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+
+    // ━━━━━━━━━━━━━━━━━━━━ [ Bling ] ━━━━━━━━━━━━━━━━━━━━
     blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
 
     // Add other subsystem default commands here as needed
@@ -75,17 +88,8 @@ public class RobotContainer {
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
-    hmiStation.robotCentric.whileTrue(
-        drivetrainSubsystem.applyRequest(
-            () ->
-                driveRobotCentric
-                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                    .withRotationalRate(
-                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
-
     hmiStation.gyroResetButton.onTrue(
-        drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldRelative));
+        drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldCentric));
 
     // Add other logic-based commands here
   }
@@ -97,10 +101,5 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return auto.getSelectedAutoCommand();
-  }
-
-  /** Sets up the PhotonVision subsystem for the drivetrain. */
-  public void setupVision() {
-    drivetrainSubsystem.setPhotonVisionSubSys(photonvisionAprilTagSubsystem);
   }
 }

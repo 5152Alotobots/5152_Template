@@ -1,53 +1,51 @@
 package frc.alotobots.library.drivetrains.swerve.ctre;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.alotobots.library.drivetrains.swerve.ctre.mk4il32024.TunerConstants;
 
 public class SwerveDrivePathPlanner {
   private final SwerveDriveSubsystem swerveDrive;
-  private boolean flipPath;
+
+  /** Swerve request to apply during robot-centric path following */
+  private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
   public SwerveDrivePathPlanner(SwerveDriveSubsystem swerveDrive) {
     this.swerveDrive = swerveDrive;
     configurePathPlanner();
   }
 
+
   private void configurePathPlanner() {
-    double driveBaseRadius = 0;
-    for (var moduleLocation : swerveDrive.getModuleLocations()) {
-      driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-    }
-
-    flipPath =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-
     try {
       var config = RobotConfig.fromGUISettings();
-      AutoBuilder.configureHolonomic(
-          swerveDrive::getPose,
-          swerveDrive::seedFieldRelative,
-          swerveDrive::getCurrentRobotChassisSpeeds,
-          swerveDrive::setAutoRequest,
-          new HolonomicPathFollowerConfig(
-              new PIDConstants(10, 0, 0), // Translation PID
-              new PIDConstants(7, 0, 0),  // Rotation PID
-              TunerConstants.SPEED_AT_12_VOLTS_MPS,
-              driveBaseRadius,
-              new ReplanningConfig()),
-          config,
-          () -> flipPath,
-          swerveDrive);
+      AutoBuilder.configure(
+              () -> swerveDrive.getState().Pose,   // Supplier of current robot pose
+              swerveDrive::resetPose,         // Consumer for seeding pose against auto
+              () -> swerveDrive.getState().Speeds, // Supplier of current robot speeds
+              // Consumer of ChassisSpeeds and feedforwards to drive the robot
+              (speeds, feedforwards) -> swerveDrive.setControl(
+                      m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                              .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                              .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+              ),
+              new PPHolonomicDriveController(
+                      // PID constants for translation
+                      new PIDConstants(10, 0, 0),
+                      // PID constants for rotation
+                      new PIDConstants(7, 0, 0)
+              ),
+              config,
+              // Assume the path needs to be flipped for Red vs Blue, this is normally the case
+              () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red,
+              swerveDrive // Subsystem for requirements
+      );
     } catch (Exception ex) {
-      DriverStation.reportError("Failed to load PathPlanner config", ex.getStackTrace());
+      DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
     }
   }
 
-  public boolean getFlipPath() {
-    return flipPath;
-  }
 }
