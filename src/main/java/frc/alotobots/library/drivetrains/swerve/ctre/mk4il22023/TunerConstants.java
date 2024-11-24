@@ -2,7 +2,6 @@ package frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -16,10 +15,8 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
 import edu.wpi.first.units.measure.*;
-import edu.wpi.first.units.Units;
 import frc.alotobots.Constants;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
-import lombok.experimental.UtilityClass;
 
 /**
  * This class contains tuning constants for the MK4iL2 2023 Swerve Drive. It includes PID gains,
