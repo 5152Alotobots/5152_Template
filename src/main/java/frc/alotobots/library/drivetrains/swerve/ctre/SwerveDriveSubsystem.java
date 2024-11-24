@@ -1,19 +1,16 @@
 package frc.alotobots.library.drivetrains.swerve.ctre;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
+
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import lombok.Getter;
@@ -245,11 +241,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
   }
 
-  public Translation2d[] getModuleLocations() {
-    return m_moduleLocations;
-  }
-
-  /**
+    /**
    * Sets the maximum speeds for the swerve drive.
    *
    * @param maxSpeed The maximum linear speed in meters per second.
@@ -263,43 +255,4 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     System.out.println("Updating max speeds: " + maxSpeed + " m/s, " + maxAngularSpeed + " rad/s");
   }
 
-  /**
-   * Sets the PID values for the drive motors.
-   *
-   * @param kP The proportional gain.
-   * @param kI The integral gain.
-   * @param kD The derivative gain.
-   */
-  public void setDrivePID(double kP, double kI, double kD) {
-    this.driveKP = kP;
-    this.driveKI = kI;
-    this.driveKD = kD;
-    // Apply the new PID values to the drive motors
-    for (var module : this.Modules) {
-      module
-          .getDriveMotor()
-          .getConfigurator()
-          .apply(new Slot0Configs().withKP(kP).withKI(kI).withKD(kD));
-    }
-  }
-
-  /**
-   * Sets the PID values for the turn motors.
-   *
-   * @param kP The proportional gain.
-   * @param kI The integral gain.
-   * @param kD The derivative gain.
-   */
-  public void setTurnPID(double kP, double kI, double kD) {
-    this.turnKP = kP;
-    this.turnKI = kI;
-    this.turnKD = kD;
-    // Apply the new PID values to the turn motors
-    for (var module : this.Modules) {
-      module
-          .getSteerMotor()
-          .getConfigurator()
-          .apply(new Slot0Configs().withKP(kP).withKI(kI).withKD(kD));
-    }
-  }
 }
