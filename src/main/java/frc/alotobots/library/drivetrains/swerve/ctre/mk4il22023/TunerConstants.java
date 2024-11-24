@@ -25,26 +25,28 @@ import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 @UtilityClass
 public class TunerConstants {
 
-  // CRITICAL:
-  private static final double ODOMETRY_UPDATE_FREQUENCY = 100; // In Hz. Default 100
+    // Both sets of gains need to be tuned to your individual robot.
+    private static final Slot0Configs steerGains = new Slot0Configs()
+        .withKP(100).withKI(0).withKD(0.2)
+        .withKS(0).withKV(1.5).withKA(0)
+        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-  // PID gains for the steer motors
-  private static final Slot0Configs STEER_GAINS =
-      new Slot0Configs().withKP(100).withKI(0).withKD(0.2).withKS(0).withKV(1.5).withKA(0);
+    private static final Slot0Configs driveGains = new Slot0Configs()
+        .withKP(3).withKI(0).withKD(0)
+        .withKS(0).withKV(0);
 
-  // PID gains for the drive motors
-  private static final Slot0Configs DRIVE_GAINS =
-      new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+    // The closed-loop output type to use for the steer motors;
+    // This affects the PID/FF gains for the steer motors
+    private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
+    // The closed-loop output type to use for the drive motors;
+    // This affects the PID/FF gains for the drive motors
+    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
-  // Output types for closed-loop control
-  private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT = ClosedLoopOutputType.Voltage;
-  private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT = ClosedLoopOutputType.Voltage;
+    // The stator current at which the wheels start to slip;
+    private static final Current kSlipCurrent = Amps.of(300.0);
 
-  // Current at which wheels start to slip
-  private static final double SLIP_CURRENT_A = 300.0;
-
-  // Theoretical free speed at 12V applied output
-  public static final double SPEED_AT_12_VOLTS_MPS = 4.73;
+    // Theoretical free speed (m/s) at 12 V applied output
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
 
   // Gear ratios and coupling
   private static final double COUPLE_RATIO = 3.5714285714285716;
