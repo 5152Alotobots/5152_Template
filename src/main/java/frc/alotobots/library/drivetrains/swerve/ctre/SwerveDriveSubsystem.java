@@ -1,15 +1,19 @@
 package frc.alotobots.library.drivetrains.swerve.ctre;
 
-import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.ONLY_USE_POSE_ESTIMATION_IN_TELEOP;
-import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.USE_VISION_POSE_ESTIMATION;
+import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,11 +23,13 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,83 +38,122 @@ import lombok.Setter;
  * implements the Subsystem interface for easy integration with WPILib's command-based framework.
  */
 public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem {
-  private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
-  private double lastSimTime;
-  private final SwerveRequest.ApplyChassisSpeeds autoRequest =
-      new SwerveRequest.ApplyChassisSpeeds();
+    private static final double SIM_LOOP_PERIOD = 0.005; // 5 ms
+    private double lastSimTime;
+    private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.SysIdSwerveTranslation translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+    private final SwerveRequest.SysIdSwerveRotation rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    private final SwerveRequest.SysIdSwerveSteerGains steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
 
-  private PhotonvisionAprilTagSubsystem subSysPhotonvision;
-  private SwerveDriveTelemetry telemetry;
-  private SwerveDrivePathPlanner pathPlanner;
+    private PhotonvisionAprilTagSubsystem subSysPhotonvision;
+    private SwerveDriveTelemetry telemetry;
+    private SwerveDrivePathPlanner pathPlanner;
 
-  // Tunable parameters
-  @Getter @Setter private double maxSpeed = TunerConstants.SPEED_AT_12_VOLTS_MPS;
-  @Getter @Setter private double maxAngularSpeed = Math.PI * 2;
-  @Getter @Setter private double driveKP = 0.1;
-  @Getter @Setter private double driveKI = 0.0;
-  @Getter @Setter private double driveKD = 0.0;
-  @Getter @Setter private double turnKP = 0.1;
-  @Getter @Setter private double turnKI = 0.0;
-  @Getter @Setter private double turnKD = 0.0;
+    // Tunable parameters
+    @Getter @Setter private double maxSpeed;
+    @Getter @Setter private double maxAngularSpeed = Math.PI * 2;
+    @Getter @Setter private double driveKP = 0.1;
+    @Getter @Setter private double driveKI = 0.0;
+    @Getter @Setter private double driveKD = 0.0;
+    @Getter @Setter private double turnKP = 0.1;
+    @Getter @Setter private double turnKI = 0.0;
+    @Getter @Setter private double turnKD = 0.0;
 
-  /**
-   * Constructs a new SubSys_SwerveDrive with the given constants and modules.
-   *
-   * @param driveTrainConstants The constants for the swerve drivetrain.
-   * @param odometryUpdateFrequency The frequency at which to update odometry.
-   * @param modules The swerve module constants for each module.
-   */
-  public SwerveDriveSubsystem(
-      SwerveDrivetrainConstants driveTrainConstants,
-      double odometryUpdateFrequency,
-      SwerveModuleConstants... modules) {
-    super(driveTrainConstants, odometryUpdateFrequency, modules);
-    initializeSubsystem();
-  }
+    /* SysId routine for characterizing the drivetrain */
+    private final SysIdRoutine sysIdRoutine;
 
-  /**
-   * Constructs a new SubSys_SwerveDrive with the given constants and modules.
-   *
-   * @param driveTrainConstants The constants for the swerve drivetrain.
-   * @param modules The swerve module constants for each module.
-   */
-  public SwerveDriveSubsystem(
-      SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-    super(driveTrainConstants, modules);
-    initializeSubsystem();
-  }
-
-  private void initializeSubsystem() {
-    System.out.println("Initializing SwerveDriveSubsystem");
-    this.telemetry = new SwerveDriveTelemetry(this);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
-    System.out.println("SwerveDriveSubsystem initialized");
-  }
-
-  private SwerveDrivePathPlanner getPathPlanner() {
-    if (pathPlanner == null) {
-      System.out.println("Initializing PathPlanner");
-      pathPlanner = new SwerveDrivePathPlanner(this);
-      System.out.println("PathPlanner initialized");
-    }
-    return pathPlanner;
-  }
-
-  @Override
-  public void periodic() {
-    // Vision estimate
-    if (ONLY_USE_POSE_ESTIMATION_IN_TELEOP) {
-      if (DriverStation.isTeleopEnabled()) {
-        updateVisionPoseEstimate();
-      }
-    } else {
-      updateVisionPoseEstimate();
+    /**
+     * Constructs a new SwerveDriveSubsystem with the given constants and modules.
+     *
+     * @param driveTrainConstants The constants for the swerve drivetrain.
+     * @param odometryUpdateFrequency The frequency at which to update odometry.
+     * @param modules The swerve module constants for each module.
+     */
+    public SwerveDriveSubsystem(
+            SwerveDrivetrainConstants driveTrainConstants,
+            double odometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
+        super(driveTrainConstants, odometryUpdateFrequency, modules);
+        this.maxSpeed = driveTrainConstants.SpeedAt12VoltsMps;
+        initializeSubsystem();
+        configureSysId();
     }
 
-    telemetry.updateShuffleboard(this);
-  }
+    /**
+     * Constructs a new SwerveDriveSubsystem with the given constants and modules.
+     *
+     * @param driveTrainConstants The constants for the swerve drivetrain.
+     * @param modules The swerve module constants for each module.
+     */
+    public SwerveDriveSubsystem(
+            SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, modules);
+        this.maxSpeed = driveTrainConstants.SpeedAt12VoltsMps;
+        initializeSubsystem();
+        configureSysId();
+    }
+
+    private void initializeSubsystem() {
+        System.out.println("Initializing SwerveDriveSubsystem");
+        this.telemetry = new SwerveDriveTelemetry(this);
+        if (Utils.isSimulation()) {
+            startSimThread();
+        }
+        System.out.println("SwerveDriveSubsystem initialized");
+    }
+
+    private void configureSysId() {
+        sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null, // Use default ramp rate
+                Volts.of(4), // Reduce voltage to prevent brownout
+                null, // Use default timeout
+                (state) -> SignalLogger.writeString("state", state.toString())
+            ),
+            new SysIdRoutine.Mechanism(
+                (volts) -> setControl(translationCharacterization.withVolts(volts)),
+                null,
+                this
+            )
+        );
+    }
+
+    private SwerveDrivePathPlanner getPathPlanner() {
+        if (pathPlanner == null) {
+            System.out.println("Initializing PathPlanner");
+            pathPlanner = new SwerveDrivePathPlanner(this);
+            System.out.println("PathPlanner initialized");
+        }
+        return pathPlanner;
+    }
+
+    @Override
+    public void periodic() {
+        // Vision estimate
+        if (DriverStation.isTeleopEnabled() || !DriverStation.isAutonomousEnabled()) {
+            updateVisionPoseEstimate();
+        }
+
+        telemetry.updateShuffleboard(this);
+    }
+
+    /**
+     * Run a SysId quasistatic test in the specified direction
+     * @param direction The direction to run the test in
+     * @return The command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.quasistatic(direction);
+    }
+
+    /**
+     * Run a SysId dynamic test in the specified direction
+     * @param direction The direction to run the test in
+     * @return The command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return sysIdRoutine.dynamic(direction);
+    }
 
   /**
    * Applies a SwerveRequest to the drivetrain.
