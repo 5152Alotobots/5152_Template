@@ -61,6 +61,9 @@ public class TunerConstants {
     // CAN bus name
     private static final CANBus kCANBus = new CANBus("", "./logs/example.hoot");
 
+    // The frequency to run the odometry loop at
+    private static final double kOdometryFrequency = 250.0; // Hz
+
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
     private static final double kCoupleRatio = 3.5714285714285716;
     private static final double kDriveGearRatio = 6.746031746031747;
@@ -152,6 +155,6 @@ public class TunerConstants {
      * @return The configured SwerveDriveSubsystem
      */
     public static SwerveDriveSubsystem createDrivetrain() {
-        return new SwerveDriveSubsystem(DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight);
+        return new SwerveDriveSubsystem(DrivetrainConstants, kOdometryFrequency, FrontLeft, FrontRight, BackLeft, BackRight);
     }
 }
