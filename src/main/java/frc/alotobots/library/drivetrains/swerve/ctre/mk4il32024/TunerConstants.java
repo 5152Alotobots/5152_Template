@@ -1,11 +1,26 @@
 package frc.alotobots.library.drivetrains.swerve.ctre.mk4il32024;
 
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.ClosedLoopOutputType;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
+import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
+
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Current;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.LinearVelocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.units.measure.*;
 import edu.wpi.first.math.util.Units;
 import frc.alotobots.Constants;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
@@ -18,23 +33,33 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TunerConstants {
 
-  // PID gains for the steer motors
-  private static final Slot0Configs STEER_GAINS =
-      new Slot0Configs().withKP(100).withKI(0).withKD(0.2).withKS(0).withKV(1.5).withKA(0);
+    private static final Slot0Configs steerGains = new Slot0Configs()
+        .withKP(100).withKI(0).withKD(0.2)
+        .withKS(0).withKV(1.5).withKA(0)
+        .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-  // PID gains for the drive motors
-  private static final Slot0Configs DRIVE_GAINS =
-      new Slot0Configs().withKP(3).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+    private static final Slot0Configs driveGains = new Slot0Configs()
+        .withKP(3).withKI(0).withKD(0)
+        .withKS(0).withKV(0);
 
-  // Output types for closed-loop control
-  private static final ClosedLoopOutputType STEER_CLOSED_LOOP_OUTPUT = ClosedLoopOutputType.Voltage;
-  private static final ClosedLoopOutputType DRIVE_CLOSED_LOOP_OUTPUT = ClosedLoopOutputType.Voltage;
+    private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
+    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
-  // Current at which wheels start to slip
-  private static final double SLIP_CURRENT_A = 60.0;
+    private static final Current kSlipCurrent = Amps.of(60.0);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.21);
 
-  // Theoretical free speed at 12V applied output
-  public static final double SPEED_AT_12_VOLTS_MPS = 5.21;
+    private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
+    private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+                .withStatorCurrentLimit(Amps.of(60))
+                .withStatorCurrentLimitEnable(true)
+        );
+    private static final CANcoderConfiguration cancoderInitialConfigs = new CANcoderConfiguration();
+    private static final Pigeon2Configuration pigeonConfigs = null;
+
+    private static final CANBus kCANBus = new CANBus("CTRDriveBus", "./logs/example.hoot");
+    private static final double kOdometryFrequency = 250.0; // Hz
 
   // Gear ratios and coupling
   private static final double COUPLE_RATIO = 3.5714285714285716;
@@ -139,8 +164,11 @@ public class TunerConstants {
           Units.inchesToMeters(BACK_RIGHT_Y_POS_INCHES),
           INVERT_RIGHT_SIDE);
 
-  /** The swerve drivetrain subsystem, configured with the constants defined in this class. */
-  public static final SwerveDriveSubsystem DRIVE_TRAIN =
-      new SwerveDriveSubsystem(
-          DRIVETRAIN_CONSTANTS, FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+    /**
+     * Creates a SwerveDriveSubsystem instance using the constants defined in this class.
+     * @return The configured SwerveDriveSubsystem
+     */
+    public static SwerveDriveSubsystem createDrivetrain() {
+        return new SwerveDriveSubsystem(DrivetrainConstants, kOdometryFrequency, FrontLeft, FrontRight, BackLeft, BackRight);
+    }
 }
