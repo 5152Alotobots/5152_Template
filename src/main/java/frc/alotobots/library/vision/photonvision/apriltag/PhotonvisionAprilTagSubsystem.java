@@ -133,7 +133,8 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
       if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         estimator.setLastPose(previousPose);
-        var estimate = estimator.update();
+        var latestResults = camera.getAllUnreadResults();
+        var estimate = latestResults.isEmpty() ? Optional.empty() : estimator.update(latestResults.getFirst());
         if (estimate.isPresent()) {
           estimates.add(estimate.get());
         }
@@ -153,9 +154,12 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     for (int i = 0; i < poseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
       if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
-        var estimate = estimator.update();
-        if (estimate.isPresent()) {
-          estimates.add(estimate.get());
+        var latestResults = CAMERAS[i].getAllUnreadResults();
+        if (!latestResults.isEmpty()) {
+          var estimate = estimator.update(latestResults.getFirst());
+          if (estimate.isPresent()) {
+            estimates.add(estimate.get());
+          }
         }
       }
     }
