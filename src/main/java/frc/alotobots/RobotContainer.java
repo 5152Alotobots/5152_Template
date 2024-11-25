@@ -34,9 +34,9 @@ public class RobotContainer {
   private final Auto auto;
 
   // Swerve drive requests
-  private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
+  private final SwerveRequest.FieldCentric driveFieldCentric =
+      new SwerveRequest.FieldCentric()
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,7 +48,7 @@ public class RobotContainer {
     blingSubsystem = new BlingSubsystem();
 
     // ━━━━━━━━━━━━━━━━━━━━ [ April Tag ] ━━━━━━━━━━━━━━━━━━━━
-    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem();
+    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem(drivetrainSubsystem);
 
     // ━━━━━━━━━━━━━━━━━━━━ [ Object Detection ] ━━━━━━━━━━━━━━━━━━━━
     photonvisionObjectDetectionSubsystem =

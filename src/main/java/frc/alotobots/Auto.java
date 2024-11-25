@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
 
 /** This class contains methods to set up and manage autonomous commands for the robot. */
 public class Auto {
@@ -36,7 +38,7 @@ public class Auto {
 
   /** Configures the autonomous command chooser. */
   private void configureAutoChooser() {
-    autoChooser = getAutoChooser();
+    //    autoChooser = getAutoChooser(); TODO: UNCOMMENT THIS
     // Add more auto options here
   }
 
@@ -80,7 +82,7 @@ public class Auto {
    * @param pathName The name of the path to follow.
    * @return A Command to follow the specified path.
    */
-  public Command getPath(String pathName) {
+  public Command getPath(String pathName) throws IOException, ParseException {
     PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
     return AutoBuilder.followPath(path);
   }
@@ -95,11 +97,6 @@ public class Auto {
     PathConstraints constraints =
         new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-    return AutoBuilder.pathfindToPose(
-        targetPose,
-        constraints,
-        0.0, // Goal end velocity in meters/sec
-        0.0 // Rotation delay distance in meters
-        );
+    return AutoBuilder.pathfindToPose(targetPose, constraints);
   }
 }

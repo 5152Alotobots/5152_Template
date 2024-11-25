@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,12 +29,13 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   private ArrayList<PhotonPoseEstimator> poseEstimators;
   private final PhotonvisionAprilTagTelemetry telemetry;
   private final boolean[] camerasEnabled;
-
+  private final SwerveDriveSubsystem driveSubsystem;
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
 
   /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
-  public PhotonvisionAprilTagSubsystem() {
+  public PhotonvisionAprilTagSubsystem(SwerveDriveSubsystem driveSubsystem) {
+    this.driveSubsystem = driveSubsystem;
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
@@ -91,10 +93,16 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (USE_VISION_POSE_ESTIMATION) {
+
       Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
       List<PhotonTrackedTarget> detectedTags = getDetectedTags();
       List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
       telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
+      // Finally, send data to robot
+      estimatedPose.ifPresent(
+          pose2dDoublePair ->
+              driveSubsystem.addVisionMeasurement(
+                  pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
     }
   }
 
@@ -158,7 +166,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
       if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         var latestResults = CAMERAS[i].getAllUnreadResults();
         if (!latestResults.isEmpty()) {
-          var estimate = estimator.update(latestResults.getFirst());
+          var estimate = estimator.update(latestResults.get(0));
           if (estimate.isPresent()) {
             estimates.add(estimate.get());
           }
@@ -397,10 +405,13 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
     for (int i = 0; i < poseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
-      if (estimator != null && camerasEnabled[i] && CAMERAS[i] != null && CAMERAS[i].isConnected()) {
+      if (estimator != null
+          && camerasEnabled[i]
+          && CAMERAS[i] != null
+          && CAMERAS[i].isConnected()) {
         var results = CAMERAS[i].getAllUnreadResults();
-        if (!results.isEmpty() && results.getFirst().hasTargets()) {
-          var estimate = estimator.update(results.getFirst());
+        if (!results.isEmpty() && results.get(0).hasTargets()) {
+          var estimate = estimator.update(results.get(0));
           if (estimate.isPresent()) {
             EstimatedRobotPose pose = estimate.get();
             perCameraPoses.add(

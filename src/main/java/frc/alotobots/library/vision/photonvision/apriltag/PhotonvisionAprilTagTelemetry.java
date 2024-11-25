@@ -265,8 +265,7 @@ public class PhotonvisionAprilTagTelemetry {
         var results = camera.getAllUnreadResults();
         if (!results.isEmpty() && results.get(0).hasTargets()) {
           for (PhotonTrackedTarget tag : results.get(0).getTargets()) {
-            Optional<Pose3d> tagPoseOptional =
-                fieldLayout.getTagPose(tag.getFiducialId());
+            Optional<Pose3d> tagPoseOptional = fieldLayout.getTagPose(tag.getFiducialId());
 
             if (tagPoseOptional.isPresent()) {
               Pose2d tagPose = tagPoseOptional.get().toPose2d();

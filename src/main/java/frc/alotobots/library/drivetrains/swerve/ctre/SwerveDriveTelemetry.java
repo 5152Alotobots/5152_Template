@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.alotobots.Constants;
 import java.util.Map;
 
 /** Handles telemetry for the Swerve Drive subsystem. */
@@ -63,9 +62,15 @@ public class SwerveDriveTelemetry {
    * @param swerveDrive The SwerveDriveSubsystem to provide telemetry for.
    */
   private void initializeOtherWidgets(SwerveDriveSubsystem swerveDrive) {
-    driveTab.addBoolean("Flip Pathplanner", () -> DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red).withPosition(0, 3).withSize(2, 1);
+    driveTab
+        .addBoolean(
+            "Flip Pathplanner",
+            () ->
+                DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                    == DriverStation.Alliance.Red)
+        .withPosition(0, 3)
+        .withSize(2, 1);
   }
-
 
   /**
    * Updates the Shuffleboard with the latest telemetry data.

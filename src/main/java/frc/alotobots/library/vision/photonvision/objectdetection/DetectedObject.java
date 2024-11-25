@@ -124,7 +124,7 @@ public class DetectedObject {
       return 0;
     }
 
-    return PhotonUtils.getDistanceToPose(drive.getPose(), pose.toPose2d());
+    return PhotonUtils.getDistanceToPose(drive.getState().Pose, pose.toPose2d());
   }
 
   /**
