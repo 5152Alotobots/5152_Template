@@ -113,8 +113,8 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     List<PhotonTrackedTarget> allDetectedTags = new ArrayList<>();
     for (PhotonCamera camera : CAMERAS) {
       var results = camera.getAllUnreadResults();
-      if (!results.isEmpty() && results.getFirst().hasTargets()) {
-        allDetectedTags.addAll(results.getFirst().getTargets());
+      if (!results.isEmpty() && results.get(0).hasTargets()) {
+        allDetectedTags.addAll(results.get(0).getTargets());
       }
     }
     return allDetectedTags;

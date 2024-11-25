@@ -1,5 +1,7 @@
 package frc.alotobots.library.vision.photonvision.apriltag;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -18,6 +20,7 @@ public class PhotonvisionAprilTagTelemetry {
   private final ShuffleboardTab aprilTagTab;
   private final ShuffleboardLayout mainPoseList;
   private final Field2d field;
+  private final AprilTagFieldLayout fieldLayout;
 
   // Main pose entries
   private final GenericEntry poseXEntry;
@@ -57,6 +60,12 @@ public class PhotonvisionAprilTagTelemetry {
 
   /** Constructs a new PhotonvisionTelemetry object. */
   public PhotonvisionAprilTagTelemetry() {
+    try {
+      this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+    } catch (Exception e) {
+      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      throw new RuntimeException("Failed to load AprilTag field layout", e);
+    }
     this.aprilTagTab = Shuffleboard.getTab("AprilTag Vision");
     this.field = new Field2d();
     this.mainPoseList = initializeMainPoseList();
@@ -257,7 +266,7 @@ public class PhotonvisionAprilTagTelemetry {
         if (!results.isEmpty() && results.getFirst().hasTargets()) {
           for (PhotonTrackedTarget tag : results.getFirst().getTargets()) {
             Optional<Pose3d> tagPoseOptional =
-                PhotonvisionAprilTagSubsystemConstants.fieldLayout.getTagPose(tag.getFiducialId());
+                fieldLayout.getTagPose(tag.getFiducialId());
 
             if (tagPoseOptional.isPresent()) {
               Pose2d tagPose = tagPoseOptional.get().toPose2d();
