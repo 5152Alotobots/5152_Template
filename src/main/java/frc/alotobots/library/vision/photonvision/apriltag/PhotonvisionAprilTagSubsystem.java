@@ -395,14 +395,10 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = new ArrayList<>();
     for (int i = 0; i < poseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
-      PhotonCamera camera = CAMERAS[i];
-
-      if (estimator != null && camerasEnabled[i] && camera != null && camera.isConnected()) {
-        // Get the latest result directly from the camera first
-        var results = camera.getAllUnreadResults();
-        if (!results.isEmpty() && results.get(0).hasTargets()) {
-          // Only update the estimator if we actually have targets
-          var estimate = estimator.update(results.get(0));
+      if (estimator != null && camerasEnabled[i] && CAMERAS[i] != null && CAMERAS[i].isConnected()) {
+        var results = CAMERAS[i].getAllUnreadResults();
+        if (!results.isEmpty() && results.getFirst().hasTargets()) {
+          var estimate = estimator.update(results.getFirst());
           if (estimate.isPresent()) {
             EstimatedRobotPose pose = estimate.get();
             perCameraPoses.add(
