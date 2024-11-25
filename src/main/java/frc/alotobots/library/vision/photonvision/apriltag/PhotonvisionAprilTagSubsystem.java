@@ -137,7 +137,8 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
         if (!latestResults.isEmpty()) {
           var estimate = estimator.update(latestResults.getFirst());
           if (estimate.isPresent()) {
-          estimates.add(estimate.get());
+            estimates.add(estimate.get());
+          }
         }
       }
     }
