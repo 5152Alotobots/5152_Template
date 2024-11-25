@@ -23,6 +23,9 @@ import java.util.function.Supplier;
  * be used in command-based projects.
  */
 public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem {
+  // Other Classes
+  SwerveDrivePathPlanner pathPlanner;
+  SwerveDriveTelemetry telemetry;
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -103,7 +106,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   public SwerveDriveSubsystem(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... modules) {
     super(drivetrainConstants, modules);
-    SwerveDrivePathPlanner pathPlanner = new SwerveDrivePathPlanner(this);
+    pathPlanner = new SwerveDrivePathPlanner(this);
+    telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }
 
@@ -123,7 +127,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
       double odometryUpdateFrequency,
       SwerveModuleConstants... modules) {
     super(drivetrainConstants, odometryUpdateFrequency, modules);
-    SwerveDrivePathPlanner pathPlanner = new SwerveDrivePathPlanner(this);
+    pathPlanner = new SwerveDrivePathPlanner(this);
+    telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }
 
@@ -152,7 +157,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         odometryStandardDeviation,
         visionStandardDeviation,
         modules);
-    SwerveDrivePathPlanner pathPlanner = new SwerveDrivePathPlanner(this);
+    pathPlanner = new SwerveDrivePathPlanner(this);
+    telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }
 
@@ -190,6 +196,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
   @Override
   public void periodic() {
+    // Update telemetry
+    telemetry.updateShuffleboard(this);
     /*
      * Periodically try to apply the operator perspective.
      * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.

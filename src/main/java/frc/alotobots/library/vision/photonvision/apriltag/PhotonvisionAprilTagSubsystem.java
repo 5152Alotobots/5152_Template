@@ -8,6 +8,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.ArrayList;
@@ -98,14 +99,14 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
 
     // Get current robot pose from odometry
     Pose2d currentPose = driveSubsystem.getState().Pose;
-    
+
     // Get vision estimate using current pose as reference
     Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d(currentPose);
-    
+
     // Get detected tags and camera poses for telemetry
     List<PhotonTrackedTarget> detectedTags = getDetectedTags();
     List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
-    
+
     // Update telemetry
     telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
 
@@ -113,8 +114,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     if (estimatedPose.isPresent()) {
       Pair<Pose2d, Double> poseData = estimatedPose.get();
       // Only use vision in teleop if configured
-      if (!PhotonvisionAprilTagSubsystemConstants.ONLY_USE_VISION_IN_TELEOP 
-          || DriverStation.isTeleopEnabled()) {
+      if (!ONLY_USE_POSE_ESTIMATION_IN_TELEOP || DriverStation.isTeleopEnabled()) {
         driveSubsystem.addVisionMeasurement(poseData.getFirst(), poseData.getSecond());
       }
     }
