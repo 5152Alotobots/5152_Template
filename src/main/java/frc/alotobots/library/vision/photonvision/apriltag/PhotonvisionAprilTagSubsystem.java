@@ -35,7 +35,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
   public PhotonvisionAprilTagSubsystem() {
     try {
-      this.fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+      this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
       System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
       throw new RuntimeException("Failed to load AprilTag field layout", e);
@@ -76,7 +76,6 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
             new PhotonPoseEstimator(
                 fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-                CAMERAS[i],
                 CAMERA_OFFSETS[i]);
         estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         poseEstimators.add(estimator);
