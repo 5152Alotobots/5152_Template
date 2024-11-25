@@ -112,9 +112,9 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   private List<PhotonTrackedTarget> getDetectedTags() {
     List<PhotonTrackedTarget> allDetectedTags = new ArrayList<>();
     for (PhotonCamera camera : CAMERAS) {
-      var result = camera.getLatestResult();
-      if (result.hasTargets()) {
-        allDetectedTags.addAll(result.getTargets());
+      var results = camera.getAllUnreadResults();
+      if (!results.isEmpty() && results.get(0).hasTargets()) {
+        allDetectedTags.addAll(results.get(0).getTargets());
       }
     }
     return allDetectedTags;
@@ -395,10 +395,10 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
 
       if (estimator != null && camerasEnabled[i] && camera != null && camera.isConnected()) {
         // Get the latest result directly from the camera first
-        var result = camera.getLatestResult();
-        if (result.hasTargets()) {
+        var results = camera.getAllUnreadResults();
+        if (!results.isEmpty() && results.get(0).hasTargets()) {
           // Only update the estimator if we actually have targets
-          var estimate = estimator.update();
+          var estimate = estimator.update(results.get(0));
           if (estimate.isPresent()) {
             EstimatedRobotPose pose = estimate.get();
             perCameraPoses.add(
