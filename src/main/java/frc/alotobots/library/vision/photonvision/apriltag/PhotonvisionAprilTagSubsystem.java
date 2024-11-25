@@ -133,8 +133,9 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
       if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
         estimator.setLastPose(previousPose);
-        var latestResults = camera.getAllUnreadResults();
-        var estimate = latestResults.isEmpty() ? Optional.empty() : estimator.update(latestResults.getFirst());
+        var latestResults = CAMERAS[i].getAllUnreadResults();
+        if (!latestResults.isEmpty()) {
+          var estimate = estimator.update(latestResults.getFirst());
         if (estimate.isPresent()) {
           estimates.add(estimate.get());
         }
