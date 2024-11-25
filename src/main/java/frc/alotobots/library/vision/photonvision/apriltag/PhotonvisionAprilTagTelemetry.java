@@ -146,7 +146,7 @@ public class PhotonvisionAprilTagTelemetry {
         widget.connectionStatus.setBoolean(isConnected);
 
         if (!results.isEmpty() && results.get(0).hasTargets()) {
-          var bestTarget = result.getBestTarget();
+          var bestTarget = results.get(0).getBestTarget();
           var camToTarget = bestTarget.getBestCameraToTarget();
 
           widget.poseXEntry.setDouble(truncate(camToTarget.getX(), 3));
