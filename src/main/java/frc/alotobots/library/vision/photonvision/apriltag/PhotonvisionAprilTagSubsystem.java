@@ -94,7 +94,8 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   public void periodic() {
     if (USE_VISION_POSE_ESTIMATION) {
 
-      Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d();
+      Optional<Pair<Pose2d, Double>> estimatedPose =
+          getEstimatedVisionPose2d(driveSubsystem.getState().Pose);
       List<PhotonTrackedTarget> detectedTags = getDetectedTags();
       List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
       telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
