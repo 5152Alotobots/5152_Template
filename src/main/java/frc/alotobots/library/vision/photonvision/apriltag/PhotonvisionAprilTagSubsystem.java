@@ -92,18 +92,31 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (USE_VISION_POSE_ESTIMATION) {
+    if (!USE_VISION_POSE_ESTIMATION) {
+      return;
+    }
 
-      Optional<Pair<Pose2d, Double>> estimatedPose =
-          getEstimatedVisionPose2d(driveSubsystem.getState().Pose);
-      List<PhotonTrackedTarget> detectedTags = getDetectedTags();
-      List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
-      telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
-      // Finally, send data to robot
-      estimatedPose.ifPresent(
-          pose2dDoublePair ->
-              driveSubsystem.addVisionMeasurement(
-                  pose2dDoublePair.getFirst(), pose2dDoublePair.getSecond()));
+    // Get current robot pose from odometry
+    Pose2d currentPose = driveSubsystem.getState().Pose;
+    
+    // Get vision estimate using current pose as reference
+    Optional<Pair<Pose2d, Double>> estimatedPose = getEstimatedVisionPose2d(currentPose);
+    
+    // Get detected tags and camera poses for telemetry
+    List<PhotonTrackedTarget> detectedTags = getDetectedTags();
+    List<Pair<Integer, Pair<Pose3d, Double>>> perCameraPoses = getPerCameraEstimatedPoses();
+    
+    // Update telemetry
+    telemetry.updateShuffleboard(estimatedPose.map(Pair::getFirst), detectedTags, perCameraPoses);
+
+    // Add vision measurement if we have a valid estimate
+    if (estimatedPose.isPresent()) {
+      Pair<Pose2d, Double> poseData = estimatedPose.get();
+      // Only use vision in teleop if configured
+      if (!PhotonvisionAprilTagSubsystemConstants.ONLY_USE_VISION_IN_TELEOP 
+          || DriverStation.isTeleopEnabled()) {
+        driveSubsystem.addVisionMeasurement(poseData.getFirst(), poseData.getSecond());
+      }
     }
   }
 
