@@ -145,8 +145,8 @@ public class PhotonvisionAprilTagTelemetry {
 
         widget.connectionStatus.setBoolean(isConnected);
 
-        if (!results.isEmpty() && results.get(0).hasTargets()) {
-          var bestTarget = results.get(0).getBestTarget();
+        if (!results.isEmpty() && results.getFirst().hasTargets()) {
+          var bestTarget = results.getFirst().getBestTarget();
           var camToTarget = bestTarget.getBestCameraToTarget();
 
           widget.poseXEntry.setDouble(truncate(camToTarget.getX(), 3));
@@ -254,8 +254,8 @@ public class PhotonvisionAprilTagTelemetry {
 
       if (camera != null) {
         var results = camera.getAllUnreadResults();
-        if (!results.isEmpty() && results.get(0).hasTargets()) {
-          for (PhotonTrackedTarget tag : results.get(0).getTargets()) {
+        if (!results.isEmpty() && results.getFirst().hasTargets()) {
+          for (PhotonTrackedTarget tag : results.getFirst().getTargets()) {
             Optional<Pose3d> tagPoseOptional =
                 PhotonvisionAprilTagSubsystemConstants.fieldLayout.getTagPose(tag.getFiducialId());
 
