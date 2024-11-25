@@ -136,7 +136,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
         var latestResults = CAMERAS[i].getAllUnreadResults();
         if (!latestResults.isEmpty()) {
           var estimate = estimator.update(latestResults.getFirst());
-        if (estimate.isPresent()) {
+          if (estimate.isPresent()) {
           estimates.add(estimate.get());
         }
       }
