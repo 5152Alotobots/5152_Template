@@ -50,10 +50,10 @@ public class PhotonvisionAprilTagSubsystemConstants {
       MatBuilder.fill(
           Nat.N3(),
           Nat.N1(),
-          0.00443, // x in meters (default=0.9)
-          0.00630, // y in meters (default=0.9)
-          1000 // heading in radians. The gyroscope is very accurate, so as long as it is reset
-          // correctly it is unnecessary to correct it with vision
+          0.1, // x in meters (default=0.9)
+          0.1, // y in meters (default=0.9)
+          10 // heading in radians. The gyroscope is very accurate, so as long as it is reset
+          // correctly it is unnecessary to correct it with vision (set this to a large value like 1000)
           );
 
   // Pose estimation constants

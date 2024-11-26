@@ -2,6 +2,7 @@ package frc.alotobots.library.vision.photonvision.apriltag;
 
 import static frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystemConstants.*;
 
+import com.ctre.phoenix6.Utils;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
@@ -36,6 +37,8 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
 
   /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
   public PhotonvisionAprilTagSubsystem(SwerveDriveSubsystem driveSubsystem) {
+    driveSubsystem.setVisionMeasurementStdDevs(VISION_STD_DEVS);
+
     this.driveSubsystem = driveSubsystem;
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
@@ -115,7 +118,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
       Pair<Pose2d, Double> poseData = estimatedPose.get();
       // Only use vision in teleop if configured
       if (!ONLY_USE_POSE_ESTIMATION_IN_TELEOP || DriverStation.isTeleopEnabled()) {
-        driveSubsystem.addVisionMeasurement(poseData.getFirst(), poseData.getSecond());
+        driveSubsystem.addVisionMeasurement(poseData.getFirst(), Utils.getCurrentTimeSeconds());
       }
     }
   }
@@ -274,6 +277,9 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     timestamp /= totalWeight;
 
     Pose3d averagePose = new Pose3d(x, y, z, new Rotation3d(rotX, rotY, rotZ));
+
+    // Convert to current time from program time
+    timestamp = Utils.fpgaToCurrentTime(timestamp);
 
     // Apply smoothing filter
     if (lastSmoothedPose == null) {
