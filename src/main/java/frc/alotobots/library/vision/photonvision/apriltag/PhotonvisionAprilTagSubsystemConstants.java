@@ -53,7 +53,8 @@ public class PhotonvisionAprilTagSubsystemConstants {
           0.1, // x in meters (default=0.9)
           0.1, // y in meters (default=0.9)
           10 // heading in radians. The gyroscope is very accurate, so as long as it is reset
-          // correctly it is unnecessary to correct it with vision (set this to a large value like 1000)
+          // correctly it is unnecessary to correct it with vision (set this to a large value like
+          // 1000)
           );
 
   // Pose estimation constants
@@ -63,6 +64,6 @@ public class PhotonvisionAprilTagSubsystemConstants {
   public static final double MAX_TAG_WEIGHT = 1.0; // Maximum weight for multi-tag poses
 
   // Smoothing constants
-  public static final double POSITION_ALPHA = 0.3; // Lower = more smoothing (0-1)
-  public static final double ROTATION_ALPHA = 0.2; // Lower = more smoothing (0-1)
+  public static final double POSITION_ALPHA = 0.05; // Lower = more smoothing (0-1)
+  public static final double ROTATION_ALPHA = 0.05; // Lower = more smoothing (0-1)
 }
