@@ -120,6 +120,8 @@ public class SwerveDrivePathPlanner {
                   == DriverStation.Alliance.Red,
           swerveDrive // Subsystem for requirements
           );
+      isConfigured = true;
+      System.out.println("PathPlanner configuration complete.");
     } catch (Exception ex) {
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder" + ex, ex.getStackTrace());
