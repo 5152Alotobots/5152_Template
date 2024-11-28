@@ -27,7 +27,7 @@ public class PhotonvisionAprilTagSubsystemConstants {
             new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))),
         // Front Middle
         new Transform3d(
-            new Translation3d(0.275, 0.0, 0.195),
+            new Translation3d(0.275, 0.0, 0.189),
             new Rotation3d(0, Math.toRadians(-35), Math.toRadians(0)))
       };
   // CAMERAS
@@ -50,8 +50,8 @@ public class PhotonvisionAprilTagSubsystemConstants {
       MatBuilder.fill(
           Nat.N3(),
           Nat.N1(),
-          0.1, // x in meters (default=0.9)
-          0.1, // y in meters (default=0.9)
+          0.001, // x in meters (default=0.9)
+          0.001, // y in meters (default=0.9)
           10 // heading in radians. The gyroscope is very accurate, so as long as it is reset
           // correctly it is unnecessary to correct it with vision (set this to a large value like
           // 1000)

@@ -24,7 +24,6 @@ import java.util.function.Supplier;
  */
 public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem {
   // Other Classes
-  SwerveDrivePathPlanner pathPlanner;
   SwerveDriveTelemetry telemetry;
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -106,7 +105,6 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   public SwerveDriveSubsystem(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... modules) {
     super(drivetrainConstants, modules);
-    pathPlanner = new SwerveDrivePathPlanner(this);
     telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }
@@ -127,7 +125,6 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
       double odometryUpdateFrequency,
       SwerveModuleConstants... modules) {
     super(drivetrainConstants, odometryUpdateFrequency, modules);
-    pathPlanner = new SwerveDrivePathPlanner(this);
     telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }
@@ -157,7 +154,6 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         odometryStandardDeviation,
         visionStandardDeviation,
         modules);
-    pathPlanner = new SwerveDrivePathPlanner(this);
     telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
   }

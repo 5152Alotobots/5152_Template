@@ -94,8 +94,16 @@ public class SwerveDrivePathPlanner {
     return AutoBuilder.pathfindToPose(targetPose, constraints);
   }
 
+  private static boolean isConfigured = false;
+
   private void configurePathPlanner() {
+    if (isConfigured) {
+      System.out.println(
+          "WARNING: PathPlanner already configured! Skipping duplicate configuration.");
+      return;
+    }
     try {
+      System.out.println("Configuring PathPlanner...");
       var config = RobotConfig.fromGUISettings();
       AutoBuilder.configure(
           () -> swerveDrive.getState().Pose, // Supplier of current robot pose
@@ -110,9 +118,9 @@ public class SwerveDrivePathPlanner {
                       .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
           new PPHolonomicDriveController(
               // PID constants for translation
-              new PIDConstants(10, 0, 0),
+              new PIDConstants(2.2, 0.012, 0.2),
               // PID constants for rotation
-              new PIDConstants(7, 0, 0)),
+              new PIDConstants(6.5, 0.02, 0.8)),
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the case
           () ->
