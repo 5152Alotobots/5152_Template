@@ -96,13 +96,7 @@ public class SwerveDrivePathPlanner {
 
   private void configurePathPlanner() {
     try {
-      var config = new RobotConfig(
-          4.0, // Max module speed, in meters per second
-          new PIDConstants(10.0, 0.0, 0.0), // Translation PID constants
-          new PIDConstants(7.0, 0.0, 0.0), // Rotation PID constants
-          3.0, // Drive base radius in meters (distance from robot center to furthest module)
-          new ReplanningConfig() // Default path replanning config
-      );
+      var config = RobotConfig.fromGUISettings();
       AutoBuilder.configure(
           () -> swerveDrive.getState().Pose, // Supplier of current robot pose
           swerveDrive::resetPose, // Consumer for seeding pose against auto
@@ -128,7 +122,7 @@ public class SwerveDrivePathPlanner {
           );
     } catch (Exception ex) {
       DriverStation.reportError(
-          "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+          "Failed to load PathPlanner config and configure AutoBuilder" + ex, ex.getStackTrace());
     }
   }
 }
