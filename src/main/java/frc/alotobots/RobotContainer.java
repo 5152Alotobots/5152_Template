@@ -11,6 +11,7 @@ import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
+import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDrivePathPlanner;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,8 +31,8 @@ public class RobotContainer {
   // Human-Machine Interface
   private final HMIStation hmiStation;
 
-  // Auto Commands
-  private final Auto auto;
+  // Path Planning and Auto
+  private final SwerveDrivePathPlanner pathPlanner;
 
   // Swerve drive requests
   private final SwerveRequest.FieldCentric driveFieldCentric =
@@ -60,8 +61,8 @@ public class RobotContainer {
     // Initialize HMI
     hmiStation = new HMIStation();
 
-    // Initialize AutoCommands
-    auto = new Auto(drivetrainSubsystem);
+    // Initialize Path Planning and Auto
+    pathPlanner = new SwerveDrivePathPlanner(drivetrainSubsystem);
 
     // Configure commands and bindings
     configureDefaultCommands();
@@ -100,6 +101,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return auto.getSelectedAutoCommand();
+    return pathPlanner.getSelectedAutoCommand();
   }
 }
