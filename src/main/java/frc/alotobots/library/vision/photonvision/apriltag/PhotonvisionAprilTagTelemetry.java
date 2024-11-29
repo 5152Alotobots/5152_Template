@@ -238,10 +238,13 @@ public class PhotonvisionAprilTagTelemetry {
         widget.lastPoseY = widget.poseYEntry.get().getString();
         widget.lastRotation = widget.rotationEntry.get().getString();
       } else {
-        // Use last known good values instead of N/A
-        widget.poseXEntry.setString(widget.lastPoseX);
-        widget.poseYEntry.setString(widget.lastPoseY);
-        widget.rotationEntry.setString(widget.lastRotation);
+        // Clear values when no updates are available
+        widget.lastPoseX = "N/A";
+        widget.lastPoseY = "N/A";
+        widget.lastRotation = "N/A";
+        widget.poseXEntry.setString("N/A");
+        widget.poseYEntry.setString("N/A");
+        widget.rotationEntry.setString("N/A");
       }
     }
   }

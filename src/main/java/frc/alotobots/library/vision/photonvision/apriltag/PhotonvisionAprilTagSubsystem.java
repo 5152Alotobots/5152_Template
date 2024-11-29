@@ -226,6 +226,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    */
   private Optional<Pair<Pose3d, Double>> averageEstimates(ArrayList<EstimatedRobotPose> estimates) {
     if (estimates.isEmpty()) {
+      lastSmoothedPose = null; // Reset the smoothed pose when no estimates are available
       return Optional.empty();
     }
 
