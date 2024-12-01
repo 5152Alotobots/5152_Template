@@ -29,13 +29,13 @@ public class TunerConstants {
           .withKP(55)
           .withKI(0)
           .withKD(0.2)
-          .withKS(0.13)
+          .withKS(0.12)
           .withKV(0.102)
           .withKA(0.015)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(5.5).withKI(0).withKD(0).withKS(0.13).withKV(0.99).withKA(0);
+      new Slot0Configs().withKP(5.5).withKI(0).withKD(0).withKS(0.13).withKV(0.099).withKA(0);
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
@@ -45,10 +45,10 @@ public class TunerConstants {
   private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
   // The stator current at which the wheels start to slip;
-  private static final Current kSlipCurrent = Amps.of(300.0);
+  private static final Current kSlipCurrent = Amps.of(27.16);
 
   // Theoretical free speed (m/s) at 12 V applied output
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.73);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.02);
 
   // Initial configs for the drive and steer motors and the CANcoder
   private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
@@ -56,7 +56,7 @@ public class TunerConstants {
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  .withStatorCurrentLimit(Amps.of(60))
+                  .withStatorCurrentLimit(Amps.of(120))
                   .withStatorCurrentLimitEnable(true));
   private static final CANcoderConfiguration cancoderInitialConfigs = new CANcoderConfiguration();
   private static final Pigeon2Configuration pigeonConfigs = null;
@@ -65,7 +65,7 @@ public class TunerConstants {
   private static final CANBus kCANBus = new CANBus("", "./logs/example.hoot");
 
   // The frequency to run the odometry loop at
-  private static final double kOdometryFrequency = 250.0; // Hz
+  private static final double kOdometryFrequency = 150.0; // Hz
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
   private static final double kCoupleRatio = 3.5714285714285716;

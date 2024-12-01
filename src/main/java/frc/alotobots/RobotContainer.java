@@ -1,8 +1,11 @@
 package frc.alotobots;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.game.HMIStation;
 import frc.alotobots.library.bling.BlingSubsystem;
 import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
@@ -91,6 +94,20 @@ public class RobotContainer {
   private void configureLogicCommands() {
     hmiStation.gyroResetButton.onTrue(
         drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldCentric));
+
+    // Enable/Disable Signal Logger for SYSID
+    hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::start));
+    hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
+
+    // SYSID
+    hmiStation.driverPOVUp.whileTrue(
+        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    hmiStation.driverPOVDown.whileTrue(
+        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    hmiStation.driverPOVLeft.whileTrue(
+        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    hmiStation.driverPOVRight.whileTrue(
+        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // Add other logic-based commands here
   }

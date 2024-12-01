@@ -52,7 +52,7 @@ public class PhotonvisionAprilTagSubsystemConstants {
           Nat.N1(),
           0.001, // x in meters (default=0.9)
           0.001, // y in meters (default=0.9)
-          10 // heading in radians. The gyroscope is very accurate, so as long as it is reset
+          0.1 // heading in radians. The gyroscope is very accurate, so as long as it is reset
           // correctly it is unnecessary to correct it with vision (set this to a large value like
           // 1000)
           );

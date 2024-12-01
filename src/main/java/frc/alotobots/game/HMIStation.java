@@ -42,8 +42,8 @@ public class HMIStation {
    * etc.
    */
   public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
-  public final JoystickButton driverButton2 = new JoystickButton(driverController, 2);
-  public final JoystickButton driverButton3 = new JoystickButton(driverController, 3);
+  public final JoystickButton stopCtrSignalLoggerButton = new JoystickButton(driverController, 2);
+  public final JoystickButton startCtrSignalLoggerButton = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
   public final JoystickButton turtleModeButton = new JoystickButton(driverController, 5);
   public final JoystickButton turboModeButton = new JoystickButton(driverController, 6);
