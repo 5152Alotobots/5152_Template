@@ -118,9 +118,9 @@ public class SwerveDrivePathPlanner {
                       .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
           new PPHolonomicDriveController(
               // PID constants for translation
-              new PIDConstants(2.4, 0, 0.015), // .26, 0, 0
+              new PIDConstants(2.4, 0, 0.015), // Tuned for 2022 Drive
               // PID constants for rotation
-              new PIDConstants(7.8, 0, 0.015)), // 6, 0, 0
+              new PIDConstants(7.8, 0, 0.015)), // Tuned for 2022 Drive 7.8, 0, .015
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the case
           () ->

@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Default2"
+            "pathName": "RotationTest1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RotationTest2"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
-  "folder": null,
+  "resetOdom": true,
+  "folder": "Tests",
   "choreoAuto": false
 }

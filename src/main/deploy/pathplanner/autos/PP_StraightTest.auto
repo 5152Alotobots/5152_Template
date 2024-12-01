@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Default1"
+            "pathName": "StraightTest1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Default2"
+            "pathName": "StraightTest2"
           }
         }
       ]
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "Tests",
   "choreoAuto": false
 }
