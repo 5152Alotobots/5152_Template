@@ -30,6 +30,9 @@ public class SwerveDriveSubsystemConstants {
 
   @UtilityClass
   public static final class PerformanceModeTurbo {
+    // NOTE: THESE ARE THE THEORETICAL MAXIMUMS OF THE ROBOT. IT IS HIGHLY UNLIKELY THAT THE ROBOT
+    // WILL ACTUALLY
+    // TRAVEL THIS FAST. OPEN LOOP USE ONLY!!
     public static final double DRIVE_TRAIN_MAX_SPD = 5.2; // m/s
     public static final double DRIVE_TRAIN_MAX_ACCELERATION = 1.00; // m/s^2
     public static final double DRIVE_TRAIN_MAX_ROT_SPD = 1.0 * 2 * Math.PI; // rad/s

@@ -15,13 +15,6 @@ public final class Constants {
 
   @UtilityClass
   public static final class Robot {
-    public static final boolean TUNE_MODE = false;
-
-    @UtilityClass
-    public static final class Calibrations {
-      @UtilityClass
-      public static final class DriveTrain {}
-    }
 
     @UtilityClass
     public static final class Field {
