@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -85,13 +86,14 @@ public class SwerveDrivePathPlanner {
    * Gets a command to pathfind to a target pose.
    *
    * @param targetPose The target pose to pathfind to.
+   * @param endVelocity Velocity the robot should target after reaching the pose
    * @return A Command to pathfind to the specified pose.
    */
-  public Command getPathFinderCommand(Pose2d targetPose) {
+  public Command getPathFinderCommand(Pose2d targetPose, LinearVelocity endVelocity) {
     PathConstraints constraints =
-        new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
 
-    return AutoBuilder.pathfindToPose(targetPose, constraints);
+    return AutoBuilder.pathfindToPose(targetPose, constraints, endVelocity);
   }
 
   private static boolean isConfigured = false;

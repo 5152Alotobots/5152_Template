@@ -92,12 +92,13 @@ public class RobotContainer {
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
+    // Gyro re-centering
     hmiStation.gyroResetButton.onTrue(
         drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldCentric));
 
     // Enable/Disable Signal Logger for SYSID
     hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::start));
-    hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
+    hmiStation.stopCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
 
     // SYSID
     hmiStation.driverPOVUp.whileTrue(
