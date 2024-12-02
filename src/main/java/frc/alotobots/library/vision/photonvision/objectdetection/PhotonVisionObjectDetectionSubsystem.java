@@ -33,10 +33,10 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    * @return List of DetectedObject instances from enabled cameras
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
-  
+
   // Smoothing factor for exponential smoothing (0 to 1)
-  private static final double SMOOTHING_FACTOR = 0.3;
-  
+  private static final double SMOOTHING_FACTOR = 0.05;
+
   // Last smoothed angle value
   private double lastSmoothedAngle = 0.0;
   private boolean hasValidMeasurement = false;
@@ -54,8 +54,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
     // Calculate raw angle in radians
     double robotAngle = driveSubsystem.getState().Pose.getRotation().getDegrees();
-    double rawAngle = Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw());
-    
+    double rawAngle =
+        Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw());
+
     // Apply exponential smoothing
     if (!hasValidMeasurement) {
       // First measurement, initialize smoothing
@@ -65,7 +66,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       // Apply smoothing formula: smoothed = α * current + (1 - α) * lastSmoothed
       lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
     }
-    
+
     return Optional.of(lastSmoothedAngle);
   }
 
