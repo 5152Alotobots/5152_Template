@@ -35,11 +35,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
   // Smoothing factor for exponential smoothing (0 to 1)
-  private static final double SMOOTHING_FACTOR = 0.05;
+  private static final double SMOOTHING_FACTOR = 0.3;
+  private static final int MOVING_AVERAGE_WINDOW = 5;
 
-  // Last smoothed angle value
+  // Smoothing state variables
   private double lastSmoothedAngle = 0.0;
   private boolean hasValidMeasurement = false;
+  private final double[] angleBuffer = new double[MOVING_AVERAGE_WINDOW];
+  private int bufferIndex = 0;
+  private int validSamples = 0;
 
   /**
    * Gets the exponentially smoothed yaw angle to the first detected object.
@@ -57,17 +61,27 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     double rawAngle =
         Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw());
 
-    // Apply exponential smoothing
+    // First apply exponential smoothing
     if (!hasValidMeasurement) {
-      // First measurement, initialize smoothing
       lastSmoothedAngle = rawAngle;
       hasValidMeasurement = true;
     } else {
-      // Apply smoothing formula: smoothed = α * current + (1 - α) * lastSmoothed
       lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
     }
 
-    return Optional.of(lastSmoothedAngle);
+    // Update moving average buffer
+    angleBuffer[bufferIndex] = lastSmoothedAngle;
+    bufferIndex = (bufferIndex + 1) % MOVING_AVERAGE_WINDOW;
+    validSamples = Math.min(validSamples + 1, MOVING_AVERAGE_WINDOW);
+
+    // Calculate moving average
+    double sum = 0;
+    for (int i = 0; i < validSamples; i++) {
+      sum += angleBuffer[i];
+    }
+    double movingAverage = sum / validSamples;
+
+    return Optional.of(movingAverage);
   }
 
   @Override
