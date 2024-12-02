@@ -1,5 +1,6 @@
 package frc.alotobots.library.vision.photonvision.objectdetection;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
@@ -33,18 +34,20 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-
   /**
-   * Gets the yaw angle to the first detected object relative to the camera.
+   * Gets the yaw angle to the first/best detected object relative to the camera.
    *
-   * @return Optional containing the yaw angle in degrees to the object,
-   *         or empty if no objects are detected
+   * @return Optional containing the yaw angle in degrees to the object, or empty if no objects are
+   *     detected
    */
   public Optional<Double> getFieldRelativeAngle() {
     if (detectedObjects.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(detectedObjects.get(0).getTarget().getYaw());
+    return Optional.of(
+        Units.degreesToRadians(
+            driveSubsystem.getState().Pose.getRotation().getDegrees()
+                + detectedObjects.get(0).getTarget().getYaw()));
   }
 
   @Override
