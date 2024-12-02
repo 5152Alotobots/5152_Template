@@ -91,7 +91,7 @@ public class SwerveDrivePathPlanner {
    * @return A Command to pathfind to the specified pose.
    */
   public Command getPathFinderCommand(Pose2d targetPose, LinearVelocity endVelocity) {
-    System.out.println("TEST Pathfind");
+    System.out.println("TEST!!!");
     PathConstraints constraints =
         new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
 
