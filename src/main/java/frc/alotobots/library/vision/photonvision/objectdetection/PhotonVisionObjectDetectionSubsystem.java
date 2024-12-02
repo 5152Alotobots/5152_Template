@@ -54,7 +54,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
 
     PhotonTrackedTarget target = detectedObjects.get(0).getTarget();
-    double currentTimestamp = target.getLastDetectedTime() / 1000.0; // Convert to seconds
+    double currentTimestamp = target.() / 1000.0; // Convert to seconds
     double latencyCompensation = currentTimestamp - lastTimestamp;
     
     // Calculate raw angle in radians
