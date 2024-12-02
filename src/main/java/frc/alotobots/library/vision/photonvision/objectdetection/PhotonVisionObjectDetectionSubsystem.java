@@ -33,21 +33,46 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    * @return List of DetectedObject instances from enabled cameras
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
+  
+  // Smoothing factor for exponential smoothing (0 to 1)
+  private static final double SMOOTHING_FACTOR = 0.3;
+  
+  // Last smoothed angle value
+  private double lastSmoothedAngle = 0.0;
+  private double lastTimestamp = 0.0;
+  private boolean hasValidMeasurement = false;
 
   /**
-   * Gets the yaw angle to the first/best detected object relative to the camera.
+   * Gets the smoothed and latency-compensated yaw angle to the first detected object.
    *
-   * @return Optional containing the yaw angle in degrees to the object, or empty if no objects are
-   *     detected
+   * @return Optional containing the processed angle in radians, or empty if no objects are detected
    */
   public Optional<Double> getFieldRelativeAngle() {
     if (detectedObjects.isEmpty()) {
+      hasValidMeasurement = false;
       return Optional.empty();
     }
-    return Optional.of(
-        Units.degreesToRadians(
-            driveSubsystem.getState().Pose.getRotation().getDegrees()
-                + detectedObjects.get(0).getTarget().getYaw()));
+
+    PhotonTrackedTarget target = detectedObjects.get(0).getTarget();
+    double currentTimestamp = target.getLastDetectedTime() / 1000.0; // Convert to seconds
+    double latencyCompensation = currentTimestamp - lastTimestamp;
+    
+    // Calculate raw angle in radians
+    double robotAngle = driveSubsystem.getState().Pose.getRotation().getDegrees();
+    double rawAngle = Units.degreesToRadians(robotAngle + target.getYaw());
+    
+    // Apply exponential smoothing
+    if (!hasValidMeasurement) {
+      // First measurement, initialize smoothing
+      lastSmoothedAngle = rawAngle;
+      hasValidMeasurement = true;
+    } else {
+      // Apply smoothing formula: smoothed = α * current + (1 - α) * lastSmoothed
+      lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
+    }
+    
+    lastTimestamp = currentTimestamp;
+    return Optional.of(lastSmoothedAngle);
   }
 
   @Override
