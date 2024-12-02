@@ -3,6 +3,7 @@ package frc.alotobots.library.vision.photonvision.objectdetection;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import edu.wpi.first.math.geometry.Translation2d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,15 +36,26 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
 
   /**
-   * Gets the field-relative angle of the first detected object using its pose.
+   * Calculates the field-relative angle needed for the robot to point towards the first detected object.
    *
-   * @return Optional containing the field-relative angle in degrees, or empty if no objects are detected
+   * @return Optional containing the angle in degrees that the robot needs to rotate to point at the object,
+   *         or empty if no objects are detected
    */
   public Optional<Double> getFieldRelativeAngle() {
     if (detectedObjects.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(detectedObjects.get(0).getPose().getRotation().getDegrees());
+
+    // Get robot and object positions
+    Translation2d robotPosition = driveSubsystem.getPose().getTranslation();
+    Translation2d objectPosition = detectedObjects.get(0).getPose().getTranslation();
+
+    // Calculate the vector from robot to object
+    Translation2d difference = objectPosition.minus(robotPosition);
+    
+    // Calculate the angle in degrees, with 0 degrees being positive X axis
+    double angleRadians = Math.atan2(difference.getY(), difference.getX());
+    return Optional.of(Math.toDegrees(angleRadians));
   }
 
   @Override
