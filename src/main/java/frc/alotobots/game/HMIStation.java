@@ -42,7 +42,7 @@ public class HMIStation {
    * Button 4 (Y) -> quaternaryActionButton
    * etc.
    */
-  public final JoystickButton driverButton1 = new JoystickButton(driverController, 1);
+  public final JoystickButton testOTFPathplannerButton = new JoystickButton(driverController, 1);
   public final JoystickButton stopCtrSignalLoggerButton = new JoystickButton(driverController, 2);
   public final JoystickButton startCtrSignalLoggerButton = new JoystickButton(driverController, 3);
   public final JoystickButton gyroResetButton = new JoystickButton(driverController, 4);
@@ -138,11 +138,17 @@ public class HMIStation {
   }
 
   // Driver Trigger Axes
-  public boolean robotCentricTrigger() {
+  private boolean robotCentricTrigger() {
     return (driverController.getRawAxis(2) > HMIDeadbands.TRIGGER_DEADBAND);
   }
 
-  public final Trigger robotCentric = new Trigger(this::robotCentricTrigger);
+  private boolean driveWhileFacingBestObjectTrigger() {
+    return (driverController.getRawAxis(3) > HMIDeadbands.TRIGGER_DEADBAND);
+  }
+
+  public final Trigger robotCentricTrigger = new Trigger(this::robotCentricTrigger);
+  public final Trigger driveWhileFacingBestObjectTrigger =
+      new Trigger(this::driveWhileFacingBestObjectTrigger);
 
   /* Add game-specific trigger methods here following this pattern:
    *

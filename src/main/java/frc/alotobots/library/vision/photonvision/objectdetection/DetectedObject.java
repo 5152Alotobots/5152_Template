@@ -67,8 +67,7 @@ public class DetectedObject {
     }
 
     // Get game element from array (currently only Notes at index 0)
-    int classId = 0; // Currently only supporting Notes
-    // TODO: REPLACE THIS WITH target.getClassId(); once updated.
+    int classId = target.getDetectedObjectClassID();
     if (classId >= GAME_ELEMENTS.length) {
       throw new IllegalArgumentException("Invalid class ID: " + classId);
     }

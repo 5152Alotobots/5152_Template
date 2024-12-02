@@ -3,6 +3,7 @@ package frc.alotobots.library.drivetrains.swerve.ctre;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -90,6 +91,7 @@ public class SwerveDrivePathPlanner {
    * @return A Command to pathfind to the specified pose.
    */
   public Command getPathFinderCommand(Pose2d targetPose, LinearVelocity endVelocity) {
+    System.out.println("TEST Pathfind");
     PathConstraints constraints =
         new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
 
@@ -136,5 +138,7 @@ public class SwerveDrivePathPlanner {
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder" + ex, ex.getStackTrace());
     }
+    // Warmup pathfinding
+    PathfindingCommand.warmupCommand().schedule();
   }
 }

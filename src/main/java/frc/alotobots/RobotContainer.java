@@ -3,6 +3,10 @@ package frc.alotobots;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -15,6 +19,7 @@ import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
+import frc.alotobots.library.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -110,6 +115,17 @@ public class RobotContainer {
     hmiStation.driverPOVRight.whileTrue(
         drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
+    // Test OTF Pathplanner
+    hmiStation.testOTFPathplannerButton.onTrue(
+        pathPlanner.getPathFinderCommand(
+            new Pose2d(15.26, 5.65, new Rotation2d(0)),
+            LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
+    hmiStation.driveWhileFacingBestObjectTrigger.whileTrue(
+        new DriveFacingBestObject(
+            photonvisionObjectDetectionSubsystem,
+            drivetrainSubsystem,
+            () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
+            () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode()));
     // Add other logic-based commands here
   }
 

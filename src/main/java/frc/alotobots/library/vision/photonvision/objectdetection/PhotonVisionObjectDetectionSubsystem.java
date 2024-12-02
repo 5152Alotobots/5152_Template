@@ -45,8 +45,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
 
     double robotAngle = driveSubsystem.getState().Pose.getRotation().getDegrees();
-    return Optional.of(Units.degreesToRadians(
-        robotAngle + detectedObjects.get(0).getTarget().getYaw()));
+    return Optional.of(
+        Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw()));
   }
 
   @Override
