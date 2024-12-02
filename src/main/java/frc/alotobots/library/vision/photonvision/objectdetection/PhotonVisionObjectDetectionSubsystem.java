@@ -32,7 +32,6 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-  @Getter private DetectedObject lastDetectedObject;
 
   /**
    * Gets the field-relative angle of the last detected object.
@@ -89,7 +88,6 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                     driveSubsystem);
 
             detectedObjects.add(object);
-            lastDetectedObject = object;
           }
         }
       }
