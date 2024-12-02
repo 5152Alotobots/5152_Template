@@ -17,12 +17,10 @@ public class DriveFacingBestObject extends Command {
   private final DoubleSupplier velocityY;
 
   // Smoothing and control parameters
-  private static final double SMOOTHING_FACTOR = 0.4; // Increased for stronger smoothing
-  private static final int MOVING_AVERAGE_WINDOW = 5;
-  private static final double DEADBAND_RADIANS = Math.toRadians(1.5); // Slightly larger deadband
-  private static final double APPROACH_FACTOR = 0.3; // Reduced for gentler approach
-  private static final double MAX_ANGLE_CHANGE_RATE =
-      Math.toRadians(20); // Max 20 degrees per period
+  private static final double SMOOTHING_FACTOR = 0.8; // Very strong smoothing
+  private static final int MOVING_AVERAGE_WINDOW = 10; // Larger window
+  private static final double DEADBAND_RADIANS = Math.toRadians(2.0); // 2 degree deadband
+  private static final double MAX_ANGLE_CHANGE_RATE = Math.toRadians(10); // More conservative rate limit
 
   // Smoothing state variables
   private double lastSmoothedAngle = 0.0;
@@ -48,7 +46,7 @@ public class DriveFacingBestObject extends Command {
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
-    driveFacingAngle.HeadingController = new PhoenixPIDController(1, 0, 0.0);
+    driveFacingAngle.HeadingController = new PhoenixPIDController(0.5, 0.01, 0.05);
   }
 
   private Optional<Double> applyExponentialSmoothing(double rawAngle) {
@@ -78,16 +76,8 @@ public class DriveFacingBestObject extends Command {
       return Optional.of(0.0);
     }
 
-    // Calculate desired angle after scaling
-    double scaleFactor =
-        Math.min(
-            1.0,
-            Math.pow((Math.abs(angle) - DEADBAND_RADIANS) / Math.toRadians(10.0), 2)
-                + APPROACH_FACTOR);
-    double targetAngle = angle * scaleFactor;
-
-    // Rate limiting
-    double angleChange = targetAngle - lastOutputAngle;
+    // Simple rate limiting
+    double angleChange = angle - lastOutputAngle;
     if (Math.abs(angleChange) > MAX_ANGLE_CHANGE_RATE) {
       angleChange = Math.copySign(MAX_ANGLE_CHANGE_RATE, angleChange);
     }
