@@ -34,6 +34,21 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
   @Getter private DetectedObject lastDetectedObject;
 
+  /**
+   * Gets the field-relative angle of the last detected object.
+   * This combines the robot's rotation with the object's relative angle.
+   *
+   * @return The field-relative angle in degrees, or 0 if no object is detected
+   */
+  public double getFieldRelativeAngle() {
+    if (lastDetectedObject == null) {
+      return 0.0;
+    }
+    // Combine robot rotation with object's relative angle
+    return driveSubsystem.getPose().getRotation().getDegrees() 
+           + lastDetectedObject.getYaw();
+  }
+
   @Override
   public void periodic() {
     // Check if object detection should be running based on dashboard toggle
