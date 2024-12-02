@@ -39,13 +39,12 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
   
   // Last smoothed angle value
   private double lastSmoothedAngle = 0.0;
-  private double lastTimestamp = 0.0;
   private boolean hasValidMeasurement = false;
 
   /**
-   * Gets the smoothed and latency-compensated yaw angle to the first detected object.
+   * Gets the exponentially smoothed yaw angle to the first detected object.
    *
-   * @return Optional containing the processed angle in radians, or empty if no objects are detected
+   * @return Optional containing the smoothed angle in radians, or empty if no objects are detected
    */
   public Optional<Double> getFieldRelativeAngle() {
     if (detectedObjects.isEmpty()) {
@@ -53,13 +52,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       return Optional.empty();
     }
 
-    PhotonTrackedTarget target = detectedObjects.get(0).getTarget();
-    double currentTimestamp = target.() / 1000.0; // Convert to seconds
-    double latencyCompensation = currentTimestamp - lastTimestamp;
-    
     // Calculate raw angle in radians
     double robotAngle = driveSubsystem.getState().Pose.getRotation().getDegrees();
-    double rawAngle = Units.degreesToRadians(robotAngle + target.getYaw());
+    double rawAngle = Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw());
     
     // Apply exponential smoothing
     if (!hasValidMeasurement) {
@@ -71,7 +66,6 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
     }
     
-    lastTimestamp = currentTimestamp;
     return Optional.of(lastSmoothedAngle);
   }
 
