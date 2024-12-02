@@ -17,7 +17,7 @@ public class DriveFacingBestObject extends Command {
   private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-          .withSteerRequestType(SwerveModule.SteerRequestType.Position);
+          .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic);
 
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
@@ -41,11 +41,15 @@ public class DriveFacingBestObject extends Command {
     // System.out.println("Objects detected");
     // System.out.println(objectDetectionSubsystem.getDetectedObjects().get(0).getAngle());
     // Rotation2d targetRotation = Rotation2d.fromDegrees(180);
-    swerveDriveSubsystem.setControl(
-        driveFacingAngle
-            .withTargetDirection(Rotation2d.fromDegrees(90))
-            .withVelocityX(velocityX.getAsDouble())
-            .withVelocityY(velocityY.getAsDouble()));
+    var request = driveFacingAngle
+        .withTargetDirection(Rotation2d.fromDegrees(90))
+        .withVelocityX(velocityX.getAsDouble())
+        .withVelocityY(velocityY.getAsDouble());
+    
+    System.out.println("Target Direction: 90 degrees");
+    System.out.println("Current Rotation: " + swerveDriveSubsystem.getState().Pose.getRotation().getDegrees());
+    
+    swerveDriveSubsystem.setControl(request);
   }
 
   @Override
