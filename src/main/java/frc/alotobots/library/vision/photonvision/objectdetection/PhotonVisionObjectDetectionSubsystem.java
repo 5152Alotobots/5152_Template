@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -24,16 +25,14 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
-  private final List<DetectedObject> detectedObjects = new ArrayList<>();
-
   /**
-   * Gets the list of currently detected objects from enabled cameras only.
+   * -- GETTER -- Gets the list of currently detected objects from enabled cameras only.
    *
    * @return List of DetectedObject instances from enabled cameras
    */
-  public List<DetectedObject> getDetectedObjects() {
-    return new ArrayList<>(detectedObjects);
-  }
+  @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
+
+  @Getter private DetectedObject lastDetectedObject;
 
   @Override
   public void periodic() {
@@ -75,6 +74,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                     driveSubsystem);
 
             detectedObjects.add(object);
+            lastDetectedObject = object;
           }
         }
       }
