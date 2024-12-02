@@ -81,13 +81,15 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     // ━━━━━━━━━━━━━━━━━━━━ [ Drive ] ━━━━━━━━━━━━━━━━━━━━
     drivetrainSubsystem.setDefaultCommand(
-        drivetrainSubsystem.applyRequest(
+        Commands.run(
             () ->
-                driveFieldCentric
-                    .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                    .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                    .withRotationalRate(
-                        hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())));
+                drivetrainSubsystem.setControl(
+                    driveFieldCentric
+                        .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
+                        .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
+                        .withRotationalRate(
+                            hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())),
+            drivetrainSubsystem));
 
     // ━━━━━━━━━━━━━━━━━━━━ [ Bling ] ━━━━━━━━━━━━━━━━━━━━
     blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
