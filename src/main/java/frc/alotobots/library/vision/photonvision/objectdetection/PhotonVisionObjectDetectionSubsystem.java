@@ -34,9 +34,11 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-  // Smoothing factor for exponential smoothing (0 to 1)
-  private static final double SMOOTHING_FACTOR = 0.3;
+  // Smoothing and control parameters
+  private static final double SMOOTHING_FACTOR = 0.2; // Reduced for smoother response
   private static final int MOVING_AVERAGE_WINDOW = 5;
+  private static final double DEADBAND_RADIANS = Math.toRadians(1.0); // 1 degree deadband
+  private static final double APPROACH_FACTOR = 0.5; // Reduces aggressive corrections near target
 
   // Smoothing state variables
   private double lastSmoothedAngle = 0.0;
@@ -81,7 +83,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
     double movingAverage = sum / validSamples;
 
-    return Optional.of(movingAverage);
+    // Apply deadband and approach factor
+    if (Math.abs(movingAverage) < DEADBAND_RADIANS) {
+      return Optional.of(0.0); // Within deadband, return zero to stop movement
+    } else {
+      // Reduce the magnitude of the angle as we get closer to the target
+      double scaleFactor = Math.min(1.0, 
+          (Math.abs(movingAverage) - DEADBAND_RADIANS) / Math.toRadians(10.0) + APPROACH_FACTOR);
+      return Optional.of(movingAverage * scaleFactor);
+    }
   }
 
   @Override
