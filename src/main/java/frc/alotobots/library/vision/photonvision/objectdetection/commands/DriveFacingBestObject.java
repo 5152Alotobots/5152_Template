@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 public class DriveFacingBestObject extends Command {
@@ -44,7 +45,7 @@ public class DriveFacingBestObject extends Command {
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
-    driveFacingAngle.HeadingController = new PhoenixPIDController(.3, 0, 0.0);
+    driveFacingAngle.HeadingController = new PhoenixPIDController(1, 0, 0.0);
   }
 
   private Optional<Double> applyExponentialSmoothing(double rawAngle) {
@@ -73,9 +74,10 @@ public class DriveFacingBestObject extends Command {
     if (Math.abs(angle) < DEADBAND_RADIANS) {
       return Optional.of(0.0);
     }
-    
-    double scaleFactor = Math.min(1.0,
-        (Math.abs(angle) - DEADBAND_RADIANS) / Math.toRadians(10.0) + APPROACH_FACTOR);
+
+    double scaleFactor =
+        Math.min(
+            1.0, (Math.abs(angle) - DEADBAND_RADIANS) / Math.toRadians(10.0) + APPROACH_FACTOR);
     return Optional.of(angle * scaleFactor);
   }
 
