@@ -1,16 +1,15 @@
 package frc.alotobots.library.drivetrains.swerve.ctre;
 
+import static frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants.PATHFINDING_CONSTRAINTS;
+import static frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants.PP_HOLONOMIC_DRIVE_CONTROLLER;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -91,11 +90,7 @@ public class SwerveDrivePathPlanner {
    * @return A Command to pathfind to the specified pose.
    */
   public Command getPathFinderCommand(Pose2d targetPose, LinearVelocity endVelocity) {
-    System.out.println("TEST!!!");
-    PathConstraints constraints =
-        new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
-
-    return AutoBuilder.pathfindToPose(targetPose, constraints, endVelocity);
+    return AutoBuilder.pathfindToPose(targetPose, PATHFINDING_CONSTRAINTS, endVelocity);
   }
 
   private static boolean isConfigured = false;
@@ -120,11 +115,7 @@ public class SwerveDrivePathPlanner {
                       .withSpeeds(speeds)
                       .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                       .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
-          new PPHolonomicDriveController(
-              // PID constants for translation
-              new PIDConstants(2.4, 0, 0.015), // Tuned for 2022 Drive
-              // PID constants for rotation
-              new PIDConstants(7.8, 0, 0.015)), // Tuned for 2022 Drive 7.8, 0, .015
+          PP_HOLONOMIC_DRIVE_CONTROLLER,
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the case
           () ->
@@ -140,9 +131,7 @@ public class SwerveDrivePathPlanner {
     }
   }
 
-  /**
-   * Warms up the pathfinding system. Call this when ready to use pathfinding.
-   */
+  /** Warms up the pathfinding system. Call this when ready to use pathfinding. */
   public void warmupPathfinding() {
     PathfindingCommand.warmupCommand().schedule();
   }

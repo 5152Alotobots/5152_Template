@@ -14,6 +14,10 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.ClosedLoopOutputType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import frc.alotobots.Constants;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
@@ -36,6 +40,17 @@ public class TunerConstants {
 
   private static final Slot0Configs driveGains =
       new Slot0Configs().withKP(5.5).withKI(0).withKD(0).withKS(0.13).withKV(0.099).withKA(0);
+
+  // Pathplanner
+  public static final PathConstraints PATHFINDING_CONSTRAINTS =
+      new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
+
+  public static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER =
+      new PPHolonomicDriveController(
+          // PID constants for translation
+          new PIDConstants(2.4, 0, 0.015), // Tuned for 2022 Drive
+          // PID constants for rotation
+          new PIDConstants(7.8, 0, 0.015)); // Tuned for 2022 Drive
 
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors

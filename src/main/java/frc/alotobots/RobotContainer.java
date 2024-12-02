@@ -21,6 +21,8 @@ import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSu
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
 
+import static frc.alotobots.Constants.Robot.Field.BLUE_SPEAKER_FRONT;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -119,11 +121,9 @@ public class RobotContainer {
 
     // Test OTF Pathplanner
     hmiStation.testOTFPathplannerButton.onTrue(
-        Commands.sequence(
-            Commands.runOnce(() -> pathPlanner.warmupPathfinding()),
-            pathPlanner.getPathFinderCommand(
-                new Pose2d(15.26, 5.65, new Rotation2d(0)),
-                LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond))));
+        pathPlanner.getPathFinderCommand(
+            BLUE_SPEAKER_FRONT,
+            LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
     hmiStation.driveWhileFacingBestObjectTrigger.whileTrue(
         new DriveFacingBestObject(
             photonvisionObjectDetectionSubsystem,
