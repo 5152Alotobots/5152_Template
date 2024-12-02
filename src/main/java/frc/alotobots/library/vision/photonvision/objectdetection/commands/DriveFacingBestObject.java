@@ -21,7 +21,8 @@ public class DriveFacingBestObject extends Command {
   private static final int MOVING_AVERAGE_WINDOW = 5;
   private static final double DEADBAND_RADIANS = Math.toRadians(1.5); // Slightly larger deadband
   private static final double APPROACH_FACTOR = 0.3; // Reduced for gentler approach
-  private static final double MAX_ANGLE_CHANGE_RATE = Math.toRadians(20); // Max 20 degrees per period
+  private static final double MAX_ANGLE_CHANGE_RATE =
+      Math.toRadians(20); // Max 20 degrees per period
 
   // Smoothing state variables
   private double lastSmoothedAngle = 0.0;
@@ -78,18 +79,19 @@ public class DriveFacingBestObject extends Command {
     }
 
     // Calculate desired angle after scaling
-    double scaleFactor = 
+    double scaleFactor =
         Math.min(
-            1.0, 
-            Math.pow((Math.abs(angle) - DEADBAND_RADIANS) / Math.toRadians(10.0), 2) + APPROACH_FACTOR);
+            1.0,
+            Math.pow((Math.abs(angle) - DEADBAND_RADIANS) / Math.toRadians(10.0), 2)
+                + APPROACH_FACTOR);
     double targetAngle = angle * scaleFactor;
-    
+
     // Rate limiting
     double angleChange = targetAngle - lastOutputAngle;
     if (Math.abs(angleChange) > MAX_ANGLE_CHANGE_RATE) {
       angleChange = Math.copySign(MAX_ANGLE_CHANGE_RATE, angleChange);
     }
-    
+
     lastOutputAngle = lastOutputAngle + angleChange;
     return Optional.of(lastOutputAngle);
   }
