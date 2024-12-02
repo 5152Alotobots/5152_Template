@@ -138,7 +138,12 @@ public class SwerveDrivePathPlanner {
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder" + ex, ex.getStackTrace());
     }
-    // Warmup pathfinding
+  }
+
+  /**
+   * Warms up the pathfinding system. Call this when ready to use pathfinding.
+   */
+  public void warmupPathfinding() {
     PathfindingCommand.warmupCommand().schedule();
   }
 }

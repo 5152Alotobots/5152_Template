@@ -117,9 +117,11 @@ public class RobotContainer {
 
     // Test OTF Pathplanner
     hmiStation.testOTFPathplannerButton.onTrue(
-        pathPlanner.getPathFinderCommand(
-            new Pose2d(15.26, 5.65, new Rotation2d(0)),
-            LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
+        Commands.sequence(
+            Commands.runOnce(() -> pathPlanner.warmupPathfinding()),
+            pathPlanner.getPathFinderCommand(
+                new Pose2d(15.26, 5.65, new Rotation2d(0)),
+                LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond))));
     hmiStation.driveWhileFacingBestObjectTrigger.whileTrue(
         new DriveFacingBestObject(
             photonvisionObjectDetectionSubsystem,
