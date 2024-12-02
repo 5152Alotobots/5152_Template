@@ -2,6 +2,7 @@ package frc.alotobots.library.vision.photonvision.objectdetection.commands;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
@@ -16,8 +17,7 @@ public class DriveFacingBestObject extends Command {
 
   private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle =
       new SwerveRequest.FieldCentricFacingAngle()
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-          .withSteerRequestType(SwerveModule.SteerRequestType.MotionMagic);
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
@@ -30,26 +30,23 @@ public class DriveFacingBestObject extends Command {
     this.velocityY = velocityY;
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
+
+    driveFacingAngle.HeadingController = new PhoenixPIDController(.3, 0, 0.0);
   }
 
   @Override
   public void execute() {
     if (objectDetectionSubsystem.getDetectedObjects().isEmpty()) {
-      System.out.println("No objects detected");
-      // return;
+      return;
     }
-    // System.out.println("Objects detected");
-    // System.out.println(objectDetectionSubsystem.getDetectedObjects().get(0).getAngle());
-    // Rotation2d targetRotation = Rotation2d.fromDegrees(180);
-    var request = driveFacingAngle
-        .withTargetDirection(Rotation2d.fromDegrees(90))
-        .withVelocityX(velocityX.getAsDouble())
-        .withVelocityY(velocityY.getAsDouble());
-    
-    System.out.println("Target Direction: 90 degrees");
-    System.out.println("Current Rotation: " + swerveDriveSubsystem.getState().Pose.getRotation().getDegrees());
-    
-    swerveDriveSubsystem.setControl(request);
+
+    Rotation2d angle =
+        new Rotation2d(objectDetectionSubsystem.getDetectedObjects().get(0).getAngle());
+    swerveDriveSubsystem.setControl(
+        driveFacingAngle
+            .withTargetDirection(angle)
+            .withVelocityX(velocityX.getAsDouble())
+            .withVelocityY(velocityY.getAsDouble()));
   }
 
   @Override
@@ -61,6 +58,6 @@ public class DriveFacingBestObject extends Command {
 
   @Override
   public boolean isFinished() {
-    return false; // objectDetectionSubsystem.getDetectedObjects().isEmpty();
+    return false;
   }
 }
