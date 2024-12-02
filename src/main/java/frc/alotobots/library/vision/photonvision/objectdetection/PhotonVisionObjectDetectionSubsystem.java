@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -34,18 +35,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
 
   /**
-   * Gets the field-relative angle of the last detected object.
-   * This combines the robot's rotation with the object's relative angle.
+   * Gets the field-relative angle of the last detected object using its pose.
    *
-   * @return The field-relative angle in degrees, or 0 if no object is detected
+   * @return Optional containing the field-relative angle in degrees, or empty if no object is detected
    */
-  public double getFieldRelativeAngle() {
+  public Optional<Double> getFieldRelativeAngle() {
     if (lastDetectedObject == null) {
-      return 0.0;
+      return Optional.empty();
     }
-    // Combine robot rotation with object's relative angle
-    return driveSubsystem.getPose().getRotation().getDegrees() 
-           + lastDetectedObject.getYaw();
+    return Optional.of(lastDetectedObject.getPose().getRotation().getDegrees());
   }
 
   @Override
