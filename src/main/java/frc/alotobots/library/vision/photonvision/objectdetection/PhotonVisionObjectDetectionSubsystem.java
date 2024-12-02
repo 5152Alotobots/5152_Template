@@ -35,15 +35,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
 
   /**
-   * Gets the field-relative angle of the last detected object using its pose.
+   * Gets the field-relative angle of the first detected object using its pose.
    *
-   * @return Optional containing the field-relative angle in degrees, or empty if no object is detected
+   * @return Optional containing the field-relative angle in degrees, or empty if no objects are detected
    */
   public Optional<Double> getFieldRelativeAngle() {
-    if (lastDetectedObject == null) {
+    if (detectedObjects.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(lastDetectedObject.getPose().getRotation().getDegrees());
+    return Optional.of(detectedObjects.get(0).getPose().getRotation().getDegrees());
   }
 
   @Override
