@@ -20,7 +20,8 @@ public class DriveFacingBestObject extends Command {
   private static final double SMOOTHING_FACTOR = 0.8; // Very strong smoothing
   private static final int MOVING_AVERAGE_WINDOW = 10; // Larger window
   private static final double DEADBAND_RADIANS = Math.toRadians(2.0); // 2 degree deadband
-  private static final double MAX_ANGLE_CHANGE_RATE = Math.toRadians(10); // More conservative rate limit
+  private static final double MAX_ANGLE_CHANGE_RATE =
+      Math.toRadians(10); // More conservative rate limit
 
   // Smoothing state variables
   private double lastSmoothedAngle = 0.0;
