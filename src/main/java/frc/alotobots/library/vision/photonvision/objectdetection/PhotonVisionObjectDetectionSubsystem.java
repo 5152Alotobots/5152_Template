@@ -34,64 +34,19 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-  // Smoothing and control parameters
-  private static final double SMOOTHING_FACTOR = 0.2; // Reduced for smoother response
-  private static final int MOVING_AVERAGE_WINDOW = 5;
-  private static final double DEADBAND_RADIANS = Math.toRadians(1.0); // 1 degree deadband
-  private static final double APPROACH_FACTOR = 0.5; // Reduces aggressive corrections near target
-
-  // Smoothing state variables
-  private double lastSmoothedAngle = 0.0;
-  private boolean hasValidMeasurement = false;
-  private final double[] angleBuffer = new double[MOVING_AVERAGE_WINDOW];
-  private int bufferIndex = 0;
-  private int validSamples = 0;
-
   /**
-   * Gets the exponentially smoothed yaw angle to the first detected object.
+   * Gets the raw field-relative angle to the first detected object.
    *
-   * @return Optional containing the smoothed angle in radians, or empty if no objects are detected
+   * @return Optional containing the angle in radians, or empty if no objects are detected
    */
   public Optional<Double> getFieldRelativeAngle() {
     if (detectedObjects.isEmpty()) {
-      hasValidMeasurement = false;
       return Optional.empty();
     }
 
-    // Calculate raw angle in radians
     double robotAngle = driveSubsystem.getState().Pose.getRotation().getDegrees();
-    double rawAngle =
-        Units.degreesToRadians(robotAngle + detectedObjects.get(0).getTarget().getYaw());
-
-    // First apply exponential smoothing
-    if (!hasValidMeasurement) {
-      lastSmoothedAngle = rawAngle;
-      hasValidMeasurement = true;
-    } else {
-      lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
-    }
-
-    // Update moving average buffer
-    angleBuffer[bufferIndex] = lastSmoothedAngle;
-    bufferIndex = (bufferIndex + 1) % MOVING_AVERAGE_WINDOW;
-    validSamples = Math.min(validSamples + 1, MOVING_AVERAGE_WINDOW);
-
-    // Calculate moving average
-    double sum = 0;
-    for (int i = 0; i < validSamples; i++) {
-      sum += angleBuffer[i];
-    }
-    double movingAverage = sum / validSamples;
-
-    // Apply deadband and approach factor
-    if (Math.abs(movingAverage) < DEADBAND_RADIANS) {
-      return Optional.of(0.0); // Within deadband, return zero to stop movement
-    } else {
-      // Reduce the magnitude of the angle as we get closer to the target
-      double scaleFactor = Math.min(1.0, 
-          (Math.abs(movingAverage) - DEADBAND_RADIANS) / Math.toRadians(10.0) + APPROACH_FACTOR);
-      return Optional.of(movingAverage * scaleFactor);
-    }
+    return Optional.of(Units.degreesToRadians(
+        robotAngle + detectedObjects.get(0).getTarget().getYaw()));
   }
 
   @Override
