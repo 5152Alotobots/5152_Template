@@ -16,20 +16,10 @@ public class DriveFacingBestObject extends Command {
   private final DoubleSupplier velocityX;
   private final DoubleSupplier velocityY;
 
-  // Smoothing and control parameters
-  private static final double SMOOTHING_FACTOR = 0.8; // Very strong smoothing
-  private static final int MOVING_AVERAGE_WINDOW = 10; // Larger window
-  private static final double DEADBAND_RADIANS = Math.toRadians(2.0); // 2 degree deadband
-  private static final double MAX_ANGLE_CHANGE_RATE =
-      Math.toRadians(10); // More conservative rate limit
-
-  // Smoothing state variables
-  private double lastSmoothedAngle = 0.0;
-  private double lastOutputAngle = 0.0;
-  private boolean hasValidMeasurement = false;
-  private final double[] angleBuffer = new double[MOVING_AVERAGE_WINDOW];
-  private int bufferIndex = 0;
-  private int validSamples = 0;
+  private static final double DEADBAND_RADIANS = Math.toRadians(1.0);
+  private final AngleKalmanFilter kalmanFilter = new AngleKalmanFilter();
+  private long lastMeasurementTime = 0;
+  private static final long MAX_PREDICTION_TIME_MS = 500; // Max time to predict without measurements
 
   private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle =
       new SwerveRequest.FieldCentricFacingAngle()
@@ -47,57 +37,32 @@ public class DriveFacingBestObject extends Command {
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
-    driveFacingAngle.HeadingController = new PhoenixPIDController(0.5, 0.01, 0.05);
-  }
-
-  private Optional<Double> applyExponentialSmoothing(double rawAngle) {
-    if (!hasValidMeasurement) {
-      lastSmoothedAngle = rawAngle;
-      hasValidMeasurement = true;
-    } else {
-      lastSmoothedAngle = SMOOTHING_FACTOR * rawAngle + (1 - SMOOTHING_FACTOR) * lastSmoothedAngle;
-    }
-    return Optional.of(lastSmoothedAngle);
-  }
-
-  private double calculateMovingAverage(double smoothedAngle) {
-    angleBuffer[bufferIndex] = smoothedAngle;
-    bufferIndex = (bufferIndex + 1) % MOVING_AVERAGE_WINDOW;
-    validSamples = Math.min(validSamples + 1, MOVING_AVERAGE_WINDOW);
-
-    double sum = 0;
-    for (int i = 0; i < validSamples; i++) {
-      sum += angleBuffer[i];
-    }
-    return sum / validSamples;
-  }
-
-  private Optional<Double> applyDeadbandAndScaling(double angle) {
-    if (Math.abs(angle) < DEADBAND_RADIANS) {
-      return Optional.of(0.0);
-    }
-
-    // Simple rate limiting
-    double angleChange = angle - lastOutputAngle;
-    if (Math.abs(angleChange) > MAX_ANGLE_CHANGE_RATE) {
-      angleChange = Math.copySign(MAX_ANGLE_CHANGE_RATE, angleChange);
-    }
-
-    lastOutputAngle = lastOutputAngle + angleChange;
-    return Optional.of(lastOutputAngle);
+    // Tune PID for smoother response with Kalman filter
+    driveFacingAngle.HeadingController = new PhoenixPIDController(0.8, 0.0, 0.1);
   }
 
   private Optional<Rotation2d> calculateTargetAngle() {
+    // Always predict the next state
+    kalmanFilter.predict();
+    
     Optional<Double> rawAngle = objectDetectionSubsystem.getFieldRelativeAngle();
-    if (rawAngle.isEmpty()) {
-      hasValidMeasurement = false;
+    if (rawAngle.isPresent()) {
+      kalmanFilter.update(rawAngle.get());
+      lastMeasurementTime = System.currentTimeMillis();
+    } else if (System.currentTimeMillis() - lastMeasurementTime > MAX_PREDICTION_TIME_MS) {
+      // Reset if we haven't seen a measurement in too long
+      kalmanFilter.reset();
       return Optional.empty();
     }
-
-    return applyExponentialSmoothing(rawAngle.get())
-        .map(this::calculateMovingAverage)
-        .flatMap(this::applyDeadbandAndScaling)
-        .map(Rotation2d::new);
+    
+    double filteredAngle = kalmanFilter.getAngle();
+    
+    // Apply deadband to the filtered angle
+    if (Math.abs(filteredAngle) < DEADBAND_RADIANS) {
+      return Optional.of(new Rotation2d(0.0));
+    }
+    
+    return Optional.of(new Rotation2d(filteredAngle));
   }
 
   @Override
