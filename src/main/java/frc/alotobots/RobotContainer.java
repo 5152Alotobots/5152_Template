@@ -1,6 +1,6 @@
 package frc.alotobots;
 
-import static frc.alotobots.Constants.Robot.Field.BLUE_SPEAKER_FRONT;
+import static frc.alotobots.Constants.Robot.Field.RED_SPEAKER_FRONT;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -120,7 +120,7 @@ public class RobotContainer {
     // Test OTF Pathplanner
     hmiStation.testOTFPathplannerButton.onTrue(
         pathPlanner.getPathFinderCommand(
-            BLUE_SPEAKER_FRONT, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
+            RED_SPEAKER_FRONT, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
     hmiStation.driveWhileFacingBestObjectTrigger.whileTrue(
         new DriveFacingBestObject(
             photonvisionObjectDetectionSubsystem,

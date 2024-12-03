@@ -1,6 +1,7 @@
 package frc.alotobots;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -21,7 +22,8 @@ public final class Constants {
     public static final class Field {
       // Add field-specific constants here
       // Ex. for the 2024 Game Season
-      public static final Pose2d BLUE_SPEAKER_FRONT = new Pose2d();
+      public static final Pose2d RED_SPEAKER_FRONT =
+          new Pose2d(15.275, 5.585, Rotation2d.fromDegrees(0));
     }
 
     @UtilityClass
