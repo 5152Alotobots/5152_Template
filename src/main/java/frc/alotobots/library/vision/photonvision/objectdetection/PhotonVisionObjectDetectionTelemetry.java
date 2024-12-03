@@ -126,13 +126,13 @@ public class PhotonVisionObjectDetectionTelemetry {
             .withSize(2, 4)
             .withPosition(8, 0)
             .withProperties(Map.of("Label position", "LEFT"));
-    
+
     // Pre-create entries for maximum number of expected objects as class members
     objectEntries = new ArrayList<>();
     for (int i = 0; i < 10; i++) { // Support up to 10 objects
-        objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
-        objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
-        objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
+      objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
+      objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
+      objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
     }
 
     // Add global settings with persistent toggle switches
@@ -174,17 +174,17 @@ public class PhotonVisionObjectDetectionTelemetry {
 
     // Update existing entries for detected objects
     for (int i = 0; i < 10; i++) { // Match the number from initialization
-        if (i < objects.size() && objects.get(i) != null) {
-            DetectedObject obj = objects.get(i);
-            objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
-            objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
-            objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
-        } else {
-            // Clear entries for non-existent objects
-            objectEntries.get(i * 3).setDouble(0.0);
-            objectEntries.get(i * 3 + 1).setDouble(0.0);
-            objectEntries.get(i * 3 + 2).setDouble(0.0);
-        }
+      if (i < objects.size() && objects.get(i) != null) {
+        DetectedObject obj = objects.get(i);
+        objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
+        objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
+        objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
+      } else {
+        // Clear entries for non-existent objects
+        objectEntries.get(i * 3).setDouble(0.0);
+        objectEntries.get(i * 3 + 1).setDouble(0.0);
+        objectEntries.get(i * 3 + 2).setDouble(0.0);
+      }
     }
 
     // Remove all existing objects and tracer lines from the field
