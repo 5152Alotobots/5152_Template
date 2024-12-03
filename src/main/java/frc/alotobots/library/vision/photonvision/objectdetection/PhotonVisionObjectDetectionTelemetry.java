@@ -18,6 +18,7 @@ public class PhotonVisionObjectDetectionTelemetry {
   private final GenericEntry totalObjectsEntry;
   private GenericEntry objectDetectionEnabled;
   private GenericEntry teleopOnlyEnabled;
+  private final ShuffleboardLayout objectsList;
 
   private static class CameraWidget {
     final ShuffleboardLayout layout;
@@ -118,6 +119,13 @@ public class PhotonVisionObjectDetectionTelemetry {
 
     totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
 
+    // Initialize detected objects list widget
+    objectsList =
+        tab.getLayout("Detected Objects", BuiltInLayouts.kList)
+            .withSize(2, 4)
+            .withPosition(8, 0)
+            .withProperties(Map.of("Label position", "LEFT"));
+
     // Add global settings with persistent toggle switches
     this.objectDetectionEnabled =
         tab.add(
@@ -154,6 +162,21 @@ public class PhotonVisionObjectDetectionTelemetry {
   public void updateObjects(List<DetectedObject> objects) {
     // Update global stats
     totalObjectsEntry.setDouble(objects.size());
+
+    // Update detected objects list
+    // First clear existing entries
+    objectsList.getComponents().forEach(component -> component.cancelAndDelete());
+    
+    // Add new entries for each object
+    for (int i = 0; i < objects.size(); i++) {
+      DetectedObject obj = objects.get(i);
+      if (obj != null) {
+        String prefix = "Object " + i + " ";
+        objectsList.add(prefix + "X", truncate(obj.getPose().getX(), 2));
+        objectsList.add(prefix + "Y", truncate(obj.getPose().getY(), 2));
+        objectsList.add(prefix + "Confidence", truncate(obj.getConfidence(), 3));
+      }
+    }
 
     // Remove all existing objects and tracer lines from the field
     field.getObject("tracerLines").setPoses(new ArrayList<>());
