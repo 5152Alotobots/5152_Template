@@ -163,11 +163,14 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update global stats
     totalObjectsEntry.setDouble(objects.size());
 
-    // Update detected objects list
-    // First clear existing entries
-    objectsList.getComponents().forEach(component -> component.cancelAndDelete());
-    
-    // Add new entries for each object
+    // Update detected objects list by rebuilding it
+    tab.remove(objectsList);
+    objectsList = tab.getLayout("Detected Objects", BuiltInLayouts.kList)
+        .withSize(2, 4)
+        .withPosition(8, 0)
+        .withProperties(Map.of("Label position", "LEFT"));
+        
+    // Add entries for each object
     for (int i = 0; i < objects.size(); i++) {
       DetectedObject obj = objects.get(i);
       if (obj != null) {
