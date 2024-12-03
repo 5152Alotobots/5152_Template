@@ -65,7 +65,12 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       return;
     }
 
-    detectedObjects.clear();
+    // Update confidence for existing objects and remove stale ones
+    detectedObjects.removeIf(
+        obj -> {
+          obj.updateConfidence();
+          return obj.isStale();
+        });
 
     // Process each camera
     for (int i = 0; i < cameras.length; i++) {
@@ -88,7 +93,21 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                     PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[i],
                     driveSubsystem);
 
-            detectedObjects.add(object);
+            // Check if this object matches any existing ones
+            boolean matched = false;
+            for (DetectedObject existing : detectedObjects) {
+              if (existing.matchesPosition(object)) {
+                // Update existing object
+                existing.refresh();
+                matched = true;
+                break;
+              }
+            }
+
+            // If no match found, add as new object
+            if (!matched) {
+              detectedObjects.add(object);
+            }
           }
         }
       }

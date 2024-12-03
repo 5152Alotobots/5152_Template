@@ -1,10 +1,10 @@
 package frc.alotobots;
 
+import static frc.alotobots.Constants.Robot.Field.BLUE_SPEAKER_FRONT;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,8 +20,6 @@ import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
 import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import frc.alotobots.library.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
-
-import static frc.alotobots.Constants.Robot.Field.BLUE_SPEAKER_FRONT;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -122,8 +120,7 @@ public class RobotContainer {
     // Test OTF Pathplanner
     hmiStation.testOTFPathplannerButton.onTrue(
         pathPlanner.getPathFinderCommand(
-            BLUE_SPEAKER_FRONT,
-            LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
+            BLUE_SPEAKER_FRONT, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond)));
     hmiStation.driveWhileFacingBestObjectTrigger.whileTrue(
         new DriveFacingBestObject(
             photonvisionObjectDetectionSubsystem,

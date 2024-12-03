@@ -4,6 +4,7 @@ import static frc.alotobots.library.vision.photonvision.objectdetection.PhotonVi
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import lombok.Getter;
 import org.photonvision.PhotonUtils;
@@ -16,7 +17,7 @@ public class DetectedObject {
   @Getter private final PhotonTrackedTarget target;
   @Getter private final Transform3d robotToCamera;
   @Getter private double confidence;
-  private long lastUpdateTime;
+  private double lastUpdateTime;
 
   /**
    * Creates a new DetectedObject with default attributes.
@@ -32,7 +33,7 @@ public class DetectedObject {
     this.target = null;
     this.robotToCamera = null;
     this.confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
-    this.lastUpdateTime = System.currentTimeMillis();
+    this.lastUpdateTime = Timer.getFPGATimestamp();
   }
 
   /**
@@ -141,6 +142,52 @@ public class DetectedObject {
           pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
     }
     return 0;
+  }
+
+  /** Updates the confidence value based on time decay. */
+  public void updateConfidence() {
+    double currentTime = Timer.getFPGATimestamp();
+    double timeDelta = currentTime - lastUpdateTime;
+    confidence =
+        Math.max(
+            PhotonVisionObjectDetectionSubsystemConstants.MIN_CONFIDENCE,
+            confidence
+                - (PhotonVisionObjectDetectionSubsystemConstants.CONFIDENCE_DECAY_RATE
+                    * timeDelta));
+    lastUpdateTime = currentTime;
+  }
+
+  /**
+   * Checks if this object's position matches another object within tolerance.
+   *
+   * @param other The other DetectedObject to compare with
+   * @return true if positions match within tolerance
+   */
+  public boolean matchesPosition(DetectedObject other) {
+    if (other == null || other.pose == null || this.pose == null) {
+      return false;
+    }
+
+    double xDiff = Math.abs(this.pose.getX() - other.pose.getX());
+    double yDiff = Math.abs(this.pose.getY() - other.pose.getY());
+
+    return xDiff <= PhotonVisionObjectDetectionSubsystemConstants.POSITION_MATCH_TOLERANCE
+        && yDiff <= PhotonVisionObjectDetectionSubsystemConstants.POSITION_MATCH_TOLERANCE;
+  }
+
+  /**
+   * Checks if this object should be considered stale based on confidence.
+   *
+   * @return true if confidence is at or below minimum
+   */
+  public boolean isStale() {
+    return confidence <= PhotonVisionObjectDetectionSubsystemConstants.MIN_CONFIDENCE;
+  }
+
+  /** Refreshes the object's confidence to initial value and updates timestamp. */
+  public void refresh() {
+    confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
+    lastUpdateTime = Timer.getFPGATimestamp();
   }
 
   @Override

@@ -27,6 +27,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     final GenericEntry poseXEntry;
     final GenericEntry poseYEntry;
     final GenericEntry targetIdEntry;
+    final GenericEntry confidenceEntry;
 
     CameraWidget(ShuffleboardTab tab, String cameraName, int position) {
       layout =
@@ -42,6 +43,7 @@ public class PhotonVisionObjectDetectionTelemetry {
       poseXEntry = layout.add("Target X", 0.0).getEntry();
       poseYEntry = layout.add("Target Y", 0.0).getEntry();
       targetIdEntry = layout.add("Target ID", -1).getEntry();
+      confidenceEntry = layout.add("Confidence", 0.0).getEntry();
     }
   }
 
@@ -202,6 +204,7 @@ public class PhotonVisionObjectDetectionTelemetry {
           widget.poseXEntry.setDouble(truncate(cameraObject.getPose().getX(), 3));
           widget.poseYEntry.setDouble(truncate(cameraObject.getPose().getY(), 3));
           widget.targetIdEntry.setDouble(cameraObject.getTarget().getFiducialId());
+          widget.confidenceEntry.setDouble(truncate(cameraObject.getConfidence(), 3));
         } else {
           widget.distanceEntry.setDouble(0.0);
           widget.poseXEntry.setDouble(0.0);
