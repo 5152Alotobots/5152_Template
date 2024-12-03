@@ -19,6 +19,7 @@ public class PhotonVisionObjectDetectionTelemetry {
   private GenericEntry objectDetectionEnabled;
   private GenericEntry teleopOnlyEnabled;
   private final ShuffleboardLayout objectsList;
+  private final List<GenericEntry> objectEntries;
 
   private static class CameraWidget {
     final ShuffleboardLayout layout;
@@ -126,11 +127,12 @@ public class PhotonVisionObjectDetectionTelemetry {
             .withPosition(8, 0)
             .withProperties(Map.of("Label position", "LEFT"));
     
-    // Pre-create entries for maximum number of expected objects
+    // Pre-create entries for maximum number of expected objects as class members
+    objectEntries = new ArrayList<>();
     for (int i = 0; i < 10; i++) { // Support up to 10 objects
-        objectsList.add("Object " + i + " X", 0.0).getEntry();
-        objectsList.add("Object " + i + " Y", 0.0).getEntry();
-        objectsList.add("Object " + i + " Confidence", 0.0).getEntry();
+        objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
     }
 
     // Add global settings with persistent toggle switches
@@ -174,14 +176,14 @@ public class PhotonVisionObjectDetectionTelemetry {
     for (int i = 0; i < 10; i++) { // Match the number from initialization
         if (i < objects.size() && objects.get(i) != null) {
             DetectedObject obj = objects.get(i);
-            objectsList.getLayout().getComponents().get(i * 3).withProperties(Map.of("value", truncate(obj.getPose().getX(), 2)));
-            objectsList.getLayout().getComponents().get(i * 3 + 1).withProperties(Map.of("value", truncate(obj.getPose().getY(), 2)));
-            objectsList.getLayout().getComponents().get(i * 3 + 2).withProperties(Map.of("value", truncate(obj.getConfidence(), 3)));
+            objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
+            objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
+            objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
         } else {
             // Clear entries for non-existent objects
-            objectsList.getLayout().getComponents().get(i * 3).withProperties(Map.of("value", 0.0));
-            objectsList.getLayout().getComponents().get(i * 3 + 1).withProperties(Map.of("value", 0.0));
-            objectsList.getLayout().getComponents().get(i * 3 + 2).withProperties(Map.of("value", 0.0));
+            objectEntries.get(i * 3).setDouble(0.0);
+            objectEntries.get(i * 3 + 1).setDouble(0.0);
+            objectEntries.get(i * 3 + 2).setDouble(0.0);
         }
     }
 
