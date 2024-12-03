@@ -187,11 +187,14 @@ public class PhotonVisionObjectDetectionTelemetry {
       }
     }
 
-    // Only update field visualization if we have valid data
+    // Always update robot pose if drive is available
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
+    }
 
-      // Plot each detected object on the field
+    // Update detected objects on field
+    if (!objects.isEmpty()) {
+      // Plot each detected object
       for (int i = 0; i < objects.size(); i++) {
         DetectedObject obj = objects.get(i);
         if (obj != null && obj.getPose() != null) {
