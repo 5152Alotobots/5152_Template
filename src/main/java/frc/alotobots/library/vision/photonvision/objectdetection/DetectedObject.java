@@ -50,6 +50,8 @@ public class DetectedObject {
     this.target = target;
     this.robotToCamera = robotToCamera;
     this.drive = drive;
+    this.confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
+    this.lastUpdateTime = Timer.getFPGATimestamp();
   }
 
   /**

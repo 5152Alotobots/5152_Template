@@ -187,16 +187,7 @@ public class PhotonVisionObjectDetectionTelemetry {
       }
     }
 
-    // Remove all existing objects and tracer lines from the field
-    field.getObject("tracerLines").setPoses(new ArrayList<>());
-
-    // Clear all previous object markers
-    for (int i = 0; i < 20; i++) { // Support up to 20 simultaneous objects
-      field.getObject("Target" + i).setPoses(new ArrayList<>());
-      field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
-    }
-
-    // Update field visualization if we have valid data
+    // Only update field visualization if we have valid data
     if (!objects.isEmpty() && objects.get(0) != null && objects.get(0).getDrive() != null) {
       field.setRobotPose(objects.get(0).getDrive().getState().Pose);
 
