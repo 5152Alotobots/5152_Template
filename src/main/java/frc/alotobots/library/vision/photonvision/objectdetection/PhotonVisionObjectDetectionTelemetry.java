@@ -229,7 +229,7 @@ public class PhotonVisionObjectDetectionTelemetry {
           widget.distanceEntry.setDouble(truncate(cameraObject.getDistance(), 3));
           widget.poseXEntry.setDouble(truncate(cameraObject.getPose().getX(), 3));
           widget.poseYEntry.setDouble(truncate(cameraObject.getPose().getY(), 3));
-          widget.targetIdEntry.setDouble(cameraObject.getTarget().getFiducialId());
+          widget.targetIdEntry.setDouble(cameraObject.getTarget().getDetectedObjectClassID());
           widget.confidenceEntry.setDouble(truncate(cameraObject.getConfidence(), 3));
         } else {
           widget.distanceEntry.setDouble(0.0);
