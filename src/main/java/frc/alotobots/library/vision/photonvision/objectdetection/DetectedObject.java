@@ -15,6 +15,8 @@ public class DetectedObject {
   @Getter private final Pose3d pose;
   @Getter private final PhotonTrackedTarget target;
   @Getter private final Transform3d robotToCamera;
+  @Getter private double confidence;
+  private long lastUpdateTime;
 
   /**
    * Creates a new DetectedObject with default attributes.
@@ -29,6 +31,8 @@ public class DetectedObject {
     this.pose = new Pose3d();
     this.target = null;
     this.robotToCamera = null;
+    this.confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
+    this.lastUpdateTime = System.currentTimeMillis();
   }
 
   /**

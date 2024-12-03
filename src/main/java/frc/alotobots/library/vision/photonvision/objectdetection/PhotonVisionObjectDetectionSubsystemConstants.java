@@ -31,4 +31,10 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
       new GameElement[] {
         new GameElement("Note", .36, .36, .05) // Class ID 0 (represented by array index)
       };
+
+  // Object tracking constants
+  public static final double INITIAL_CONFIDENCE = 1.0;
+  public static final double CONFIDENCE_DECAY_RATE = 0.01;
+  public static final double MIN_CONFIDENCE = 0.0;
+  public static final double POSITION_MATCH_TOLERANCE = 0.1; // meters
 }
