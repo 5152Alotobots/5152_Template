@@ -164,7 +164,7 @@ public class PhotonVisionObjectDetectionTelemetry {
     totalObjectsEntry.setDouble(objects.size());
 
     // Update detected objects list by rebuilding it
-    tab.remove(objectsList);
+    tabemove(objectsList);
     objectsList = tab.getLayout("Detected Objects", BuiltInLayouts.kList)
         .withSize(2, 4)
         .withPosition(8, 0)
