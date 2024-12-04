@@ -120,20 +120,15 @@ public class PhotonVisionObjectDetectionTelemetry {
 
     totalObjectsEntry = globalStatsList.add("Total Objects", 0).getEntry();
 
-    // Initialize detected objects list widget with entries for maximum expected objects
+    // Initialize detected objects list widget
     objectsList =
         tab.getLayout("Detected Objects", BuiltInLayouts.kList)
             .withSize(2, 4)
             .withPosition(8, 0)
             .withProperties(Map.of("Label position", "LEFT"));
 
-    // Pre-create entries for maximum number of expected objects as class members
+    // Initialize empty list for object entries
     objectEntries = new ArrayList<>();
-    for (int i = 0; i < 10; i++) { // Support up to 10 objects
-      objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
-      objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
-      objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
-    }
 
     // Add global settings with persistent toggle switches
     this.objectDetectionEnabled =
@@ -172,18 +167,20 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update global stats
     totalObjectsEntry.setDouble(objects.size());
 
-    // Update existing entries for detected objects
-    for (int i = 0; i < 10; i++) { // Match the number from initialization
-      if (i < objects.size() && objects.get(i) != null) {
-        DetectedObject obj = objects.get(i);
+    // Update entries for detected objects
+    for (int i = 0; i < objects.size(); i++) {
+      DetectedObject obj = objects.get(i);
+      if (obj != null) {
+        // Ensure we have enough entries
+        while (objectEntries.size() <= i * 3 + 2) {
+          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " X", 0.0).getEntry());
+          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Y", 0.0).getEntry());
+          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Confidence", 0.0).getEntry());
+        }
+        
         objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
         objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
         objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
-      } else {
-        // Clear entries for non-existent objects
-        objectEntries.get(i * 3).setDouble(0.0);
-        objectEntries.get(i * 3 + 1).setDouble(0.0);
-        objectEntries.get(i * 3 + 2).setDouble(0.0);
       }
     }
 
@@ -221,13 +218,8 @@ public class PhotonVisionObjectDetectionTelemetry {
               .withPosition(8, 0)
               .withProperties(Map.of("Label position", "LEFT"));
               
-      // Recreate entries for maximum number of expected objects
+      // Clear the entries list
       objectEntries.clear();
-      for (int i = 0; i < 10; i++) {
-        objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
-        objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
-        objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
-      }
     }
 
     // Update camera widgets
