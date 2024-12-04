@@ -31,17 +31,12 @@ public class DriveFacingBestObject extends Command {
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
-    driveFacingAngle.HeadingController = new PhoenixPIDController(.3, 0, 0.0);
+    driveFacingAngle.HeadingController = new PhoenixPIDController(5.5, 0, 0.0);
   }
 
   @Override
   public void execute() {
-    if (objectDetectionSubsystem.getDetectedObjects().isEmpty()) {
-      return;
-    }
-
-    Rotation2d angle =
-        new Rotation2d(objectDetectionSubsystem.getDetectedObjects().get(0).getAngle());
+    Rotation2d angle = objectDetectionSubsystem.getDetectedObjects().get(0).getAngle();
     swerveDriveSubsystem.setControl(
         driveFacingAngle
             .withTargetDirection(angle)
@@ -50,14 +45,7 @@ public class DriveFacingBestObject extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {
-    if (interrupted) {
-      System.out.println("Interrupted!!");
-    }
-  }
-
-  @Override
   public boolean isFinished() {
-    return false;
+    return objectDetectionSubsystem.getDetectedObjects().isEmpty();
   }
 }

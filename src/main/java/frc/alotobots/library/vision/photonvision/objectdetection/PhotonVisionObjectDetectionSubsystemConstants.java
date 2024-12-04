@@ -33,8 +33,8 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
       };
 
   // Object tracking constants
-  public static final double INITIAL_CONFIDENCE = 1.0;
-  public static final double CONFIDENCE_DECAY_RATE = 0.01;
+  public static final double INITIAL_CONFIDENCE = 0.99;
+  public static final double CONFIDENCE_DECAY_RATE = 0.33;
   public static final double MIN_CONFIDENCE = 0.0;
   public static final double POSITION_MATCH_TOLERANCE = 0.5; // meters
 }
