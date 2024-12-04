@@ -212,6 +212,22 @@ public class PhotonVisionObjectDetectionTelemetry {
         // Clear any tracer lines
         field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
       }
+      
+      // Remove and recreate the objects list layout to clear all entries
+      tab.remove(objectsList);
+      objectsList = 
+          tab.getLayout("Detected Objects", BuiltInLayouts.kList)
+              .withSize(2, 4)
+              .withPosition(8, 0)
+              .withProperties(Map.of("Label position", "LEFT"));
+              
+      // Recreate entries for maximum number of expected objects
+      objectEntries.clear();
+      for (int i = 0; i < 10; i++) {
+        objectEntries.add(objectsList.add("Object " + i + " X", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + i + " Y", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + i + " Confidence", 0.0).getEntry());
+      }
     }
 
     // Update camera widgets
