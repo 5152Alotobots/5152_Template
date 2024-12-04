@@ -209,16 +209,10 @@ public class PhotonVisionObjectDetectionTelemetry {
         field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
       }
       
-      // Remove and recreate the objects list layout to clear all entries
-      tab.remove(objectsList);
-      objectsList = 
-          tab.getLayout("Detected Objects", BuiltInLayouts.kList)
-              .withSize(2, 4)
-              .withPosition(8, 0)
-              .withProperties(Map.of("Label position", "LEFT"));
-              
-      // Clear the entries list
-      objectEntries.clear();
+      // Clear all existing entry values
+      for (int i = 0; i < objectEntries.size(); i++) {
+        objectEntries.get(i).setDouble(0.0);
+      }
     }
 
     // Update camera widgets
