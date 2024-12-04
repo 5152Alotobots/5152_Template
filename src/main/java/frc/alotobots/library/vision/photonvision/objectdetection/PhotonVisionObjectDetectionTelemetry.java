@@ -205,6 +205,13 @@ public class PhotonVisionObjectDetectionTelemetry {
           drawTracerLine(obj, i);
         }
       }
+    } else {
+      // Clear all objects from field when no objects are detected
+      for (int i = 0; i < 10; i++) {
+        field.getObject("Target" + i).setPose(new Pose2d());
+        // Clear any tracer lines
+        field.getObject("TracerLine" + i).setTrajectory(new Trajectory());
+      }
     }
 
     // Update camera widgets
