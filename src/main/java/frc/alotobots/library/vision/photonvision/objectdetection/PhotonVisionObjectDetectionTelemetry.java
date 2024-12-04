@@ -167,21 +167,20 @@ public class PhotonVisionObjectDetectionTelemetry {
     // Update global stats
     totalObjectsEntry.setDouble(objects.size());
 
-    // Update entries for detected objects
-    for (int i = 0; i < objects.size(); i++) {
+    // Update entries for up to top 3 detected objects
+    int numToShow = Math.min(objects.size(), 3);
+    for (int i = 0; i < numToShow; i++) {
       DetectedObject obj = objects.get(i);
-      if (obj != null) {
-        // Ensure we have enough entries
-        while (objectEntries.size() <= i * 3 + 2) {
-          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " X", 0.0).getEntry());
-          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Y", 0.0).getEntry());
-          objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Confidence", 0.0).getEntry());
-        }
-        
-        objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
-        objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
-        objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
+      // Ensure we have exactly 9 entries (3 objects * 3 values each)
+      while (objectEntries.size() < 9) {
+        objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " X", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Y", 0.0).getEntry());
+        objectEntries.add(objectsList.add("Object " + (objectEntries.size() / 3) + " Confidence", 0.0).getEntry());
       }
+      
+      objectEntries.get(i * 3).setDouble(truncate(obj.getPose().getX(), 2));
+      objectEntries.get(i * 3 + 1).setDouble(truncate(obj.getPose().getY(), 2));
+      objectEntries.get(i * 3 + 2).setDouble(truncate(obj.getConfidence(), 3));
     }
 
     // Always update robot pose if drive is available
