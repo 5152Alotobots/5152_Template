@@ -138,12 +138,11 @@ public class DetectedObject {
    *
    * @return The angle in radians, or 0 if the drive is not set.
    */
-  public double getAngle() {
+  public Rotation2d getAngle() {
     if (drive != null) {
-      return Math.atan2(
-          pose.getY() - drive.getState().Pose.getY(), pose.getX() - drive.getState().Pose.getX());
+      return PhotonUtils.getYawToPose(drive.getState().Pose, pose.toPose2d());
     }
-    return 0;
+    return drive.getState().Pose.getRotation();
   }
 
   /** Updates the confidence value based on time decay. */
