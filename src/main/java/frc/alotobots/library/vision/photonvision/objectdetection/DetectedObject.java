@@ -142,7 +142,13 @@ public class DetectedObject {
     if (drive == null) {
       return new Rotation2d();
     }
-    return PhotonUtils.getYawToPose(drive.getState().Pose, pose.toPose2d());
+    
+    // Get the field-relative vector from robot to target
+    Translation2d robotToTarget = pose.toPose2d().getTranslation()
+        .minus(drive.getState().Pose.getTranslation());
+        
+    // Calculate the angle of this vector in field space
+    return new Rotation2d(robotToTarget.getX(), robotToTarget.getY());
   }
 
   /** Updates the confidence value based on time decay. */
