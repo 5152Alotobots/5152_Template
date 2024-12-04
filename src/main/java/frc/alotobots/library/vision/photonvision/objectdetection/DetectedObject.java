@@ -147,8 +147,8 @@ public class DetectedObject {
     Translation2d robotToTarget =
         pose.toPose2d().getTranslation().minus(drive.getState().Pose.getTranslation());
 
-    // Calculate the angle of this vector in field space
-    return new Rotation2d(robotToTarget.getX(), robotToTarget.getY());
+    // Calculate the angle of this vector in field space, add PI to point towards target
+    return new Rotation2d(robotToTarget.getX(), robotToTarget.getY()).plus(new Rotation2d(Math.PI));
   }
 
   /** Updates the confidence value based on time decay. */
