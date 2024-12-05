@@ -9,8 +9,8 @@ Related features:
 - [SwerveDrive](../subsystems/swerve.md) for path following
 
 ## Required Subsystems
-- PhotonVisionObjectDetectionSubsystem
-- SwerveDriveSubsystem
+- [PhotonVision Object Detection System](../subsystems/vision/objectdetection.md)
+- [SwerveDrive Subsystem](../subsystems/swerve.md)
 - SwerveDrivePathPlanner
 
 ## Constructor

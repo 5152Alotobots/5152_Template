@@ -8,8 +8,8 @@ This command works in conjunction with the [PhotonVision Object Detection System
 See also: [PathfindToBestObject](./pathfindtobestobject.md) for autonomous navigation to objects.
 
 ## Required Subsystems
-- PhotonVisionObjectDetectionSubsystem
-- SwerveDriveSubsystem
+- [PhotonVision Object Detection System](../subsystems/vision/objectdetection.md)
+- [SwerveDrive Subsystem](../subsystems/swerve.md)
 
 ## Constructor
 ```java

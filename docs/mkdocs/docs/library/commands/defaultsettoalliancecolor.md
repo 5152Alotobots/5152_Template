@@ -4,7 +4,7 @@
 DefaultSetToAllianceColor serves as the default command for the Bling subsystem, maintaining the robot's LED indicators at the current alliance color. This command runs continuously, including when the robot is disabled, ensuring consistent visual indication of alliance membership throughout a match.
 
 ## Required Subsystems
-- BlingSubsystem
+- [Bling Subsystem](../subsystems/bling.md)
 
 ## Constructor
 ```java
