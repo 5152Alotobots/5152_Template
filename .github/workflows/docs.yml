@@ -19,15 +19,15 @@ jobs:
       # Download and setup WPILib
       - name: Download WPILib
         run: |
-          wget -q https://github.com/wpilibsuite/allwpilib/releases/download/v2024.1.1/WPILib_Linux-2024.1.1.tar.gz
-          mkdir -p $HOME/wpilib/2024
-          tar --quiet xf WPILib_Linux-2024.1.1.tar.gz -C $HOME/wpilib/2024
+          wget -q https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz
+          mkdir -p $HOME/wpilib/2025
+          tar --quiet xf WPILib_Linux-2025.1.1-beta-2.tar.gz -C $HOME/wpilib/2025
 
       # Setup vendor dependencies
       - name: Setup vendor dependencies
         run: |
-          mkdir -p $HOME/wpilib/2024/vendordeps/
-          cp vendordeps/*.json $HOME/wpilib/2024/vendordeps/
+          mkdir -p $HOME/wpilib/2025/vendordeps/
+          cp vendordeps/*.json $HOME/wpilib/2025/vendordeps/
           chmod +x gradlew
           ./gradlew vendordep --refresh-dependencies
 
@@ -46,7 +46,7 @@ jobs:
           javadoc -d docs/javadoc \
             -sourcepath build/generated/sources/delombok/java/main \
             -subpackages frc.alotobots \
-            -classpath "$HOME/wpilib/2024/maven/edu/wpi/first/wpilibj/wpilibj-java/2024.1.1/wpilibj-java-2024.1.1.jar:$HOME/wpilib/2024/maven/edu/wpi/first/wpiutil/wpiutil-java/2024.1.1/wpiutil-java-2024.1.1.jar:$HOME/wpilib/2024/maven/edu/wpi/first/hal/hal-java/2024.1.1/hal-java-2024.1.1.jar"
+            -classpath "$HOME/wpilib/2025/maven/edu/wpi/first/wpilibj/wpilibj-java/2025.1.1-beta-2/wpilibj-java-2025.1.1-beta-2.jar:$HOME/wpilib/2025/maven/edu/wpi/first/wpiutil/wpiutil-java/2025.1.1-beta-2/wpiutil-java-2025.1.1-beta-2.jar:$HOME/wpilib/2025/maven/edu/wpi/first/hal/hal-java/2025.1.1-beta-2/hal-java-2025.1.1-beta-2.jar"
 
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
 
