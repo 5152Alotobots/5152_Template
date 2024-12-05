@@ -44,7 +44,7 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
 
     // Log raw gyro data
-    Logger.getInstance().processInputs("Drive/Gyro",
+    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Gyro",
         Map.of(
             "connected", inputs.connected,
             "yawDegrees", yaw.getValueAsDouble(),

@@ -178,7 +178,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     var turnEncoderStatus = BaseStatusSignal.refreshAll(turnAbsolutePosition);
 
     // Log raw signals
-    Logger.getInstance().processInputs("Drive/Module" + constants.DriveMotorId + "/DriveMotor", 
+    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Module" + constants.DriveMotorId + "/DriveMotor", 
         Map.of(
             "position", drivePosition.getValue(),
             "velocity", driveVelocity.getValue(),
@@ -186,7 +186,7 @@ public class ModuleIOTalonFX implements ModuleIO {
             "current", driveCurrent.getValue()
         ));
     
-    Logger.getInstance().processInputs("Drive/Module" + constants.SteerMotorId + "/TurnMotor",
+    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Module" + constants.SteerMotorId + "/TurnMotor",
         Map.of(
             "position", turnPosition.getValue(),
             "velocity", turnVelocity.getValue(), 
