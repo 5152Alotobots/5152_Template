@@ -123,9 +123,19 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       }
     }
 
-    // Clean up old timers and update telemetry
-    detectionTimers.entrySet().removeIf(entry -> 
-      !result.get(0).getTargets().contains(entry.getKey()));
+    // Clean up old timers that don't match any current targets
+    detectionTimers.entrySet().removeIf(entry -> {
+      for (PhotonCamera camera : cameras) {
+        if (camera != null) {
+          var results = camera.getLatestResult();
+          if (results.hasTargets() && results.getTargets().contains(entry.getKey())) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+    
     telemetry.updateObjects(detectedObjects);
   }
 }
