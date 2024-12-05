@@ -65,16 +65,19 @@ public final class Constants {
     }
 
     @UtilityClass
+    /** Analog input port assignments */
     public static final class AnalogInputIds {
       // Add analog input IDs here
     }
 
     @UtilityClass
+    /** Digital I/O port assignments */
     public static final class DigitalIoIds {
       // Add digital I/O IDs here
     }
 
     @UtilityClass
+    /** PWM port assignments */
     public static final class PwmIds {
       // Add PWM IDs here
     }
