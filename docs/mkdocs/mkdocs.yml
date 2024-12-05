@@ -1,5 +1,10 @@
 site_name: Team 5152 Robot Documentation
-theme: material
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: grey
+    accent: red
 nav:
   - Home: index.md
   - API Documentation: ../javadoc/
