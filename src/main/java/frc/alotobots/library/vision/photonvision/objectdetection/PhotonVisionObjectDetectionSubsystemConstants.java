@@ -37,5 +37,6 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
   public static final double CONFIDENCE_DECAY_RATE = 0.33;
   public static final double MIN_CONFIDENCE = 0.0;
   public static final double POSITION_MATCH_TOLERANCE = 0.5; // meters
-  public static final double MINIMUM_DETECTION_TIME = 0.1; // seconds before adding to detected objects
+  public static final double MINIMUM_DETECTION_TIME =
+      3; // seconds before adding to detected objects
 }

@@ -113,7 +113,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
             if (!matched) {
               boolean timerFound = false;
               edu.wpi.first.wpilibj.Timer matchingTimer = null;
-              
+
               // Look for an existing timer for a similar position
               for (var entry : detectionTimers.entrySet()) {
                 if (entry.getKey().matchesPosition(object)) {
@@ -123,7 +123,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                   break;
                 }
               }
-              
+
               // If no timer found for this position, create new one
               if (!timerFound) {
                 matchingTimer = new edu.wpi.first.wpilibj.Timer();
@@ -131,15 +131,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                 detectionTimers.put(object, matchingTimer);
                 System.out.println("New timer created for position: " + object);
               }
-              
+
               // Check if timer has elapsed
               if (matchingTimer.hasElapsed(
                   PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
-                System.out.println("Added new object after " + matchingTimer.get() + "s: " + object);
-              } else {
                 System.out.println(
-                    "Waiting on timer: " + matchingTimer.get() + "s for: " + object);
+                    "Added new object after " + matchingTimer.get() + "s: " + object);
+              } else {
+                System.out.println("Waiting on timer: " + matchingTimer.get() + "s for: " + object);
               }
             }
           }
@@ -155,19 +155,19 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
             entry -> {
               boolean shouldRemove = true;
               DetectedObject timerObject = entry.getKey();
-              
+
               for (PhotonCamera camera : cameras) {
                 if (camera != null) {
                   var results = camera.getAllUnreadResults();
                   for (var result : results) {
                     if (result.hasTargets()) {
                       for (var target : result.getTargets()) {
-                        DetectedObject currentObject = 
+                        DetectedObject currentObject =
                             DetectedObject.fromPhotonTarget(
                                 target,
                                 PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[0],
                                 driveSubsystem);
-                                
+
                         if (timerObject.matchesPosition(currentObject)) {
                           shouldRemove = false;
                           System.out.println("Keeping timer for position: " + timerObject);
@@ -178,7 +178,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                   }
                 }
               }
-              
+
               if (shouldRemove) {
                 System.out.println("Removing timer for position: " + timerObject);
               }
@@ -186,7 +186,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
             });
 
     if (beforeSize != detectionTimers.size()) {
-      System.out.println("Position timers changed from " + beforeSize + " to " + detectionTimers.size());
+      System.out.println(
+          "Position timers changed from " + beforeSize + " to " + detectionTimers.size());
     }
 
     telemetry.updateObjects(detectedObjects);
