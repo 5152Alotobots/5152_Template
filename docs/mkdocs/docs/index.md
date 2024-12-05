@@ -9,8 +9,8 @@ Welcome to the documentation for Team 5152's robot code. This documentation cove
 
 ## Quick Links
 
-- [JavaDoc API Documentation](../javadoc/)
-- [Source Code on GitHub](https://github.com/alotobots/5152_Template)
+- [JavaDoc API Documentation](./javadoc/)
+- [Source Code on GitHub](https://github.com/5152Alotobots/5152_Template)
 
 ## Key Features
 

@@ -3,8 +3,8 @@ theme:
   name: material
   palette:
     scheme: slate
-    primary: grey
-    accent: red
+    primary: red
+    accent: grey
 nav:
   - Home: index.md
   - API Documentation: ../javadoc/
