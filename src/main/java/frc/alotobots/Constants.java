@@ -16,17 +16,19 @@ import lombok.experimental.UtilityClass;
 public final class Constants {
 
   @UtilityClass
+  /** Robot-specific constants and configurations */
   public static final class Robot {
 
     @UtilityClass
+    /** Field-specific measurements and positions */
     public static final class Field {
-      // Add field-specific constants here
-      // Ex. for the 2024 Game Season
+      /** Position of the red alliance speaker's front face */
       public static final Pose2d RED_SPEAKER_FRONT =
           new Pose2d(15.275, 5.585, Rotation2d.fromDegrees(0));
     }
 
     @UtilityClass
+    /** CAN bus device IDs */
     public static final class CanId {
       /** Power Distribution Panel CAN ID */
       public static final int PDP_CAN_ID = 1;
