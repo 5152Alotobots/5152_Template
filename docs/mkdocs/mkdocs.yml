@@ -7,6 +7,12 @@ theme:
     accent: grey
 nav:
   - Home: index.md
+  - Subsystems:
+    - Drivetrain: subsystems/drivetrain.md
+    - Pneumatics: subsystems/pneumatics.md
+    - Vision: subsystems/vision.md
+    - Controls: subsystems/controls.md
+    - Notifications: subsystems/notifications.md
   - API Documentation: ../javadoc/
 repo_url: https://github.com/alotobots/5152_Template
 repo_name: alotobots/5152_Template
