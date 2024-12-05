@@ -2,6 +2,11 @@
 
 The controls subsystem handles driver input processing and mapping. It provides sophisticated input processing for precise robot control.
 
+This system integrates with:
+- [SwerveDrive Subsystem](../../library/subsystems/swerve.md) for robot movement
+- [DriveFacingBestObject](../../library/commands/drivefacingbestobject.md) for assisted driving
+- [PathfindToBestObject](../../library/commands/pathfindtobestobject.md) for autonomous navigation
+
 ## Input Processing Features
 
 ### Deadband Processing

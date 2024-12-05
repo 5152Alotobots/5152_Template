@@ -3,6 +3,10 @@
 ## Purpose
 The DriveFacingBestObject command enables field-centric robot driving while automatically orienting the robot to face detected game pieces. It combines manual translation control with automated rotation management, providing smooth transitions between automated facing and manual override capabilities.
 
+This command works in conjunction with the [PhotonVision Object Detection System](../subsystems/vision/objectdetection.md) and [SwerveDrive Subsystem](../subsystems/swerve.md).
+
+See also: [PathfindToBestObject](./pathfindtobestobject.md) for autonomous navigation to objects.
+
 ## Required Subsystems
 - PhotonVisionObjectDetectionSubsystem
 - SwerveDriveSubsystem

@@ -2,6 +2,12 @@
 ## Overview
 The PhotonVision Object Detection System is a sophisticated computer vision subsystem designed for FRC robots. It provides real-time detection and tracking of game pieces and other objects using multiple PhotonVision cameras. The system maintains object persistence across frames, handles confidence decay, and provides comprehensive telemetry data for debugging and visualization.
 
+For AprilTag-specific vision features, see the [AprilTag documentation](../vision/apriltag.md).
+
+Related commands:
+- [DriveFacingBestObject](../../commands/drivefacingbestobject.md)
+- [PathfindToBestObject](../../commands/pathfindtobestobject.md)
+
 ## Core Components
 
 ### DetectedObject Class

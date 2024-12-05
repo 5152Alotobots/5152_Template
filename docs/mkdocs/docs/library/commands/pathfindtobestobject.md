@@ -3,6 +3,11 @@
 ## Purpose
 The PathfindToBestObject command creates and executes a path for the robot to navigate to the closest detected game piece while maintaining a safe approach distance based on the robot's bumper dimensions. This instant command generates and schedules a pathfinding command that considers the robot's physical dimensions and optimal approach angles.
 
+Related features:
+- [DriveFacingBestObject](./drivefacingbestobject.md) for manual driving toward objects
+- [Object Detection System](../subsystems/vision/objectdetection.md) for vision processing
+- [SwerveDrive](../subsystems/swerve.md) for path following
+
 ## Required Subsystems
 - PhotonVisionObjectDetectionSubsystem
 - SwerveDriveSubsystem
