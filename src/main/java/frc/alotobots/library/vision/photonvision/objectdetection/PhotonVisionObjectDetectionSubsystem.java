@@ -127,7 +127,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     detectionTimers.entrySet().removeIf(entry -> {
       for (PhotonCamera camera : cameras) {
         if (camera != null) {
-          var results = camera.getLatestResult();
+          var results = camera.getAllUnreadResults();
           if (results.hasTargets() && results.getTargets().contains(entry.getKey())) {
             return false;
           }
