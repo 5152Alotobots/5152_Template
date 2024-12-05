@@ -30,8 +30,13 @@ public class PathfindToBestObject extends InstantCommand {
 
   @Override
   public void initialize() {
+    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    if (detectedObjects.isEmpty()) {
+      return;
+    }
+
     Pose2d robotPose = swerveDriveSubsystem.getState().Pose;
-    Pose2d objectPose = objectDetectionSubsystem.getDetectedObjects().get(0).getPose().toPose2d();
+    Pose2d objectPose = detectedObjects.get(0).getPose().toPose2d();
 
     // Calculate direction from robot to object
     Translation2d toObject = objectPose.getTranslation().minus(robotPose.getTranslation());
