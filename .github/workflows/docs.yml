@@ -17,13 +17,14 @@ jobs:
           cache: 'gradle'
 
       # Then setup WPILib dependencies
-      - name: Grant execute permission for vendordeps
-        run: chmod +x gradlew
-      - name: Download vendor dependencies
+      - name: Setup vendor dependencies
         run: |
+          mkdir -p /home/runner/wpilib/2025/vendordeps/
+          cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
+          chmod +x gradlew
           for file in vendordeps/*.json; do
             if [ -f "$file" ]; then
-              ./gradlew vendordep --url="FRCLOCAL/$file"
+              ./gradlew vendordep --url="file://$PWD/$file"
             fi
           done
       - uses: actions/setup-python@v4
