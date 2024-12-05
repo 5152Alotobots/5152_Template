@@ -19,15 +19,10 @@ public class DriveFacingBestObject extends Command {
 
   private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle =
       new SwerveRequest.FieldCentricFacingAngle()
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-          .withTargetRateFeedforward(10)
-          .withVelocityXFeedforward(1.0)
-          .withVelocityYFeedforward(1.0);
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
   private final SwerveRequest.FieldCentric driveFieldCentric =
       new SwerveRequest.FieldCentric()
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-          .withVelocityXFeedforward(1.0)
-          .withVelocityYFeedforward(1.0);
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
   Timer overrideTimer = new Timer();
 
@@ -45,8 +40,7 @@ public class DriveFacingBestObject extends Command {
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
-    driveFacingAngle.HeadingController = new PhoenixPIDController(5.0, 0, 0.2)
-        .withKF(0.3); // Feedforward gain for faster initial response
+    driveFacingAngle.HeadingController = new PhoenixPIDController(5.0, 0, 0.0);
   }
 
   @Override
