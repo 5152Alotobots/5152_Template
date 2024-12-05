@@ -1,0 +1,24 @@
+name: Documentation
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: pip install mkdocs mkdocs-material
+      - run: javadoc -d docs/javadoc src/**/*.java
+      - run: cd docs/mkdocs && mkdocs build
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

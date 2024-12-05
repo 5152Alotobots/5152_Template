@@ -1,0 +1,6 @@
+site_name: 5152 Template
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - API: ../javadoc/index.html
