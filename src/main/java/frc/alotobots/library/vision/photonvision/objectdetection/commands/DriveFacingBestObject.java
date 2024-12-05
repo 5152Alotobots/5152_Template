@@ -46,7 +46,7 @@ public class DriveFacingBestObject extends Command {
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
 
     driveFacingAngle.HeadingController = new PhoenixPIDController(5.0, 0, 0.2)
-        .withFeedForward(0.3); // Higher feedforward for faster initial response
+        .withKF(0.3); // Feedforward gain for faster initial response
   }
 
   @Override
