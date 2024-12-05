@@ -21,6 +21,6 @@ nav:
           - Vision:
             - AprilTag: library/subsystems/vision/apriltag.md
             - Object Detection: library/subsystems/vision/objectdetection.md
-  - API Documentation: ../javadoc/
+  - API Documentation: ./javadoc
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: alotobots/5152_Template
