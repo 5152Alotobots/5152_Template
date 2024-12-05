@@ -16,12 +16,13 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      # Then setup WPILib dependencies
-      - name: Setup vendor dependencies
+      # Then setup WPILib dependencies and sync Gradle
+      - name: Setup vendor dependencies and sync Gradle
         run: |
           mkdir -p /home/runner/wpilib/2025/vendordeps/
           cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
           chmod +x gradlew
+          ./gradlew --refresh-dependencies
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
