@@ -3,10 +3,8 @@ package frc.alotobots;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.game.HMIStation;
 import frc.alotobots.library.bling.BlingSubsystem;
 import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
@@ -104,17 +102,6 @@ public class RobotContainer {
     // Enable/Disable Signal Logger for SYSID
     hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::start));
     hmiStation.stopCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
-
-    // X pattern stop
-    hmiStation.xPatternButton.onTrue(Commands.runOnce(drivetrainSubsystem::stopWithX, drivetrainSubsystem));
-
-    // Reset gyro to 0°
-    hmiStation.resetGyroToZeroButton.onTrue(
-        Commands.runOnce(
-            () -> drivetrainSubsystem.seedFieldRelative(new Rotation2d()),
-            drivetrainSubsystem)
-        .ignoringDisable(true));
-
 
     // Test OTF Pathplanner to best object
     hmiStation.testOTFPathplannerButton.onTrue(

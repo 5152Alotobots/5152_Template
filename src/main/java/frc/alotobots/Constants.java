@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import lombok.experimental.UtilityClass;
 
-public enum Mode {
+enum Mode {
   REAL, // Running on the real robot
   SIM, // Running in simulation
   REPLAY // Replaying from a log file

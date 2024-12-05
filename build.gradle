@@ -20,7 +20,7 @@ java {
     }
     gversion {
       srcDir       = "src/main/java/"
-      classPackage = "frc.robot"
+      classPackage = "frc.alotobots"
       className    = "BuildConstants"
       dateFormat   = "yyyy-MM-dd HH:mm:ss z"
       timeZone     = "America/New_York" // Use preferred time zone
