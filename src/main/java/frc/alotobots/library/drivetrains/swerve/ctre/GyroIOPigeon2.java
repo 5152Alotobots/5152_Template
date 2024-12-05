@@ -36,9 +36,19 @@ public class GyroIOPigeon2 implements GyroIO {
 
   @Override
   public void updateInputs(GyroIOInputs inputs) {
-    inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
+    var status = BaseStatusSignal.refreshAll(yaw, yawVelocity);
+    inputs.connected = status.equals(StatusCode.OK);
     inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
+
+    // Log raw gyro data
+    Logger.getInstance().processInputs("Drive/Gyro",
+        Map.of(
+            "connected", inputs.connected,
+            "yawDegrees", yaw.getValueAsDouble(),
+            "yawVelocityDegPerSec", yawVelocity.getValueAsDouble(),
+            "statusCode", status.toString()
+        ));
 
     inputs.odometryYawTimestamps =
         yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();

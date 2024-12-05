@@ -203,6 +203,22 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     return this.getState().Speeds.omegaRadiansPerSecond;
   }
 
+  /** Returns the individual module velocities. */
+  @AutoLogOutput(key = "SwerveStates/ModuleVelocities")
+  private double[] getModuleVelocities() {
+    return java.util.Arrays.stream(getModuleStates())
+        .mapToDouble(state -> state.speedMetersPerSecond)
+        .toArray();
+  }
+
+  /** Returns the individual module angles. */
+  @AutoLogOutput(key = "SwerveStates/ModuleAngles")
+  private double[] getModuleAngles() {
+    return java.util.Arrays.stream(getModuleStates())
+        .mapToDouble(state -> state.angle.getRadians())
+        .toArray();
+  }
+
   /**
    * Returns a command that applies the specified control request to this swerve drivetrain.
    *
