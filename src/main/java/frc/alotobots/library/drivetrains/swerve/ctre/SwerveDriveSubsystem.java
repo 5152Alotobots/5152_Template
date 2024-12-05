@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
@@ -172,9 +173,34 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   }
 
   /** Returns the measured chassis speeds of the robot. */
-  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured") 
   private ChassisSpeeds getChassisSpeeds() {
     return this.getState().Speeds;
+  }
+
+  /** Returns the current robot pose. */
+  @AutoLogOutput(key = "Odometry/RobotPose")
+  private Pose2d getRobotPose() {
+    return this.getState().Pose;
+  }
+
+  /** Returns the current robot heading. */
+  @AutoLogOutput(key = "Odometry/Heading")
+  private Rotation2d getRobotHeading() {
+    return this.getState().Pose.getRotation();
+  }
+
+  /** Returns the current robot velocity. */
+  @AutoLogOutput(key = "Odometry/Velocity") 
+  private double getRobotVelocity() {
+    var speeds = this.getState().Speeds;
+    return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+  }
+
+  /** Returns the current robot angular velocity. */
+  @AutoLogOutput(key = "Odometry/AngularVelocity")
+  private double getRobotAngularVelocity() {
+    return this.getState().Speeds.omegaRadiansPerSecond;
   }
 
   /**
