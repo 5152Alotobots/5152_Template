@@ -17,8 +17,8 @@ jobs:
           python-version: '3.x'
       - run: pip install mkdocs mkdocs-material
       - run: |
-          find src/main/java -name "*.java" > sources.txt
-          javadoc -d docs/javadoc @sources.txt
+          mkdir -p docs/javadoc
+          javadoc -d docs/javadoc -sourcepath src/main/java -subpackages frc.alotobots
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
       - uses: peaceiris/actions-gh-pages@v3
         with:
