@@ -83,11 +83,13 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
       PhotonCamera camera = cameras[i];
       if (camera != null) {
-        var result = camera.getAllUnreadResults();
+        var results = camera.getAllUnreadResults();
 
-        if (!result.isEmpty()) {
+        for (var result : results) {
+          if (!result.hasTargets()) continue;
+          
           // Get all targets from this camera
-          for (PhotonTrackedTarget target : result.get(0).getTargets()) {
+          for (PhotonTrackedTarget target : result.getTargets()) {
             // Create DetectedObject using camera transform for each target
             DetectedObject object =
                 DetectedObject.fromPhotonTarget(
@@ -128,7 +130,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       for (PhotonCamera camera : cameras) {
         if (camera != null) {
           var results = camera.getAllUnreadResults();
-          if (results.hasTargets() && results.getTargets().contains(entry.getKey())) {
+          if (!results.isEmpty() && results.get(0).hasTargets() && 
+              results.get(0).getTargets().contains(entry.getKey())) {
             return false;
           }
         }
