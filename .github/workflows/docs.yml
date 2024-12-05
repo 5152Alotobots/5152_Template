@@ -22,9 +22,11 @@ jobs:
           mkdir -p /home/runner/wpilib/2025/vendordeps/
           cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
           chmod +x gradlew
+          # Install each vendor dependency individually with full path
           for file in vendordeps/*.json; do
             if [ -f "$file" ]; then
-              ./gradlew vendordep --url="file://$PWD/$file"
+              FULL_PATH="$(readlink -f "$file")"
+              ./gradlew vendordep --url="file://${FULL_PATH}"
             fi
           done
       - uses: actions/setup-python@v4
