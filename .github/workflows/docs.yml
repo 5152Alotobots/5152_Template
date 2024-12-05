@@ -22,11 +22,17 @@ jobs:
           mkdir -p /home/runner/wpilib/2025/vendordeps/
           cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
           chmod +x gradlew
-          # Install each vendor dependency individually with full path
+          # Install each vendor dependency individually with absolute path and validation
           for file in vendordeps/*.json; do
             if [ -f "$file" ]; then
+              # Validate JSON file
+              if ! jq empty "$file" 2>/dev/null; then
+                echo "Error: Invalid JSON in $file"
+                exit 1
+              fi
               FULL_PATH="$(readlink -f "$file")"
-              ./gradlew vendordep --url="file://${FULL_PATH}"
+              echo "Installing vendor dependency from $FULL_PATH"
+              ./gradlew vendordep --url="file://${FULL_PATH}" --info || exit 1
             fi
           done
       - uses: actions/setup-python@v4
