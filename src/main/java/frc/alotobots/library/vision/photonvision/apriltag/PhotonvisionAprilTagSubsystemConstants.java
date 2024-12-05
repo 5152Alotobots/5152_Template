@@ -39,6 +39,11 @@ public class PhotonvisionAprilTagSubsystemConstants {
         // new PhotonCamera("BR_AprilTag")
       };
 
+  // IOs
+  public static final AprilTagIOPhotonVision[] = new AprilTagIOPhotonVision[]{
+
+  }
+
   public static final boolean USE_VISION_POSE_ESTIMATION = true;
   public static final boolean ONLY_USE_POSE_ESTIMATION_IN_TELEOP = false;
 

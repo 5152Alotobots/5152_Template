@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -33,11 +35,14 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
   private final PhotonvisionAprilTagTelemetry telemetry;
   private final boolean[] camerasEnabled;
   private final SwerveDriveSubsystem driveSubsystem;
+  private final PhotonvisionAprilTagIOInputsAutoLogged[] inputs;
   // Smoothing filter state
   private Pose3d lastSmoothedPose;
 
   /** Constructs a new PhotonvisionAprilTagSubsystem for AprilTag detection and pose estimation. */
   public PhotonvisionAprilTagSubsystem(SwerveDriveSubsystem driveSubsystem) {
+    // First, loop through are camera list, adding each one to the input layer
+
     driveSubsystem.setVisionMeasurementStdDevs(VISION_STD_DEVS);
 
     this.driveSubsystem = driveSubsystem;
@@ -154,6 +159,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
    */
   public Optional<Pair<Pose3d, Double>> getEstimatedVisionPose3d(Pose2d previousPose) {
     ArrayList<EstimatedRobotPose> estimates = new ArrayList<>();
+
     for (int i = 0; i < poseEstimators.size(); i++) {
       PhotonPoseEstimator estimator = poseEstimators.get(i);
       if (estimator != null && camerasEnabled[i] && CAMERAS[i].isConnected()) {
