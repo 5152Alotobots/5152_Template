@@ -34,6 +34,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
+  private final java.util.Map<DetectedObject, edu.wpi.first.wpilibj.Timer> detectionTimers =
+      new java.util.HashMap<>();
+
   /**
    * Gets the raw field-relative angle to the first detected object.
    *
@@ -81,11 +84,13 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
       PhotonCamera camera = cameras[i];
       if (camera != null) {
-        var result = camera.getAllUnreadResults();
+        var results = camera.getAllUnreadResults();
 
-        if (!result.isEmpty()) {
+        for (var result : results) {
+          if (!result.hasTargets()) continue;
+
           // Get all targets from this camera
-          for (PhotonTrackedTarget target : result.get(0).getTargets()) {
+          for (PhotonTrackedTarget target : result.getTargets()) {
             // Create DetectedObject using camera transform for each target
             DetectedObject object =
                 DetectedObject.fromPhotonTarget(
@@ -104,16 +109,115 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               }
             }
 
-            // If no match found, add as new object
+            // If no match found in existing objects, check timers
             if (!matched) {
-              detectedObjects.add(object);
+              boolean timerFound = false;
+              edu.wpi.first.wpilibj.Timer matchingTimer = null;
+
+              // Look for an existing timer for a similar position
+              for (var entry : detectionTimers.entrySet()) {
+                if (entry.getKey().matchesPosition(object)) {
+                  timerFound = true;
+                  matchingTimer = entry.getValue();
+                  System.out.println("Found existing timer for similar position: " + object);
+                  break;
+                }
+              }
+
+              // If no timer found for this position, create new one
+              if (!timerFound) {
+                matchingTimer = new edu.wpi.first.wpilibj.Timer();
+                matchingTimer.start();
+                detectionTimers.put(object, matchingTimer);
+                System.out.println("New timer created for position: " + object);
+              }
+
+              // Check if timer has elapsed
+              if (matchingTimer.hasElapsed(
+                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
+                detectedObjects.add(object);
+                System.out.println(
+                    "Added new object after " + matchingTimer.get() + "s: " + object);
+              } else {
+                System.out.println("Waiting on timer: " + matchingTimer.get() + "s for: " + object);
+              }
             }
           }
         }
       }
     }
 
-    // Update telemetry with latest data
+    // Clean up old timers that haven't seen matches for the grace period
+    int beforeSize = detectionTimers.size();
+    double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+
+    detectionTimers
+        .entrySet()
+        .removeIf(
+            entry -> {
+              DetectedObject timerObject = entry.getKey();
+              edu.wpi.first.wpilibj.Timer timer = entry.getValue();
+
+              // Check if we've seen this object recently across any camera
+              boolean seenRecently = false;
+              for (PhotonCamera camera : cameras) {
+                if (camera != null) {
+                  var results = camera.getAllUnreadResults();
+                  for (var result : results) {
+                    if (result.hasTargets()) {
+                      for (var target : result.getTargets()) {
+                        DetectedObject currentObject =
+                            DetectedObject.fromPhotonTarget(
+                                target,
+                                PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[0],
+                                driveSubsystem);
+
+                        if (timerObject.matchesPosition(currentObject)) {
+                          seenRecently = true;
+                          timer.reset(); // Reset grace period timer when object is seen
+                          System.out.println(
+                              "Reset grace period for timer at position: " + timerObject);
+                          break;
+                        }
+                      }
+                    }
+                    if (seenRecently) break;
+                  }
+                }
+                if (seenRecently) break;
+              }
+
+              // Only remove if:
+              // 1. We haven't seen it for the grace period
+              // 2. It's not currently in detectedObjects
+              boolean exceededGracePeriod =
+                  timer.get()
+                      > PhotonVisionObjectDetectionSubsystemConstants.TIMER_CLEANUP_GRACE_PERIOD;
+
+              boolean isActivelyDetected =
+                  detectedObjects.stream().anyMatch(obj -> obj.matchesPosition(timerObject));
+
+              boolean shouldRemove = exceededGracePeriod && !isActivelyDetected;
+
+              if (shouldRemove) {
+                System.out.println(
+                    "Removing timer for position "
+                        + timerObject
+                        + " after "
+                        + timer.get()
+                        + "s without detection (actively detected: "
+                        + isActivelyDetected
+                        + ")");
+              }
+
+              return shouldRemove;
+            });
+
+    if (beforeSize != detectionTimers.size()) {
+      System.out.println(
+          "Position timers changed from " + beforeSize + " to " + detectionTimers.size());
+    }
+
     telemetry.updateObjects(detectedObjects);
   }
 }

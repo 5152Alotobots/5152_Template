@@ -52,6 +52,8 @@ public class TunerConstants {
           // PID constants for rotation
           new PIDConstants(7.8, 0, 0.015)); // Tuned for 2022 Drive
 
+  public static final Distance BUMPER_LENGTH = Distance.ofBaseUnits(.75, Meters);
+  public static final Distance BUMPER_WIDTH = Distance.ofBaseUnits(.75, Meters);
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
