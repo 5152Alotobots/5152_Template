@@ -177,23 +177,24 @@ public class ModuleIOTalonFX implements ModuleIO {
         BaseStatusSignal.refreshAll(turnPosition, turnVelocity, turnAppliedVolts, turnCurrent);
     var turnEncoderStatus = BaseStatusSignal.refreshAll(turnAbsolutePosition);
 
-    // Log raw signals
-    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Module" + constants.DriveMotorId + "/DriveMotor", 
-        Map.of(
-            "position", drivePosition.getValue(),
-            "velocity", driveVelocity.getValue(),
-            "appliedVolts", driveAppliedVolts.getValue(),
-            "current", driveCurrent.getValue()
-        ));
-    
-    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Module" + constants.SteerMotorId + "/TurnMotor",
-        Map.of(
-            "position", turnPosition.getValue(),
-            "velocity", turnVelocity.getValue(), 
-            "appliedVolts", turnAppliedVolts.getValue(),
-            "current", turnCurrent.getValue(),
-            "absolutePosition", turnAbsolutePosition.getValue()
-        ));
+    // Log raw drive motor signals
+    var driveInputs = new ModuleIOInputs();
+    driveInputs.drivePositionRad = drivePosition.getValue().in(Radians);
+    driveInputs.driveVelocityRadPerSec = driveVelocity.getValue().in(RadiansPerSecond); 
+    driveInputs.driveAppliedVolts = driveAppliedVolts.getValue().in(Volts);
+    driveInputs.driveCurrentAmps = driveCurrent.getValue().in(Amps);
+    org.littletonrobotics.junction.Logger.getInstance().processInputs(
+        "Drive/Module" + constants.DriveMotorId + "/DriveMotor", driveInputs);
+
+    // Log raw turn motor signals
+    var turnInputs = new ModuleIOInputs();
+    turnInputs.turnPosition = Rotation2d.fromRotations(turnPosition.getValue().in(Rotations));
+    turnInputs.turnVelocityRadPerSec = turnVelocity.getValue().in(RadiansPerSecond);
+    turnInputs.turnAppliedVolts = turnAppliedVolts.getValue().in(Volts);
+    turnInputs.turnCurrentAmps = turnCurrent.getValue().in(Amps);
+    turnInputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValue().in(Rotations));
+    org.littletonrobotics.junction.Logger.getInstance().processInputs(
+        "Drive/Module" + constants.SteerMotorId + "/TurnMotor", turnInputs);
 
     // Update drive inputs
     inputs.driveConnected = driveConnectedDebounce.calculate(driveStatus.isOK());
