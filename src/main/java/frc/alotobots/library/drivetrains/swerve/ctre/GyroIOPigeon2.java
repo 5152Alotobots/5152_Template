@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.alotobots.Constants;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
+import org.littletonrobotics.junction.Logger;
 
 import java.util.Map;
 import java.util.Queue;
@@ -44,7 +45,7 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
 
     // Log raw gyro data
-    org.littletonrobotics.junction.Logger.getInstance().processInputs("Drive/Gyro",
+    Logger.processInputs("Drive/Gyro",
         Map.of(
             "connected", inputs.connected,
             "yawDegrees", yaw.getValueAsDouble(),

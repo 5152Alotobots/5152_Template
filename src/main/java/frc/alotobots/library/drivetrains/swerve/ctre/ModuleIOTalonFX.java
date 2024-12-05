@@ -193,7 +193,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnInputs.turnAppliedVolts = turnAppliedVolts.getValue().in(Volts);
     turnInputs.turnCurrentAmps = turnCurrent.getValue().in(Amps);
     turnInputs.turnAbsolutePosition = Rotation2d.fromRotations(turnAbsolutePosition.getValue().in(Rotations));
-    org.littletonrobotics.junction.Logger.getInstance().processInputs(
+    org.littletonrobotics.junction.Logger.processInputs(
         "Drive/Module" + constants.SteerMotorId + "/TurnMotor", turnInputs);
 
     // Update drive inputs
