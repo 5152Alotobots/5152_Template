@@ -150,50 +150,63 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     // Clean up old timers that haven't seen matches for the grace period
     int beforeSize = detectionTimers.size();
     double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
-    
-    detectionTimers.entrySet().removeIf(entry -> {
-      DetectedObject timerObject = entry.getKey();
-      edu.wpi.first.wpilibj.Timer timer = entry.getValue();
-      
-      // Check if we've seen this object recently across any camera
-      boolean seenRecently = false;
-      for (PhotonCamera camera : cameras) {
-        if (camera != null) {
-          var results = camera.getAllUnreadResults();
-          for (var result : results) {
-            if (result.hasTargets()) {
-              for (var target : result.getTargets()) {
-                DetectedObject currentObject = DetectedObject.fromPhotonTarget(
-                    target,
-                    PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[0],
-                    driveSubsystem);
 
-                if (timerObject.matchesPosition(currentObject)) {
-                  seenRecently = true;
-                  timer.reset(); // Reset grace period timer when object is seen
-                  System.out.println("Reset grace period for timer at position: " + timerObject);
-                  break;
+    detectionTimers
+        .entrySet()
+        .removeIf(
+            entry -> {
+              DetectedObject timerObject = entry.getKey();
+              edu.wpi.first.wpilibj.Timer timer = entry.getValue();
+
+              // Check if we've seen this object recently across any camera
+              boolean seenRecently = false;
+              for (PhotonCamera camera : cameras) {
+                if (camera != null) {
+                  var results = camera.getAllUnreadResults();
+                  for (var result : results) {
+                    if (result.hasTargets()) {
+                      for (var target : result.getTargets()) {
+                        DetectedObject currentObject =
+                            DetectedObject.fromPhotonTarget(
+                                target,
+                                PhotonVisionObjectDetectionSubsystemConstants.CAMERA_OFFSETS[0],
+                                driveSubsystem);
+
+                        if (timerObject.matchesPosition(currentObject)) {
+                          seenRecently = true;
+                          timer.reset(); // Reset grace period timer when object is seen
+                          System.out.println(
+                              "Reset grace period for timer at position: " + timerObject);
+                          break;
+                        }
+                      }
+                    }
+                    if (seenRecently) break;
+                  }
                 }
+                if (seenRecently) break;
               }
-            }
-            if (seenRecently) break;
-          }
-        }
-        if (seenRecently) break;
-      }
 
-      // Remove if we haven't seen it for the grace period
-      boolean shouldRemove = timer.get() > PhotonVisionObjectDetectionSubsystemConstants.TIMER_CLEANUP_GRACE_PERIOD;
-      
-      if (shouldRemove) {
-        System.out.println("Removing timer for position " + timerObject + " after " + timer.get() + "s without detection");
-      }
-      
-      return shouldRemove;
-    });
+              // Remove if we haven't seen it for the grace period
+              boolean shouldRemove =
+                  timer.get()
+                      > PhotonVisionObjectDetectionSubsystemConstants.TIMER_CLEANUP_GRACE_PERIOD;
+
+              if (shouldRemove) {
+                System.out.println(
+                    "Removing timer for position "
+                        + timerObject
+                        + " after "
+                        + timer.get()
+                        + "s without detection");
+              }
+
+              return shouldRemove;
+            });
 
     if (beforeSize != detectionTimers.size()) {
-      System.out.println("Position timers changed from " + beforeSize + " to " + detectionTimers.size());
+      System.out.println(
+          "Position timers changed from " + beforeSize + " to " + detectionTimers.size());
     }
 
     telemetry.updateObjects(detectedObjects);
