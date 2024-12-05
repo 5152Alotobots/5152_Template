@@ -28,6 +28,16 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    // Log build constants
+    DataLogManager.log("MAVEN_GROUP: " + BuildConstants.MAVEN_GROUP);
+    DataLogManager.log("MAVEN_NAME: " + BuildConstants.MAVEN_NAME);
+    DataLogManager.log("VERSION: " + BuildConstants.VERSION);
+    DataLogManager.log("GIT_REVISION: " + BuildConstants.GIT_REVISION);
+    DataLogManager.log("GIT_SHA: " + BuildConstants.GIT_SHA);
+    DataLogManager.log("GIT_DATE: " + BuildConstants.GIT_DATE);
+    DataLogManager.log("GIT_BRANCH: " + BuildConstants.GIT_BRANCH);
+    DataLogManager.log("BUILD_DATE: " + BuildConstants.BUILD_DATE);
+    DataLogManager.log("BUILD_UNIX_TIME: " + BuildConstants.BUILD_UNIX_TIME);
 
     // Port forwarding for vision systems
     // Photonvision
