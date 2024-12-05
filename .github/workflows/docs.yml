@@ -19,9 +19,9 @@ jobs:
       # Download and setup WPILib
       - name: Download WPILib
         run: |
-          wget https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz
+          wget -q https://github.com/wpilibsuite/allwpilib/releases/download/v2024.1.1/WPILib_Linux-2024.1.1.tar.gz
           mkdir -p $HOME/wpilib/2024
-          tar xf WPILib_Linux-2024.1.1.tar.gz -C $HOME/wpilib/2024
+          tar --quiet xf WPILib_Linux-2024.1.1.tar.gz -C $HOME/wpilib/2024
 
       # Setup vendor dependencies
       - name: Setup vendor dependencies
