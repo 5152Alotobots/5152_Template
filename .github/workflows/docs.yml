@@ -8,18 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      # Setup Java and Python
+
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Setup Gradle (like in your build workflow)
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
 
-      # Let Gradle handle dependencies
       - name: Download Dependencies
         run: ./gradlew dependencies
 
@@ -27,19 +24,25 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Install documentation tools
       - run: pip install mkdocs mkdocs-material
 
-      # Generate documentation
-      - name: Generate Javadoc
+      # Enhanced Javadoc generation with debug info
+      - name: Generate and Copy Javadoc
         run: |
-          mkdir -p docs/javadoc
+          echo "Generating Javadocs..."
           ./gradlew javadoc
-          cp -r build/docs/javadoc/* docs/javadoc/
+          echo "Checking Javadoc output..."
+          ls -la build/docs/javadoc/
+          echo "Creating docs directory..."
+          mkdir -p site/javadoc
+          echo "Copying Javadocs..."
+          cp -r build/docs/javadoc/* site/javadoc/
+          echo "Checking final Javadoc location..."
+          ls -la site/javadoc/
 
-      - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
+      - name: Build MkDocs
+        run: mkdocs build -f docs/mkdocs/mkdocs.yml -d site
 
-      # Publish to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
