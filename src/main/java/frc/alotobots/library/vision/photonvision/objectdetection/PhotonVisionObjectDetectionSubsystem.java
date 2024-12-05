@@ -106,9 +106,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
             // If no match found and object has been detected long enough, add as new object
             if (!matched) {
-              double currentTime = Timer.getFPGATimestamp();
-              if (currentTime - object.getDetectionStartTime() >= 
-                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME) {
+              if (object.detectionTimer.hasElapsed(
+                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
               }
             }
