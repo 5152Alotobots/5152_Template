@@ -34,9 +34,12 @@ jobs:
 
       - name: Build MkDocs
         run: |
-          mkdocs build -f docs/mkdocs/mkdocs.yml -d site
+          cd docs/mkdocs
+          mkdocs build
+          mkdir -p ../../site
+          cp -r site/* ../../site/
           echo "Site directory after MkDocs build:"
-          ls -la site/
+          ls -la ../../site/
 
       - uses: peaceiris/actions-gh-pages@v3
         with:
