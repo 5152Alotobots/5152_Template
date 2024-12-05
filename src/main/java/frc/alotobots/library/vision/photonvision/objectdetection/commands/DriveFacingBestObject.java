@@ -20,10 +20,14 @@ public class DriveFacingBestObject extends Command {
   private final SwerveRequest.FieldCentricFacingAngle driveFacingAngle =
       new SwerveRequest.FieldCentricFacingAngle()
           .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-              .withTargetRateFeedforward(10);
+          .withTargetRateFeedforward(10)
+          .withVelocityXFeedforward(1.0)
+          .withVelocityYFeedforward(1.0);
   private final SwerveRequest.FieldCentric driveFieldCentric =
       new SwerveRequest.FieldCentric()
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+          .withVelocityXFeedforward(1.0)
+          .withVelocityYFeedforward(1.0);
 
   Timer overrideTimer = new Timer();
 
