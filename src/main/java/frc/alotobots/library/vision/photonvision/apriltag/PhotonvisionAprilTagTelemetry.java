@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.alotobots.util.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class PhotonvisionAprilTagTelemetry {
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
-      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      Logger.error("Failed to load AprilTag field layout: " + e.getMessage());
       throw new RuntimeException("Failed to load AprilTag field layout", e);
     }
     this.aprilTagTab = Shuffleboard.getTab("AprilTag Vision");

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.alotobots.util.Logger;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
@@ -97,12 +98,11 @@ public class SwerveDrivePathPlanner {
 
   private void configurePathPlanner() {
     if (isConfigured) {
-      System.out.println(
-          "WARNING: PathPlanner already configured! Skipping duplicate configuration.");
+      Logger.warn("PathPlanner already configured! Skipping duplicate configuration.");
       return;
     }
     try {
-      System.out.println("Configuring PathPlanner...");
+      Logger.info("Configuring PathPlanner...");
       var config = RobotConfig.fromGUISettings();
       AutoBuilder.configure(
           () -> swerveDrive.getState().Pose, // Supplier of current robot pose
@@ -124,7 +124,7 @@ public class SwerveDrivePathPlanner {
           swerveDrive // Subsystem for requirements
           );
       isConfigured = true;
-      System.out.println("PathPlanner configuration complete.");
+      Logger.info("PathPlanner configuration complete.");
     } catch (Exception ex) {
       DriverStation.reportError(
           "Failed to load PathPlanner config and configure AutoBuilder" + ex, ex.getStackTrace());

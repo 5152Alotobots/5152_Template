@@ -7,6 +7,7 @@ import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.alotobots.util.Logger;
 import java.awt.Color;
 import lombok.Getter;
 
@@ -22,25 +23,24 @@ public class BlingSubsystem extends SubsystemBase {
 
   /** Constructs a new Bling subsystem. */
   public BlingSubsystem() {
-    System.out.println("Initializing BlingSubsystem");
+    Logger.info("Initializing BlingSubsystem");
 
     controller = new CANdle(CANDLE_CAN_ID);
-    System.out.println("CANdle controller initialized");
+    Logger.info("CANdle controller initialized");
 
     controller.configBrightnessScalar(MAX_LED_BRIGHTNESS);
     controller.configLEDType(LED_TYPE);
     controller.configStatusLedState(DISABLE_STATUS_LED);
-    System.out.println("CANdle configuration completed");
+    Logger.info("CANdle configuration completed");
 
     telemetry = new BlingTelemetry();
-    System.out.println("Telemetry initialized");
+    Logger.info("Telemetry initialized");
 
-    System.out.println("BlingSubsystem initialization completed");
+    Logger.info("BlingSubsystem initialization completed");
   }
 
   /** Sets the LED strip to the color of the alliance reported by the FMS/DS. */
   public void setLedToAllianceColor() {
-    System.out.println("Setting LED to alliance color");
     clearAnimation();
     if (DriverStation.getAlliance().isPresent()) {
       setSolidColor(
@@ -58,14 +58,12 @@ public class BlingSubsystem extends SubsystemBase {
    * @param color The color to set the LEDs to.
    */
   public void setSolidColor(Color color) {
-    System.out.println("Setting solid color: " + colorToString(color));
     clearAnimation();
     currentSolidColor = color;
   }
 
   /** Clears the LEDs solid color (Turns off LEDs). */
   public void clearSolidColor() {
-    System.out.println("Clearing solid color");
     currentSolidColor = Colors.OFF_COLOR;
   }
 
@@ -75,18 +73,15 @@ public class BlingSubsystem extends SubsystemBase {
    * @param toQueue The color to queue.
    */
   public void queueColor(Color toQueue) {
-    System.out.println("Queuing color: " + colorToString(toQueue));
     queuedColor = toQueue;
   }
 
   /** Sets the next color if available. If not, runs default behavior. */
   public void setQueuedColor() {
     if (queuedColor != null) {
-      System.out.println("Setting queued color: " + colorToString(queuedColor));
       setSolidColor(queuedColor);
       queuedColor = null;
     } else {
-      System.out.println("No queued color available, running default behavior");
       runDefault();
     }
   }
@@ -98,14 +93,12 @@ public class BlingSubsystem extends SubsystemBase {
    * @param animation The animation to set.
    */
   public void runAnimation(Animation animation) {
-    System.out.println("Running animation: " + animation.getClass().getSimpleName());
     clearAnimation();
     currentAnimation = animation;
   }
 
   /** Clears the current animation. */
   public void clearAnimation() {
-    System.out.println("Clearing animation");
     controller.clearAnimation(0);
     currentAnimation = null;
   }
@@ -116,32 +109,27 @@ public class BlingSubsystem extends SubsystemBase {
    * @param toQueue The animation to queue.
    */
   public void queueAnimation(Animation toQueue) {
-    System.out.println("Queuing animation: " + toQueue.getClass().getSimpleName());
     queuedAnimation = toQueue;
   }
 
   /** Runs the next animation if available. If not, runs default behavior. */
   public void runQueuedAnimation() {
     if (queuedAnimation != null) {
-      System.out.println("Running queued animation: " + queuedAnimation.getClass().getSimpleName());
       runAnimation(queuedAnimation);
       queuedAnimation = null;
     } else {
-      System.out.println("No queued animation available, running default behavior");
       runDefault();
     }
   }
 
   /** Clears all settings (turns off LEDs). */
   public void clearAll() {
-    System.out.println("Clearing all settings");
     clearAnimation();
     clearSolidColor();
   }
 
   /** Runs the default action. */
   public void runDefault() {
-    System.out.println("Running default action");
     setLedToAllianceColor();
   }
 

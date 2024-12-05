@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import frc.alotobots.util.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
-      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      Logger.error("Failed to load AprilTag field layout: " + e.getMessage());
       throw new RuntimeException("Failed to load AprilTag field layout", e);
     }
 
@@ -54,12 +55,12 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     try {
       initializePoseEstimators();
     } catch (Exception e) {
-      System.err.println("Failed to initialize pose estimators: " + e.getMessage());
+      Logger.error("Failed to initialize pose estimators: " + e.getMessage());
       throw new RuntimeException("Failed to initialize pose estimators", e);
     }
 
     telemetry = new PhotonvisionAprilTagTelemetry();
-    System.out.println("PhotonVision AprilTag subsystem initialized");
+    Logger.info("PhotonVision AprilTag subsystem initialized");
   }
 
   /**
@@ -83,7 +84,6 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
                 fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 CAMERA_OFFSETS[i]);
-        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         poseEstimators.add(estimator);
 
         camerasEnabled[i] = CAMERAS[i].isConnected();

@@ -4,6 +4,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import frc.alotobots.util.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     this.cameras = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS;
     this.telemetry = new PhotonVisionObjectDetectionTelemetry();
     this.driveSubsystem = driveSubsystem;
-    System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
+    Logger.info("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
   /**
@@ -119,7 +120,6 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                 if (entry.getKey().matchesPosition(object)) {
                   timerFound = true;
                   matchingTimer = entry.getValue();
-                  System.out.println("Found existing timer for similar position: " + object);
                   break;
                 }
               }
@@ -129,17 +129,12 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                 matchingTimer = new edu.wpi.first.wpilibj.Timer();
                 matchingTimer.start();
                 detectionTimers.put(object, matchingTimer);
-                System.out.println("New timer created for position: " + object);
               }
 
               // Check if timer has elapsed
               if (matchingTimer.hasElapsed(
                   PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
-                System.out.println(
-                    "Added new object after " + matchingTimer.get() + "s: " + object);
-              } else {
-                System.out.println("Waiting on timer: " + matchingTimer.get() + "s for: " + object);
               }
             }
           }
@@ -175,8 +170,6 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                         if (timerObject.matchesPosition(currentObject)) {
                           seenRecently = true;
                           timer.reset(); // Reset grace period timer when object is seen
-                          System.out.println(
-                              "Reset grace period for timer at position: " + timerObject);
                           break;
                         }
                       }
@@ -199,24 +192,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
               boolean shouldRemove = exceededGracePeriod && !isActivelyDetected;
 
-              if (shouldRemove) {
-                System.out.println(
-                    "Removing timer for position "
-                        + timerObject
-                        + " after "
-                        + timer.get()
-                        + "s without detection (actively detected: "
-                        + isActivelyDetected
-                        + ")");
-              }
-
               return shouldRemove;
             });
-
-    if (beforeSize != detectionTimers.size()) {
-      System.out.println(
-          "Position timers changed from " + beforeSize + " to " + detectionTimers.size());
-    }
 
     telemetry.updateObjects(detectedObjects);
   }
