@@ -2,8 +2,9 @@ site_name: Team 5152 Robot Documentation
 theme:
   name: material
   palette:
-    primary: blue
-    accent: orange
+    scheme: slate
+    primary: grey
+    accent: red
 nav:
   - Home: index.md
   - API Documentation: ../javadoc/
