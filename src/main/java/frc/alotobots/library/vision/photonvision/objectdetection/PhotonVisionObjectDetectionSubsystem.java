@@ -117,12 +117,16 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                       k -> {
                         var t = new edu.wpi.first.wpilibj.Timer();
                         t.start();
+                        System.out.println("New timer created for target: " + target.getFiducialId());
                         return t;
                       });
 
               if (timer.hasElapsed(
                   PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
+                System.out.println("Added new object after " + timer.get() + "s: " + object);
+              } else {
+                System.out.println("Waiting on timer: " + timer.get() + "s for target: " + target.getFiducialId());
               }
             }
           }
@@ -131,22 +135,38 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
 
     // Clean up old timers that don't match any current targets
+    int beforeSize = detectionTimers.size();
     detectionTimers
         .entrySet()
         .removeIf(
             entry -> {
+              boolean shouldRemove = true;
               for (PhotonCamera camera : cameras) {
                 if (camera != null) {
                   var results = camera.getAllUnreadResults();
                   for (var result : results) {
-                    if (result.hasTargets() && result.getTargets().contains(entry.getKey())) {
-                      return false;
+                    if (result.hasTargets()) {
+                      System.out.println("Checking " + result.getTargets().size() + " targets from camera");
+                      for (var target : result.getTargets()) {
+                        if (target.equals(entry.getKey())) {
+                          shouldRemove = false;
+                          System.out.println("Keeping timer for target: " + target.getFiducialId());
+                          break;
+                        }
+                      }
                     }
                   }
                 }
               }
-              return true;
+              if (shouldRemove) {
+                System.out.println("Removing timer for target: " + entry.getKey().getFiducialId());
+              }
+              return shouldRemove;
             });
+    
+    if (beforeSize != detectionTimers.size()) {
+      System.out.println("Timers changed from " + beforeSize + " to " + detectionTimers.size());
+    }
 
     telemetry.updateObjects(detectedObjects);
   }
