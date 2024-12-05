@@ -18,6 +18,7 @@ public class DetectedObject {
   @Getter private final Transform3d robotToCamera;
   @Getter private double confidence;
   private double lastUpdateTime;
+  @Getter private final double detectionStartTime;
 
   /**
    * Creates a new DetectedObject with default attributes.
@@ -33,7 +34,9 @@ public class DetectedObject {
     this.target = null;
     this.robotToCamera = null;
     this.confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
-    this.lastUpdateTime = Timer.getFPGATimestamp();
+    double currentTime = Timer.getFPGATimestamp();
+    this.lastUpdateTime = currentTime;
+    this.detectionStartTime = currentTime;
   }
 
   /**

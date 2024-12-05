@@ -104,9 +104,13 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               }
             }
 
-            // If no match found, add as new object
+            // If no match found and object has been detected long enough, add as new object
             if (!matched) {
-              detectedObjects.add(object);
+              double currentTime = Timer.getFPGATimestamp();
+              if (currentTime - object.getDetectionStartTime() >= 
+                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME) {
+                detectedObjects.add(object);
+              }
             }
           }
         }
