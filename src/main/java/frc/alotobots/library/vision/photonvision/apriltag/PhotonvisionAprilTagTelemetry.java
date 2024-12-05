@@ -63,7 +63,7 @@ public class PhotonvisionAprilTagTelemetry {
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
-      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      Logger.error("Failed to load AprilTag field layout: " + e.getMessage());
       throw new RuntimeException("Failed to load AprilTag field layout", e);
     }
     this.aprilTagTab = Shuffleboard.getTab("AprilTag Vision");
