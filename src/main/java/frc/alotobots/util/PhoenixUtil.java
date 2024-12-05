@@ -53,17 +53,13 @@ package frc.alotobots.util;
 import com.ctre.phoenix6.StatusCode;
 import java.util.function.Supplier;
 
+/** Utility class for Phoenix 6 configuration and status handling. */
 public final class PhoenixUtil {
   private PhoenixUtil() {
     throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
   }
 
-  /**
-   * Attempts to run the command until no error is produced or max attempts reached.
-   *
-   * @param maxAttempts Maximum number of attempts to try the command
-   * @param command The command to execute that returns a StatusCode
-   */
+  /** Attempts to run the command until no error is produced. */
   public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
     for (int i = 0; i < maxAttempts; i++) {
       var error = command.get();
