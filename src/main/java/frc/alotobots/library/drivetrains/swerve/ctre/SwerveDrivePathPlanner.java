@@ -45,6 +45,20 @@ public class SwerveDrivePathPlanner {
   /** Configures the autonomous command chooser. */
   private void configureAutoChooser() {
     autoChooser = AutoBuilder.buildAutoChooser("Default");
+    
+    // Add SysId routines
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Forward)",
+        swerveDrive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Reverse)",
+        swerveDrive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Forward)", 
+        swerveDrive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Reverse)", 
+        swerveDrive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
 
   /** Adds the auto chooser to the Shuffleboard. */

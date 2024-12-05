@@ -104,15 +104,6 @@ public class RobotContainer {
     hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::start));
     hmiStation.stopCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
 
-    // SYSID
-    hmiStation.driverPOVUp.whileTrue(
-        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    hmiStation.driverPOVDown.whileTrue(
-        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    hmiStation.driverPOVLeft.whileTrue(
-        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    hmiStation.driverPOVRight.whileTrue(
-        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // Test OTF Pathplanner to best object
     hmiStation.testOTFPathplannerButton.onTrue(
