@@ -33,6 +33,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    * @return List of DetectedObject instances from enabled cameras
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
+
   private final edu.wpi.first.wpilibj.Timer detectionTimer = new edu.wpi.first.wpilibj.Timer();
 
   /**
@@ -107,8 +108,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
             // If no match found, start/reset timer and check elapsed time
             if (!matched) {
-              detectionTimer.reset();
-              detectionTimer.start();
+              detectionTimer.restart();
               if (detectionTimer.hasElapsed(
                   PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
