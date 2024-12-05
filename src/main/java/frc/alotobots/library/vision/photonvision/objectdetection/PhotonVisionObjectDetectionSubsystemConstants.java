@@ -40,5 +40,5 @@ public class PhotonVisionObjectDetectionSubsystemConstants {
   public static final double MINIMUM_DETECTION_TIME =
       3.0; // seconds before adding to detected objects
   public static final double TIMER_CLEANUP_GRACE_PERIOD =
-      1.0; // seconds to keep timer after last detection
+      5.0; // seconds to keep timer after last detection
 }

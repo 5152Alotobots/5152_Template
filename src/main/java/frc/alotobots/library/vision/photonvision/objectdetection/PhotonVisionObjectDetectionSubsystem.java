@@ -187,10 +187,16 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                 if (seenRecently) break;
               }
 
-              // Remove if we haven't seen it for the grace period
-              boolean shouldRemove =
-                  timer.get()
-                      > PhotonVisionObjectDetectionSubsystemConstants.TIMER_CLEANUP_GRACE_PERIOD;
+              // Only remove if:
+              // 1. We haven't seen it for the grace period
+              // 2. It's not currently in detectedObjects
+              boolean exceededGracePeriod = 
+                  timer.get() > PhotonVisionObjectDetectionSubsystemConstants.TIMER_CLEANUP_GRACE_PERIOD;
+              
+              boolean isActivelyDetected = detectedObjects.stream()
+                  .anyMatch(obj -> obj.matchesPosition(timerObject));
+
+              boolean shouldRemove = exceededGracePeriod && !isActivelyDetected;
 
               if (shouldRemove) {
                 System.out.println(
@@ -198,7 +204,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                         + timerObject
                         + " after "
                         + timer.get()
-                        + "s without detection");
+                        + "s without detection (actively detected: "
+                        + isActivelyDetected
+                        + ")");
               }
 
               return shouldRemove;
