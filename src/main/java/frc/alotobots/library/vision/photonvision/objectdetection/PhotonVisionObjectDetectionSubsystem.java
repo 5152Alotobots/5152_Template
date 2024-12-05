@@ -34,7 +34,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-  private final edu.wpi.first.wpilibj.Timer detectionTimer = new edu.wpi.first.wpilibj.Timer();
+  private final java.util.Map<PhotonTrackedTarget, edu.wpi.first.wpilibj.Timer> detectionTimers = new java.util.HashMap<>();
 
   /**
    * Gets the raw field-relative angle to the first detected object.
@@ -106,11 +106,15 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               }
             }
 
-            // If no match found, start/reset timer and check elapsed time
+            // If no match found, check/update timer for this target
             if (!matched) {
-              detectionTimer.restart();
-              if (detectionTimer.hasElapsed(
-                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
+              edu.wpi.first.wpilibj.Timer timer = detectionTimers.computeIfAbsent(target, k -> {
+                var t = new edu.wpi.first.wpilibj.Timer();
+                t.start();
+                return t;
+              });
+              
+              if (timer.hasElapsed(PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
               }
             }
@@ -119,7 +123,9 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
       }
     }
 
-    // Update telemetry with latest data
+    // Clean up old timers and update telemetry
+    detectionTimers.entrySet().removeIf(entry -> 
+      !result.get(0).getTargets().contains(entry.getKey()));
     telemetry.updateObjects(detectedObjects);
   }
 }
