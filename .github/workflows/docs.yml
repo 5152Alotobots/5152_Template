@@ -14,22 +14,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      # Download and setup WPILib
-      - name: Download WPILib
-        run: |
-          wget -q https://packages.wpilib.workers.dev/installer/v2025.1.1-beta-2/Linux/WPILib_Linux-2025.1.1-beta-2.tar.gz
-          mkdir -p $HOME/wpilib/2025
-          tar --quiet xf WPILib_Linux-2025.1.1-beta-2.tar.gz -C $HOME/wpilib/2025
+      # Setup Gradle (like in your build workflow)
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
 
-      # Setup vendor dependencies
-      - name: Setup vendor dependencies
-        run: |
-          mkdir -p $HOME/wpilib/2025/vendordeps/
-          cp vendordeps/*.json $HOME/wpilib/2025/vendordeps/
-          chmod +x gradlew
-          ./gradlew vendordep --refresh-dependencies
+      # Let Gradle handle dependencies
+      - name: Download Dependencies
+        run: ./gradlew dependencies
 
       - uses: actions/setup-python@v4
         with:
@@ -42,11 +34,8 @@ jobs:
       - name: Generate Javadoc
         run: |
           mkdir -p docs/javadoc
-          ./gradlew delombok
-          javadoc -d docs/javadoc \
-            -sourcepath build/generated/sources/delombok/java/main \
-            -subpackages frc.alotobots \
-            -classpath "$HOME/wpilib/2025/maven/edu/wpi/first/wpilibj/wpilibj-java/2025.1.1-beta-2/wpilibj-java-2025.1.1-beta-2.jar:$HOME/wpilib/2025/maven/edu/wpi/first/wpiutil/wpiutil-java/2025.1.1-beta-2/wpiutil-java-2025.1.1-beta-2.jar:$HOME/wpilib/2025/maven/edu/wpi/first/hal/hal-java/2025.1.1-beta-2/hal-java-2025.1.1-beta-2.jar"
+          ./gradlew javadoc
+          cp -r build/docs/javadoc/* docs/javadoc/
 
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
 

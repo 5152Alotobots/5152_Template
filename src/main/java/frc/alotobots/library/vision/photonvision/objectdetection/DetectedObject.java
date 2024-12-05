@@ -11,10 +11,9 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * Represents an object detected by the PhotonVision vision processing system.
- * Tracks the object's 3D pose, confidence level, and provides utilities for calculating
- * relative positions and angles. Objects are tracked with confidence decay over time
- * to handle intermittent detection issues.
+ * Represents an object detected by the PhotonVision vision processing system. Tracks the object's
+ * 3D pose, confidence level, and provides utilities for calculating relative positions and angles.
+ * Objects are tracked with confidence decay over time to handle intermittent detection issues.
  */
 public class DetectedObject {
   @Getter private final SwerveDriveSubsystem drive;
@@ -25,9 +24,9 @@ public class DetectedObject {
   private double lastUpdateTime;
 
   /**
-   * Creates a new DetectedObject with default attributes.
-   * This constructor initializes a basic object with default pose and confidence values.
-   * The drive subsystem is required for pose calculations relative to the robot's position.
+   * Creates a new DetectedObject with default attributes. This constructor initializes a basic
+   * object with default pose and confidence values. The drive subsystem is required for pose
+   * calculations relative to the robot's position.
    *
    * @param drive The SwerveDriveSubsystem to use for pose calculations
    * @throws IllegalArgumentException if drive is null
@@ -45,8 +44,8 @@ public class DetectedObject {
   }
 
   /**
-   * Creates a new DetectedObject with a specific pose and tracking information.
-   * Initializes all tracking parameters including confidence and timestamp.
+   * Creates a new DetectedObject with a specific pose and tracking information. Initializes all
+   * tracking parameters including confidence and timestamp.
    *
    * @param pose The 3D pose of the detected object in field coordinates
    * @param target The raw PhotonVision target data

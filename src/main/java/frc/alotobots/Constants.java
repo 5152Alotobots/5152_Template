@@ -13,8 +13,8 @@ import lombok.experimental.UtilityClass;
  * constants are needed, to reduce verbosity.
  */
 /**
- * Central repository for robot-wide constant values.
- * Contains configuration values, port mappings, and calibration constants.
+ * Central repository for robot-wide constant values. Contains configuration values, port mappings,
+ * and calibration constants.
  */
 @UtilityClass
 public final class Constants {
@@ -22,16 +22,16 @@ public final class Constants {
   @UtilityClass
   /** Robot-specific constants and configurations */
   /**
-   * Robot-specific constants and configurations.
-   * Groups all robot-related constants into logical categories.
+   * Robot-specific constants and configurations. Groups all robot-related constants into logical
+   * categories.
    */
   public static final class Robot {
 
     @UtilityClass
     /** Field-specific measurements and positions */
     /**
-     * Field-specific measurements and positions.
-     * Contains constants related to the game field layout and key positions.
+     * Field-specific measurements and positions. Contains constants related to the game field
+     * layout and key positions.
      */
     public static final class Field {
       /** Position of the red alliance speaker's front face */
@@ -42,39 +42,52 @@ public final class Constants {
     @UtilityClass
     /** CAN bus device IDs */
     /**
-     * CAN bus device ID assignments.
-     * Maps CAN IDs for motors, sensors and other CAN-connected devices.
+     * CAN bus device ID assignments. Maps CAN IDs for motors, sensors and other CAN-connected
+     * devices.
      */
     public static final class CanId {
       /** Power Distribution Panel CAN ID */
       public static final int PDP_CAN_ID = 1;
+
       /** Pneumatic Control Module CAN ID */
       public static final int PCM_CAN_ID = 2;
+
       /** Pigeon 2 IMU CAN ID */
       public static final int PIGEON_2_ID = 3;
 
       /** Front left drive motor CAN ID */
       public static final int FRONT_LEFT_DRIVE_MTR_CAN_ID = 10;
+
       /** Front left steering motor CAN ID */
       public static final int FRONT_LEFT_STEER_MTR_CAN_ID = 11;
+
       /** Front left steering encoder CAN ID */
       public static final int FRONT_LEFT_STEER_CAN_CODER_CAN_ID = 12;
+
       /** Front right drive motor CAN ID */
       public static final int FRONT_RIGHT_DRIVE_MTR_CAN_ID = 13;
+
       /** Front right steering motor CAN ID */
       public static final int FRONT_RIGHT_STEER_MTR_CAN_ID = 14;
+
       /** Front right steering encoder CAN ID */
       public static final int FRONT_RIGHT_STEER_CAN_CODER_CAN_ID = 15;
+
       /** Back left drive motor CAN ID */
       public static final int BACK_LEFT_DRIVE_MTR_CAN_ID = 16;
+
       /** Back left steering motor CAN ID */
       public static final int BACK_LEFT_STEER_MTR_CAN_ID = 17;
+
       /** Back left steering encoder CAN ID */
       public static final int BACK_LEFT_STEER_CAN_CODER_CAN_ID = 18;
+
       /** Back right drive motor CAN ID */
       public static final int BACK_RIGHT_DRIVE_MTR_CAN_ID = 19;
+
       /** Back right steering motor CAN ID */
       public static final int BACK_RIGHT_STEER_MTR_CAN_ID = 20;
+
       /** Back right steering encoder CAN ID */
       public static final int BACK_RIGHT_STEER_CAN_CODER_CAN_ID = 21;
 
@@ -84,10 +97,7 @@ public final class Constants {
 
     @UtilityClass
     /** Analog input port assignments */
-    /**
-     * Analog input port assignments.
-     * Maps analog sensor connections to specific robot ports.
-     */
+    /** Analog input port assignments. Maps analog sensor connections to specific robot ports. */
     public static final class AnalogInputIds {
       // Add analog input IDs here
     }
@@ -95,8 +105,8 @@ public final class Constants {
     @UtilityClass
     /** Digital I/O port assignments */
     /**
-     * Digital I/O port assignments.
-     * Maps digital sensor and actuator connections to specific robot ports.
+     * Digital I/O port assignments. Maps digital sensor and actuator connections to specific robot
+     * ports.
      */
     public static final class DigitalIoIds {
       // Add digital I/O IDs here
@@ -105,8 +115,8 @@ public final class Constants {
     @UtilityClass
     /** PWM port assignments */
     /**
-     * PWM port assignments.
-     * Maps PWM motor controller and servo connections to specific robot ports.
+     * PWM port assignments. Maps PWM motor controller and servo connections to specific robot
+     * ports.
      */
     public static final class PwmIds {
       // Add PWM IDs here

@@ -3,8 +3,8 @@ package frc.alotobots.util;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 /**
- * Utility class for logging messages at different severity levels.
- * Wraps WPILib's DataLogManager to provide standard logging levels.
+ * Utility class for logging messages at different severity levels. Wraps WPILib's DataLogManager to
+ * provide standard logging levels.
  */
 public class Logger {
   /**

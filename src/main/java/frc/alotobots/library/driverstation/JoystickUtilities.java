@@ -3,17 +3,16 @@ package frc.alotobots.library.driverstation;
 import lombok.experimental.UtilityClass;
 
 /**
- * Utility class providing methods for processing joystick inputs.
- * Includes functions for deadband processing, scaling, and various input transformations
- * commonly used in robot control systems.
+ * Utility class providing methods for processing joystick inputs. Includes functions for deadband
+ * processing, scaling, and various input transformations commonly used in robot control systems.
  */
 @UtilityClass
 public class JoystickUtilities {
 
   /**
-   * Applies a deadband to a joystick input value and rescales the remaining range.
-   * Values within the deadband range are set to zero, while values outside are
-   * rescaled to maintain smooth control transitions.
+   * Applies a deadband to a joystick input value and rescales the remaining range. Values within
+   * the deadband range are set to zero, while values outside are rescaled to maintain smooth
+   * control transitions.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @param deadband The deadband range (0.0 to 1.0)
@@ -30,8 +29,8 @@ public class JoystickUtilities {
   }
 
   /**
-   * Squares the joystick input while preserving the sign.
-   * This provides finer control at low speeds while maintaining full power availability.
+   * Squares the joystick input while preserving the sign. This provides finer control at low speeds
+   * while maintaining full power availability.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @return The squared joystick value, maintaining original sign
@@ -43,8 +42,8 @@ public class JoystickUtilities {
   }
 
   /**
-   * Scales a joystick input by a constant factor.
-   * Useful for limiting maximum speed or adjusting sensitivity.
+   * Scales a joystick input by a constant factor. Useful for limiting maximum speed or adjusting
+   * sensitivity.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @param scalefactor The scaling factor to apply
@@ -57,8 +56,8 @@ public class JoystickUtilities {
   }
 
   /**
-   * Applies both deadband and squaring transformations to a joystick input.
-   * Combines deadband filtering with squared response for enhanced control.
+   * Applies both deadband and squaring transformations to a joystick input. Combines deadband
+   * filtering with squared response for enhanced control.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @param deadband The deadband range (0.0 to 1.0)
@@ -71,8 +70,8 @@ public class JoystickUtilities {
   }
 
   /**
-   * Applies deadband and scaling transformations to a joystick input.
-   * First applies deadband, then scales the result.
+   * Applies deadband and scaling transformations to a joystick input. First applies deadband, then
+   * scales the result.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @param deadband The deadband range (0.0 to 1.0)
@@ -86,8 +85,8 @@ public class JoystickUtilities {
   }
 
   /**
-   * Applies deadband, squaring, and scaling transformations to a joystick input.
-   * Processes input in order: deadband → squaring → scaling.
+   * Applies deadband, squaring, and scaling transformations to a joystick input. Processes input in
+   * order: deadband → squaring → scaling.
    *
    * @param rawJoy The raw joystick input value (-1.0 to 1.0)
    * @param deadband The deadband range (0.0 to 1.0)

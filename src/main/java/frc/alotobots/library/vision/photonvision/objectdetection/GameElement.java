@@ -1,8 +1,8 @@
 package frc.alotobots.library.vision.photonvision.objectdetection;
 
 /**
- * Represents a physical game element that can be detected by the vision system.
- * Stores the element's name and physical dimensions.
+ * Represents a physical game element that can be detected by the vision system. Stores the
+ * element's name and physical dimensions.
  */
 public class GameElement {
 
