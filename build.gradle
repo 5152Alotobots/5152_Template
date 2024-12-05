@@ -73,13 +73,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     
-    // Add required vendor dependencies
-    implementation "org.photonvision:PhotonLib-json:2024.1.1-beta-2:1"
-    implementation "com.ctre.phoenix6:wpiapi-java:2024.1.1-beta-2"
-    implementation "com.ctre.phoenix:api-java:5.30.4"
-    implementation "com.ctre.phoenix:wpiapi-java:5.30.4"
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 test {
