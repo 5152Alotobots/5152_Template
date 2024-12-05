@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.alotobots.util.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

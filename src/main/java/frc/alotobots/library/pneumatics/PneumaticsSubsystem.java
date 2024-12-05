@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.Constants;
+import frc.alotobots.util.Logger;
 
 /** Subsystem for controlling the pneumatics system on the robot. */
 public class PneumaticsSubsystem extends SubsystemBase {
