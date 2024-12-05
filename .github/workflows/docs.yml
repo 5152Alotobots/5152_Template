@@ -16,7 +16,9 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install mkdocs mkdocs-material
-      - run: javadoc -d docs/javadoc src/**/*.java
+      - run: |
+          find src/main/java -name "*.java" > sources.txt
+          javadoc -d docs/javadoc @sources.txt
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
       - uses: peaceiris/actions-gh-pages@v3
         with:
