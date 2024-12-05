@@ -9,34 +9,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Setup Java and Python first
+      # Setup Java and Python
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
 
-      # Then setup WPILib dependencies and sync Gradle
-      - name: Setup vendor dependencies and sync Gradle
+      # Download and setup WPILib
+      - name: Download WPILib
         run: |
-          mkdir -p /home/runner/wpilib/2025/vendordeps/
-          cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
+          wget https://github.com/wpilibsuite/allwpilib/releases/download/v2024.1.1/WPILib_Linux-2024.1.1.tar.gz
+          mkdir -p $HOME/wpilib/2024
+          tar xf WPILib_Linux-2024.1.1.tar.gz -C $HOME/wpilib/2024
+
+      # Setup vendor dependencies
+      - name: Setup vendor dependencies
+        run: |
+          mkdir -p $HOME/wpilib/2024/vendordeps/
+          cp vendordeps/*.json $HOME/wpilib/2024/vendordeps/
           chmod +x gradlew
-          ./gradlew --refresh-dependencies
+          ./gradlew vendordep --refresh-dependencies
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          
+
       # Install documentation tools
       - run: pip install mkdocs mkdocs-material
-      
+
       # Generate documentation
-      - run: |
+      - name: Generate Javadoc
+        run: |
           mkdir -p docs/javadoc
           ./gradlew delombok
-          javadoc -d docs/javadoc -sourcepath build/generated/sources/delombok/java/main -subpackages frc.alotobots
+          javadoc -d docs/javadoc \
+            -sourcepath build/generated/sources/delombok/java/main \
+            -subpackages frc.alotobots \
+            -classpath "$HOME/wpilib/2024/maven/edu/wpi/first/wpilibj/wpilibj-java/2024.1.1/wpilibj-java-2024.1.1.jar:$HOME/wpilib/2024/maven/edu/wpi/first/wpiutil/wpiutil-java/2024.1.1/wpiutil-java-2024.1.1.jar:$HOME/wpilib/2024/maven/edu/wpi/first/hal/hal-java/2024.1.1/hal-java-2024.1.1.jar"
+
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
-      
+
       # Publish to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v3
         with:
