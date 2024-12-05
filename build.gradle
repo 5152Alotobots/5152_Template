@@ -52,26 +52,34 @@ def includeDesktopSupport = true
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-  annotationProcessor wpi.java.deps.wpilibAnnotations()
-  implementation wpi.java.deps.wpilib()
-  implementation wpi.java.vendor.java()
+    annotationProcessor wpi.java.deps.wpilibAnnotations()
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
 
-  roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
-  roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
-  roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
-  roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
 
-  nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-  nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-  simulationDebug wpi.sim.enableDebug()
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
 
-  nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-  nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-  simulationRelease wpi.sim.enableRelease()
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
 
-  testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    
+    // Add required vendor dependencies
+    implementation "org.photonvision:PhotonLib-json:2024.1.1-beta-2:1"
+    implementation "com.ctre.phoenix6:wpiapi-java:2024.1.1-beta-2"
+    implementation "com.ctre.phoenix:api-java:5.30.4"
+    implementation "com.ctre.phoenix:wpiapi-java:5.30.4"
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 test {
