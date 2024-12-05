@@ -1,22 +1,36 @@
 # Team 5152 Robot Code Documentation
 
-Welcome to the documentation for Team 5152's robot code. This documentation covers:
+Welcome to the comprehensive documentation for Team 5152's robot code. This documentation provides detailed information about our robot's systems, subsystems, and commands.
 
-- Java API documentation for all robot code
-- Usage guides and examples
-- Control system documentation
-- Vision and sensor configuration
+## Core Systems
 
-## Quick Links
+### Drive Systems
+- [SwerveDrive Subsystem](./library/subsystems/swerve.md) - Advanced omnidirectional drive control
+- [Controls System](./game/subsystems/controls.md) - Driver input processing with deadband handling
+- Autonomous path following and trajectory generation
 
-- [JavaDoc API Documentation](./javadoc/)
+### Vision Processing
+- [AprilTag System](./library/subsystems/vision/apriltag.md) - Field-relative pose estimation
+- [Object Detection](./library/subsystems/vision/objectdetection.md) - Game piece tracking
+- Multi-camera fusion and filtering
+
+### Game-Specific Commands
+- [DriveFacingBestObject](./library/commands/drivefacingbestobject.md) - Assisted game piece targeting
+- [PathfindToBestObject](./library/commands/pathfindtobestobject.md) - Autonomous game piece approach
+- [DefaultSetToAllianceColor](./library/commands/defaultsettoalliancecolor.md) - Alliance indicator control
+
+### Support Systems
+- [Pneumatics Control](./library/subsystems/pneumatics.md) - Actuator and pressure management
+- [LED Notification](./library/subsystems/bling.md) - Visual state indication and debugging
+
+## Developer Resources
+
+### Quick Links
+- [JavaDoc API Documentation](./javadoc/) - Detailed API reference
 - [Source Code on GitHub](https://github.com/5152Alotobots/5152_Template)
-- [Controls Documentation](./game/subsystems/controls.md)
-- [Vision Systems](./library/subsystems/vision/apriltag.md)
 
-## Key Features
-
-- Advanced [drivetrain control](./library/subsystems/swerve.md) with [deadband handling](./game/subsystems/controls.md)
-- Vision processing with [AprilTag](./library/subsystems/vision/apriltag.md) and [object detection](./library/subsystems/vision/objectdetection.md) support
-- [Pneumatics control system](./library/subsystems/pneumatics.md)
-- [LED notification system](./library/subsystems/bling.md) for debugging
+### Key Features
+- Sophisticated swerve drive control with field-relative operation
+- Advanced vision processing with multi-camera support
+- Comprehensive telemetry and debugging systems
+- Modular command-based architecture
