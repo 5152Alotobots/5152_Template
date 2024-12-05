@@ -34,7 +34,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
 
-  private final java.util.Map<PhotonTrackedTarget, edu.wpi.first.wpilibj.Timer> detectionTimers = new java.util.HashMap<>();
+  private final java.util.Map<PhotonTrackedTarget, edu.wpi.first.wpilibj.Timer> detectionTimers =
+      new java.util.HashMap<>();
 
   /**
    * Gets the raw field-relative angle to the first detected object.
@@ -87,7 +88,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
         for (var result : results) {
           if (!result.hasTargets()) continue;
-          
+
           // Get all targets from this camera
           for (PhotonTrackedTarget target : result.getTargets()) {
             // Create DetectedObject using camera transform for each target
@@ -110,13 +111,17 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
 
             // If no match found, check/update timer for this target
             if (!matched) {
-              edu.wpi.first.wpilibj.Timer timer = detectionTimers.computeIfAbsent(target, k -> {
-                var t = new edu.wpi.first.wpilibj.Timer();
-                t.start();
-                return t;
-              });
-              
-              if (timer.hasElapsed(PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
+              edu.wpi.first.wpilibj.Timer timer =
+                  detectionTimers.computeIfAbsent(
+                      target,
+                      k -> {
+                        var t = new edu.wpi.first.wpilibj.Timer();
+                        t.start();
+                        return t;
+                      });
+
+              if (timer.hasElapsed(
+                  PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
               }
             }
@@ -126,19 +131,23 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     }
 
     // Clean up old timers that don't match any current targets
-    detectionTimers.entrySet().removeIf(entry -> {
-      for (PhotonCamera camera : cameras) {
-        if (camera != null) {
-          var results = camera.getAllUnreadResults();
-          if (!results.isEmpty() && results.get(0).hasTargets() && 
-              results.get(0).getTargets().contains(entry.getKey())) {
-            return false;
-          }
-        }
-      }
-      return true;
-    });
-    
+    detectionTimers
+        .entrySet()
+        .removeIf(
+            entry -> {
+              for (PhotonCamera camera : cameras) {
+                if (camera != null) {
+                  var results = camera.getAllUnreadResults();
+                  if (!results.isEmpty()
+                      && results.get(0).hasTargets()
+                      && results.get(0).getTargets().contains(entry.getKey())) {
+                    return false;
+                  }
+                }
+              }
+              return true;
+            });
+
     telemetry.updateObjects(detectedObjects);
   }
 }
