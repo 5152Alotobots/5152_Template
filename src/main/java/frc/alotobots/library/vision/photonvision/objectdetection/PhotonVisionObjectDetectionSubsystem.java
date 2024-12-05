@@ -138,10 +138,10 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               for (PhotonCamera camera : cameras) {
                 if (camera != null) {
                   var results = camera.getAllUnreadResults();
-                  if (!results.isEmpty()
-                      && results.get(0).hasTargets()
-                      && results.get(0).getTargets().contains(entry.getKey())) {
-                    return false;
+                  for (var result : results) {
+                    if (result.hasTargets() && result.getTargets().contains(entry.getKey())) {
+                      return false;
+                    }
                   }
                 }
               }
