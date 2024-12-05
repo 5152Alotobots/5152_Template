@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -160,6 +161,18 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         modules);
     telemetry = new SwerveDriveTelemetry(this);
     // Pathplanner config is handled in SwerveDrivePathPlanner file
+  }
+
+  /** Returns the module states (turn angles and drive velocities) for all of the modules. */
+  @AutoLogOutput(key = "SwerveStates/Measured")
+  private SwerveModuleState[] getModuleStates() {
+    return this.getState().ModuleStates;
+  }
+
+  /** Returns the measured chassis speeds of the robot. */
+  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured") 
+  private ChassisSpeeds getChassisSpeeds() {
+    return this.getState().Speeds;
   }
 
   /**
