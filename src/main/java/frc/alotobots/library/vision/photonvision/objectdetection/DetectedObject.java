@@ -18,7 +18,6 @@ public class DetectedObject {
   @Getter private final Transform3d robotToCamera;
   @Getter private double confidence;
   private double lastUpdateTime;
-  private final edu.wpi.first.wpilibj.Timer detectionTimer = new edu.wpi.first.wpilibj.Timer();
 
   /**
    * Creates a new DetectedObject with default attributes.
@@ -35,7 +34,6 @@ public class DetectedObject {
     this.robotToCamera = null;
     this.confidence = PhotonVisionObjectDetectionSubsystemConstants.INITIAL_CONFIDENCE;
     this.lastUpdateTime = Timer.getFPGATimestamp();
-    this.detectionTimer.start();
   }
 
   /**

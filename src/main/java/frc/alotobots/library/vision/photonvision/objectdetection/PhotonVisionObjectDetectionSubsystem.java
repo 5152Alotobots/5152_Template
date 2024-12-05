@@ -104,9 +104,11 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               }
             }
 
-            // If no match found and object has been detected long enough, add as new object
+            // If no match found, start/reset timer and check elapsed time
             if (!matched) {
-              if (object.detectionTimer.hasElapsed(
+              detectionTimer.reset();
+              detectionTimer.start();
+              if (detectionTimer.hasElapsed(
                   PhotonVisionObjectDetectionSubsystemConstants.MINIMUM_DETECTION_TIME)) {
                 detectedObjects.add(object);
               }
