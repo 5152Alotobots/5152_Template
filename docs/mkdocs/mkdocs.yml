@@ -7,12 +7,20 @@ theme:
     accent: grey
 nav:
   - Home: index.md
-  - Subsystems:
-    - Drivetrain: subsystems/drivetrain.md
-    - Pneumatics: subsystems/pneumatics.md
-    - Vision: subsystems/vision.md
-    - Controls: subsystems/controls.md
-    - Notifications: subsystems/notifications.md
+  - Game:
+      - Controls: game/subsystems/controls.md
+  - Library:
+      - Commands:
+          - library/commands/drivefacingbestobject.md
+          - library/commands/pathfindtobestobject.md
+          - library/commands/defaultsettoalliancecolor.md
+      - Subsystems:
+          - Bling: library/subsystems/bling.md
+          - Pneumatics: library/subsystems/pneumatics.md
+          - Swerve: library/subsystems/swerve.md
+          - Vision:
+            - AprilTag: library/subsystems/vision/apriltag.md
+            - Object Detection: library/subsystems/vision/objectdetection.md
   - API Documentation: ../javadoc/
-repo_url: https://github.com/alotobots/5152_Template
+repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: alotobots/5152_Template
