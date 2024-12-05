@@ -83,7 +83,6 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
                 fieldLayout,
                 PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
                 CAMERA_OFFSETS[i]);
-        estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
         poseEstimators.add(estimator);
 
         camerasEnabled[i] = CAMERAS[i].isConnected();
