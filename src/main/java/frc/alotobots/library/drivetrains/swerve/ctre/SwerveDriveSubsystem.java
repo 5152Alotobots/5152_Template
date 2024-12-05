@@ -9,6 +9,8 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -170,7 +172,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   }
 
   /** Returns the measured chassis speeds of the robot. */
-  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured") 
+  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
   private ChassisSpeeds getChassisSpeeds() {
     return this.getState().Speeds;
   }
@@ -223,7 +225,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
           .ifPresent(
               allianceColor -> {
                 setOperatorPerspectiveForward(
-                    allianceColor == Alliance.Redmodule
+                    allianceColor == Alliance.Red
                         ? kRedAlliancePerspectiveRotation
                         : kBlueAlliancePerspectiveRotation);
                 // Acknowledge
