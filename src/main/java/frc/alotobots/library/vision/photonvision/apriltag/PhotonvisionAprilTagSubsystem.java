@@ -43,7 +43,7 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     try {
       this.fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
     } catch (Exception e) {
-      System.err.println("Failed to load AprilTag field layout: " + e.getMessage());
+      Logger.error("Failed to load AprilTag field layout: " + e.getMessage());
       throw new RuntimeException("Failed to load AprilTag field layout", e);
     }
 
@@ -54,12 +54,12 @@ public class PhotonvisionAprilTagSubsystem extends SubsystemBase {
     try {
       initializePoseEstimators();
     } catch (Exception e) {
-      System.err.println("Failed to initialize pose estimators: " + e.getMessage());
+      Logger.error("Failed to initialize pose estimators: " + e.getMessage());
       throw new RuntimeException("Failed to initialize pose estimators", e);
     }
 
     telemetry = new PhotonvisionAprilTagTelemetry();
-    System.out.println("PhotonVision AprilTag subsystem initialized");
+    Logger.info("PhotonVision AprilTag subsystem initialized");
   }
 
   /**

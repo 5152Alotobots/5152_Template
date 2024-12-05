@@ -24,7 +24,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
     this.cameras = PhotonVisionObjectDetectionSubsystemConstants.CAMERAS;
     this.telemetry = new PhotonVisionObjectDetectionTelemetry();
     this.driveSubsystem = driveSubsystem;
-    System.out.println("PhotonVisionObjectDetection Subsystem Initialized");
+    Logger.info("PhotonVisionObjectDetection Subsystem Initialized");
   }
 
   /**

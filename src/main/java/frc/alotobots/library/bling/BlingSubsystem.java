@@ -22,20 +22,20 @@ public class BlingSubsystem extends SubsystemBase {
 
   /** Constructs a new Bling subsystem. */
   public BlingSubsystem() {
-    System.out.println("Initializing BlingSubsystem");
+    Logger.info("Initializing BlingSubsystem");
 
     controller = new CANdle(CANDLE_CAN_ID);
-    System.out.println("CANdle controller initialized");
+    Logger.info("CANdle controller initialized");
 
     controller.configBrightnessScalar(MAX_LED_BRIGHTNESS);
     controller.configLEDType(LED_TYPE);
     controller.configStatusLedState(DISABLE_STATUS_LED);
-    System.out.println("CANdle configuration completed");
+    Logger.info("CANdle configuration completed");
 
     telemetry = new BlingTelemetry();
-    System.out.println("Telemetry initialized");
+    Logger.info("Telemetry initialized");
 
-    System.out.println("BlingSubsystem initialization completed");
+    Logger.info("BlingSubsystem initialization completed");
   }
 
   /** Sets the LED strip to the color of the alliance reported by the FMS/DS. */
