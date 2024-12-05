@@ -12,15 +12,27 @@ import lombok.experimental.UtilityClass;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
+/**
+ * Central repository for robot-wide constant values.
+ * Contains configuration values, port mappings, and calibration constants.
+ */
 @UtilityClass
 public final class Constants {
 
   @UtilityClass
   /** Robot-specific constants and configurations */
+  /**
+   * Robot-specific constants and configurations.
+   * Groups all robot-related constants into logical categories.
+   */
   public static final class Robot {
 
     @UtilityClass
     /** Field-specific measurements and positions */
+    /**
+     * Field-specific measurements and positions.
+     * Contains constants related to the game field layout and key positions.
+     */
     public static final class Field {
       /** Position of the red alliance speaker's front face */
       public static final Pose2d RED_SPEAKER_FRONT =
@@ -29,6 +41,10 @@ public final class Constants {
 
     @UtilityClass
     /** CAN bus device IDs */
+    /**
+     * CAN bus device ID assignments.
+     * Maps CAN IDs for motors, sensors and other CAN-connected devices.
+     */
     public static final class CanId {
       /** Power Distribution Panel CAN ID */
       public static final int PDP_CAN_ID = 1;
@@ -68,18 +84,30 @@ public final class Constants {
 
     @UtilityClass
     /** Analog input port assignments */
+    /**
+     * Analog input port assignments.
+     * Maps analog sensor connections to specific robot ports.
+     */
     public static final class AnalogInputIds {
       // Add analog input IDs here
     }
 
     @UtilityClass
     /** Digital I/O port assignments */
+    /**
+     * Digital I/O port assignments.
+     * Maps digital sensor and actuator connections to specific robot ports.
+     */
     public static final class DigitalIoIds {
       // Add digital I/O IDs here
     }
 
     @UtilityClass
     /** PWM port assignments */
+    /**
+     * PWM port assignments.
+     * Maps PWM motor controller and servo connections to specific robot ports.
+     */
     public static final class PwmIds {
       // Add PWM IDs here
     }

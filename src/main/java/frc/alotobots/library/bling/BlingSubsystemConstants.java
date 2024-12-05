@@ -4,7 +4,10 @@ import com.ctre.phoenix.led.*;
 import java.awt.Color;
 import lombok.experimental.UtilityClass;
 
-/** Constants for the Bling subsystem. */
+/** 
+ * Constants for configuring the robot's LED lighting (Bling) subsystem.
+ * Defines settings for LED strips, animations, and colors.
+ */
 @UtilityClass
 public class BlingSubsystemConstants {
   /** Global enable/disable flag for the Bling subsystem */
@@ -27,6 +30,10 @@ public class BlingSubsystemConstants {
 
   /** Predefined animations for the Bling subsystem. */
   @UtilityClass
+  /**
+   * Predefined animation patterns for the LED strips.
+   * Contains constants for different light show effects.
+   */
   public static class Animations {
     /** Animation displayed when no alliance color is set */
     public static final ColorFlowAnimation NO_ALLIANCE_ANIMATION =
@@ -36,6 +43,10 @@ public class BlingSubsystemConstants {
 
   /** Predefined colors for the Bling subsystem. */
   @UtilityClass
+  /**
+   * Standard colors used in LED patterns and animations.
+   * Defines common colors like alliance colors and status indicators.
+   */
   public static class Colors {
     /** Color used to turn LEDs off */
     public static final Color OFF_COLOR = Color.BLACK;
