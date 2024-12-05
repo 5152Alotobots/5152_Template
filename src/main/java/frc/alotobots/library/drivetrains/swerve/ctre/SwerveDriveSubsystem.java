@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -20,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 /**
@@ -173,7 +173,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   }
 
   /** Returns the measured chassis speeds of the robot. */
-  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured") 
+  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
   private ChassisSpeeds getChassisSpeeds() {
     return this.getState().Speeds;
   }
@@ -191,7 +191,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
   }
 
   /** Returns the current robot velocity. */
-  @AutoLogOutput(key = "Odometry/Velocity") 
+  @AutoLogOutput(key = "Odometry/Velocity")
   private double getRobotVelocity() {
     var speeds = this.getState().Speeds;
     return Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
