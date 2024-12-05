@@ -33,6 +33,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
    * @return List of DetectedObject instances from enabled cameras
    */
   @Getter private final List<DetectedObject> detectedObjects = new ArrayList<>();
+  private final edu.wpi.first.wpilibj.Timer detectionTimer = new edu.wpi.first.wpilibj.Timer();
 
   /**
    * Gets the raw field-relative angle to the first detected object.
