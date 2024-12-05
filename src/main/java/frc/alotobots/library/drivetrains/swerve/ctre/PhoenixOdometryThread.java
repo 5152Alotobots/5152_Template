@@ -5,6 +5,8 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -92,7 +94,7 @@ public class PhoenixOdometryThread extends Thread {
         if (phoenixSignals.length > 0) {
           BaseStatusSignal.refreshAll(phoenixSignals);
         }
-        Thread.sleep((long) (1000.0 / SwerveDriveSubsystem.ODOMETRY_FREQUENCY));
+        Thread.sleep((long) (1000.0 / TunerConstants.ODOMETRY_FREQUENCY));
       } catch (InterruptedException e) {
         e.printStackTrace();
       } finally {
