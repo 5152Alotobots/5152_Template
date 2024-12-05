@@ -48,3 +48,26 @@ public final class PhoenixUtil {
     return !status.isOK(); 
   }
 }
+package frc.alotobots.util;
+
+import com.ctre.phoenix6.StatusCode;
+import java.util.function.Supplier;
+
+public final class PhoenixUtil {
+  private PhoenixUtil() {
+    throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+  }
+
+  /**
+   * Attempts to run the command until no error is produced or max attempts reached.
+   *
+   * @param maxAttempts Maximum number of attempts to try the command
+   * @param command The command to execute that returns a StatusCode
+   */
+  public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+    for (int i = 0; i < maxAttempts; i++) {
+      var error = command.get();
+      if (error.isOK()) break;
+    }
+  }
+}
