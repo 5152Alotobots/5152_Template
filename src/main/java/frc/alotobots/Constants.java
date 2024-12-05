@@ -4,6 +4,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import lombok.experimental.UtilityClass;
 
+public enum Mode {
+  REAL, // Running on the real robot
+  SIM, // Running in simulation
+  REPLAY // Replaying from a log file
+}
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -14,6 +20,7 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class Constants {
+  public static final Mode currentMode = Mode.REAL; // Default to real robot
 
   @UtilityClass
   public static final class Robot {
