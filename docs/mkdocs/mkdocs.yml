@@ -1,15 +1,7 @@
 site_name: Team 5152 Robot Documentation
-theme:
-  name: material
-  palette:
-    scheme: slate
-    primary: grey
-    accent: red
+theme: material
 nav:
   - Home: index.md
   - API Documentation: ../javadoc/
 repo_url: https://github.com/alotobots/5152_Template
 repo_name: alotobots/5152_Template
-markdown_extensions:
-  - pymdownx.highlight
-  - pymdownx.superfences
