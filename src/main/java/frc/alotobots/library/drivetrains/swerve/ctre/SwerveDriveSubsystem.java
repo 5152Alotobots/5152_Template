@@ -33,6 +33,9 @@ import java.util.function.Supplier;
 public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem {
   // Other Classes
   SwerveDriveTelemetry telemetry;
+  
+  // Lock object for thread safety during odometry updates
+  public static final ReentrantLock odometryLock = new ReentrantLock();
 
   /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
   private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
