@@ -13,6 +13,14 @@ import java.util.function.DoubleSupplier;
 /**
  * Command that drives the robot while automatically facing the best detected object.
  * Uses PhotonVision object detection to identify targets and adjusts robot orientation accordingly.
+ * 
+ * <p>This command:
+ * - Takes manual drive inputs for X/Y translation
+ * - Automatically rotates to face the highest-confidence detected object
+ * - Falls back to manual rotation control when no objects are detected
+ * - Allows temporary manual rotation override with a timeout
+ * 
+ * <p>The command requires both the vision and drive subsystems to operate.
  */
 public class DriveFacingBestObject extends Command {
   /** The subsystem handling object detection via PhotonVision */
@@ -64,6 +72,14 @@ public class DriveFacingBestObject extends Command {
   /**
    * Called repeatedly when this Command is scheduled to run.
    * Controls robot movement while facing detected objects.
+   * 
+   * <p>The control flow:
+   * 1. If objects are detected:
+   *    - Uses field-centric drive with automatic rotation to face best object
+   * 2. If no objects detected:
+   *    - Falls back to standard field-centric drive with manual rotation
+   * 3. If manual rotation override is active:
+   *    - Starts timeout timer for returning to automatic facing
    */
   @Override
   public void execute() {
