@@ -9,18 +9,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Setup WPILib dependencies
-      - name: Grant execute permission for vendordeps
-        run: chmod +x gradlew
-      - name: Download vendor dependencies
-        run: ./gradlew vendordep
-        
-      # Setup Java and Python
+      # Setup Java and Python first
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
+
+      # Then setup WPILib dependencies
+      - name: Grant execute permission for vendordeps
+        run: chmod +x gradlew
+      - name: Download vendor dependencies
+        run: ./gradlew vendordep
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
