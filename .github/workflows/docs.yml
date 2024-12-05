@@ -17,8 +17,8 @@ jobs:
           python-version: '3.x'
       - run: pip install mkdocs mkdocs-material
       - run: javadoc -d docs/javadoc src/**/*.java
-      - run: cd docs/mkdocs && mkdocs build
+      - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./site
