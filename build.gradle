@@ -8,6 +8,9 @@ plugins {
 java {
   sourceCompatibility = JavaVersion.VERSION_17
   targetCompatibility = JavaVersion.VERSION_17
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 def ROBOT_MAIN_CLASS = "frc.alotobots.Main"
@@ -101,6 +104,17 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
+
+// Configure Javadoc
+javadoc {
+  source = sourceSets.main.allJava.filter { file ->
+    !file.name.equals('.gitkeep')
+  }
+  classpath = sourceSets.main.compileClasspath
+  options.addStringOption('Xdoclint:none', '-quiet')
+  options.addBooleanOption('html5', true)
+  options.encoding = 'UTF-8'
+}
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
