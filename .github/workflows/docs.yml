@@ -26,20 +26,17 @@ jobs:
 
       - run: pip install mkdocs mkdocs-material
 
-      - name: Build MkDocs
-        run: mkdocs build -f docs/mkdocs/mkdocs.yml -d site
-
-      - name: Generate and Copy Javadoc
+      - name: Generate and Copy Javadoc First
         run: |
-          echo "Generating Javadocs..."
           ./gradlew javadoc
-          echo "Creating javadoc directory..."
-          mkdir -p site/javadoc
-          echo "Copying Javadocs..."
-          cp -r build/docs/javadoc/* site/javadoc/
-          echo "Verifying site contents..."
+          mkdir -p docs/mkdocs/docs/javadoc
+          cp -r build/docs/javadoc/* docs/mkdocs/docs/javadoc/
+
+      - name: Build MkDocs
+        run: |
+          mkdocs build -f docs/mkdocs/mkdocs.yml -d site
+          echo "Site directory after MkDocs build:"
           ls -la site/
-          ls -la site/javadoc/
 
       - uses: peaceiris/actions-gh-pages@v3
         with:
