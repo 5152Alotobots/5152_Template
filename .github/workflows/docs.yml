@@ -8,6 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      # Setup WPILib dependencies
+      - name: Grant execute permission for vendordeps
+        run: chmod +x gradlew
+      - name: Download vendor dependencies
+        run: ./gradlew vendordep
+        
+      # Setup Java and Python
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -15,12 +23,18 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+          
+      # Install documentation tools
       - run: pip install mkdocs mkdocs-material
+      
+      # Generate documentation
       - run: |
           mkdir -p docs/javadoc
           ./gradlew delombok
           javadoc -d docs/javadoc -sourcepath build/generated/sources/delombok/java/main -subpackages frc.alotobots
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
+      
+      # Publish to GitHub Pages
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
