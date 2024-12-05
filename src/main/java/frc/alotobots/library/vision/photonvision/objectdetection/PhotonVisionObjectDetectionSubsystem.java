@@ -117,7 +117,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                       k -> {
                         var t = new edu.wpi.first.wpilibj.Timer();
                         t.start();
-                        System.out.println("New timer created for target: " + target.getFiducialId());
+                        System.out.println(
+                            "New timer created for target: " + target.getFiducialId());
                         return t;
                       });
 
@@ -126,7 +127,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                 detectedObjects.add(object);
                 System.out.println("Added new object after " + timer.get() + "s: " + object);
               } else {
-                System.out.println("Waiting on timer: " + timer.get() + "s for target: " + target.getFiducialId());
+                System.out.println(
+                    "Waiting on timer: " + timer.get() + "s for target: " + target.getFiducialId());
               }
             }
           }
@@ -146,7 +148,8 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
                   var results = camera.getAllUnreadResults();
                   for (var result : results) {
                     if (result.hasTargets()) {
-                      System.out.println("Checking " + result.getTargets().size() + " targets from camera");
+                      System.out.println(
+                          "Checking " + result.getTargets().size() + " targets from camera");
                       for (var target : result.getTargets()) {
                         if (target.equals(entry.getKey())) {
                           shouldRemove = false;
@@ -163,7 +166,7 @@ public class PhotonVisionObjectDetectionSubsystem extends SubsystemBase {
               }
               return shouldRemove;
             });
-    
+
     if (beforeSize != detectionTimers.size()) {
       System.out.println("Timers changed from " + beforeSize + " to " + detectionTimers.size());
     }
