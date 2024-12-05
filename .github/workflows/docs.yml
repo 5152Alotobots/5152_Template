@@ -22,10 +22,6 @@ jobs:
           mkdir -p /home/runner/wpilib/2025/vendordeps/
           cp vendordeps/*.json /home/runner/wpilib/2025/vendordeps/
           chmod +x gradlew
-          # Install vendor dependencies using WPILib vendor tool
-          for file in vendordeps/*.json; do
-            java -jar $GITHUB_WORKSPACE/gradlew.jar vendordep --url="file://$GITHUB_WORKSPACE/$file"
-          done
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
