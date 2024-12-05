@@ -18,8 +18,8 @@ jobs:
       - run: pip install mkdocs mkdocs-material
       - run: |
           mkdir -p docs/javadoc
-          find src/main/java -name "*.java" ! -name ".gitkeep" > sources.txt
-          javadoc -d docs/javadoc @sources.txt
+          ./gradlew delombok
+          javadoc -d docs/javadoc -sourcepath build/generated/sources/delombok/java/main -subpackages frc.alotobots
       - run: mkdocs build -f docs/mkdocs/mkdocs.yml -d ../../site
       - uses: peaceiris/actions-gh-pages@v3
         with:
