@@ -175,11 +175,13 @@ public class DetectedObject {
       return false;
     }
 
-    double xDiff = Math.abs(this.pose.getX() - other.pose.getX());
-    double yDiff = Math.abs(this.pose.getY() - other.pose.getY());
+    // Calculate Euclidean distance between the two positions
+    double deltaX = this.pose.getX() - other.pose.getX();
+    double deltaY = this.pose.getY() - other.pose.getY();
+    double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-    return xDiff <= PhotonVisionObjectDetectionSubsystemConstants.POSITION_MATCH_TOLERANCE
-        && yDiff <= PhotonVisionObjectDetectionSubsystemConstants.POSITION_MATCH_TOLERANCE;
+    // Return true if the distance is within the tolerance
+    return distance <= PhotonVisionObjectDetectionSubsystemConstants.POSITION_MATCH_TOLERANCE;
   }
 
   /**
