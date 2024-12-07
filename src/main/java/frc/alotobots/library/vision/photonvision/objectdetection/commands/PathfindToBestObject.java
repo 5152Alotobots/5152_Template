@@ -33,9 +33,10 @@ public class PathfindToBestObject extends InstantCommand {
 
   @Override
   public void initialize() {
-    var detectedObjects = objectDetectionSubsystem.getDetectedObjects().stream()
-        .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
-        .toList();
+    var detectedObjects =
+        objectDetectionSubsystem.getDetectedObjects().stream()
+            .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
+            .toList();
     if (detectedObjects.isEmpty()) {
       return;
     }

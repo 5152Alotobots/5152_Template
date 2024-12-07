@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
-import frc.alotobots.library.vision.photonvision.objectdetection.GameElement;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import java.util.function.DoubleSupplier;
 
@@ -88,9 +87,10 @@ public class DriveFacingBestObject extends Command {
    */
   @Override
   public void execute() {
-    var detectedObjects = objectDetectionSubsystem.getDetectedObjects().stream()
-        .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
-        .toList();
+    var detectedObjects =
+        objectDetectionSubsystem.getDetectedObjects().stream()
+            .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
+            .toList();
 
     if (!detectedObjects.isEmpty()) {
       Rotation2d angle = detectedObjects.get(0).getAngle();
@@ -108,8 +108,7 @@ public class DriveFacingBestObject extends Command {
     }
 
     // Rotation override timeout
-    if (!detectedObjects.isEmpty()
-        && velocityRotation.getAsDouble() != 0) {
+    if (!detectedObjects.isEmpty() && velocityRotation.getAsDouble() != 0) {
       overrideTimer.start();
     } else {
       overrideTimer.reset();

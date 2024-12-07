@@ -37,6 +37,7 @@ public class DetectedObject {
     }
     return GAME_ELEMENTS[classId];
   }
+
   private double lastUpdateTime;
 
   /**

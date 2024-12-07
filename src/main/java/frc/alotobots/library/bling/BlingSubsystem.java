@@ -14,18 +14,15 @@ import lombok.Getter;
 /**
  * Subsystem for controlling LED lighting (Bling) on the robot.
  *
- * <p>The Bling subsystem manages LED strips connected to a CTRE CANdle controller.
- * It supports:
- * - Setting solid colors
- * - Running animations
- * - Queueing colors/animations
- * - Alliance-based color schemes
- * - Brightness control
+ * <p>The Bling subsystem manages LED strips connected to a CTRE CANdle controller. It supports: -
+ * Setting solid colors - Running animations - Queueing colors/animations - Alliance-based color
+ * schemes - Brightness control
  *
- * <p>The subsystem uses a CANdle controller to drive addressable LED strips.
- * LED updates happen in the periodic() method.
+ * <p>The subsystem uses a CANdle controller to drive addressable LED strips. LED updates happen in
+ * the periodic() method.
  *
  * <p>Usage example:
+ *
  * <pre>
  * BlingSubsystem bling = new BlingSubsystem();
  * // Set solid red color
