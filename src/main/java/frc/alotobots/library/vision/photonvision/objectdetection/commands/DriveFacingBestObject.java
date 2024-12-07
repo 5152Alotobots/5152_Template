@@ -28,8 +28,8 @@ public class DriveFacingBestObject extends Command {
   /** The swerve drive subsystem for robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
 
-  /** The specific game element type to target */
-  private final GameElement targetGameElement;
+  /** The name of the game element type to target */
+  private final String targetGameElementName;
 
   /** Supplier for X velocity (forward/backward) */
   private final DoubleSupplier velocityX;
@@ -61,13 +61,13 @@ public class DriveFacingBestObject extends Command {
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
-      GameElement targetGameElement,
+      String targetGameElementName,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
       DoubleSupplier velocityRotation) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
-    this.targetGameElement = targetGameElement;
+    this.targetGameElementName = targetGameElementName;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
     this.velocityRotation = velocityRotation;
@@ -89,7 +89,7 @@ public class DriveFacingBestObject extends Command {
   @Override
   public void execute() {
     var detectedObjects = objectDetectionSubsystem.getDetectedObjects().stream()
-        .filter(obj -> obj.getGameElement().getName().equals(targetGameElement.getName()))
+        .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
         .toList();
 
     if (!detectedObjects.isEmpty()) {

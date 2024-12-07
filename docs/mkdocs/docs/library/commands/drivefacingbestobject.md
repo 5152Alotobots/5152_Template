@@ -16,7 +16,7 @@ See also: [PathfindToBestObject](./pathfindtobestobject.md) for autonomous navig
 public DriveFacingBestObject(
     PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
     SwerveDriveSubsystem swerveDriveSubsystem,
-    GameElement targetGameElement,
+    String targetGameElementName,
     DoubleSupplier velocityX,
     DoubleSupplier velocityY,
     DoubleSupplier velocityRotation
