@@ -16,10 +16,10 @@ See also: [PathfindToBestObject](./pathfindtobestobject.md) for autonomous navig
 public DriveFacingBestObject(
     PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
     SwerveDriveSubsystem swerveDriveSubsystem,
-    String... targetGameElementNames,
     DoubleSupplier velocityX,
     DoubleSupplier velocityY,
-    DoubleSupplier velocityRotation
+    DoubleSupplier velocityRotation,
+    String... targetGameElementNames
 )
 ```
 
@@ -61,10 +61,10 @@ private static final double OVERRIDE_TIMEOUT_SECONDS = 0.1;
 new DriveFacingBestObject(
     visionSubsystem,
     driveSubsystem,
-    "Cone", "Cube",                         // Game elements in priority order
     () -> -driverController.getLeftY(),     // Forward/back
     () -> -driverController.getLeftX(),     // Left/right
-    () -> -driverController.getRightX()     // Manual rotation override
+    () -> -driverController.getRightX(),    // Manual rotation override
+    "Cone", "Cube"                          // Game elements in priority order
 );
 ```
 

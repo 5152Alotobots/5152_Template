@@ -60,10 +60,10 @@ public class DriveFacingBestObject extends Command {
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
-      String... targetGameElementNames,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
-      DoubleSupplier velocityRotation) {
+      DoubleSupplier velocityRotation,
+      String... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.targetGameElementNames = targetGameElementNames;
