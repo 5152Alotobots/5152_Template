@@ -61,9 +61,10 @@ private static final double OVERRIDE_TIMEOUT_SECONDS = 0.1;
 new DriveFacingBestObject(
     visionSubsystem,
     driveSubsystem,
-    () -> -driverController.getLeftY(),   // Forward/back
-    () -> -driverController.getLeftX(),   // Left/right
-    () -> -driverController.getRightX()   // Manual rotation override
+    "Cone", "Cube",                         // Game elements in priority order
+    () -> -driverController.getLeftY(),     // Forward/back
+    () -> -driverController.getLeftX(),     // Left/right
+    () -> -driverController.getRightX()     // Manual rotation override
 );
 ```
 
