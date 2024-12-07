@@ -14,6 +14,7 @@ nav:
           - library/commands/drivefacingbestobject.md
           - library/commands/pathfindtobestobject.md
           - library/commands/defaultsettoalliancecolor.md
+          - library/commands/drivefacingpose.md
       - Subsystems:
           - Bling: library/subsystems/bling.md
           - Pneumatics: library/subsystems/pneumatics.md
