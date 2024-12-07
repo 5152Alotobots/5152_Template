@@ -8,8 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
-import frc.alotobots.library.vision.photonvision.objectdetection.DetectedObject;
-import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import java.util.function.DoubleSupplier;
 
 /**
@@ -26,8 +24,6 @@ public class DriveFacingPose extends Command {
   /** The target pose to face */
   private final Pose2d targetPose;
 
-  /** The subsystem handling object detection via PhotonVision */
-  private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
 
   /** The swerve drive subsystem for robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
@@ -53,7 +49,6 @@ public class DriveFacingPose extends Command {
   /**
    * Creates a new DriveFacingBestObject command.
    *
-   * @param objectDetectionSubsystem The subsystem for detecting objects
    * @param swerveDriveSubsystem The subsystem for controlling robot movement
    * @param velocityX Supplier for forward/backward velocity
    * @param velocityY Supplier for left/right velocity
@@ -61,19 +56,17 @@ public class DriveFacingPose extends Command {
    */
   public DriveFacingPose(
       Pose2d targetPose,
-      PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
       DoubleSupplier velocityRotation) {
     this.targetPose = targetPose;
-    this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
     this.velocityRotation = velocityRotation;
 
-    addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
+    addRequirements(swerveDriveSubsystem);
 
     driveFacingAngle.HeadingController = new PhoenixPIDController(5.0, 0, 0.0);
   }
@@ -109,8 +102,8 @@ public class DriveFacingPose extends Command {
               .withRotationalRate(velocityRotation.getAsDouble()));
     }
 
-    // Rotation override timeout
-    if (matchingObject.isPresent() && velocityRotation.getAsDouble() != 0) {
+    // Start override timer when manual rotation is used
+    if (Math.abs(velocityRotation.getAsDouble()) > 0.1) {
       overrideTimer.start();
     } else {
       overrideTimer.reset();
