@@ -123,10 +123,10 @@ public class RobotContainer {
         new DriveFacingBestObject(
             photonvisionObjectDetectionSubsystem,
             drivetrainSubsystem,
-            "Note",
             () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
             () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode(),
-            () -> hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()));
+            () -> hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode(),
+            "Note"));
 
     // Add other logic-based commands here
   }

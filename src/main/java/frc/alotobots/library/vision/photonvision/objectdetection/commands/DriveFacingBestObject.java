@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
+import frc.alotobots.library.vision.photonvision.objectdetection.DetectedObject;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import java.util.function.DoubleSupplier;
 
@@ -88,13 +89,14 @@ public class DriveFacingBestObject extends Command {
   @Override
   public void execute() {
     var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
-    
+
     // Find first matching object based on priority order
     var matchingObject = java.util.Optional.<DetectedObject>empty();
     for (String elementName : targetGameElementNames) {
-      matchingObject = detectedObjects.stream()
-          .filter(obj -> obj.getGameElement().getName().equals(elementName))
-          .findFirst();
+      matchingObject =
+          detectedObjects.stream()
+              .filter(obj -> obj.getGameElement().getName().equals(elementName))
+              .findFirst();
       if (matchingObject.isPresent()) {
         break;
       }

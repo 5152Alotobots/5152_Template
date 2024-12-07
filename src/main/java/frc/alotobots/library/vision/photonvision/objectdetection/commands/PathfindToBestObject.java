@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDrivePathPlanner;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
+import frc.alotobots.library.vision.photonvision.objectdetection.DetectedObject;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 
 public class PathfindToBestObject extends InstantCommand {
@@ -34,22 +35,23 @@ public class PathfindToBestObject extends InstantCommand {
   @Override
   public void initialize() {
     var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
-    
+
     // Try each target game element name in priority order
     java.util.Optional<DetectedObject> matchingObject = java.util.Optional.empty();
     for (String targetName : targetGameElementNames) {
-      matchingObject = detectedObjects.stream()
-          .filter(obj -> obj.getGameElement().getName().equals(targetName))
-          .findFirst();
+      matchingObject =
+          detectedObjects.stream()
+              .filter(obj -> obj.getGameElement().getName().equals(targetName))
+              .findFirst();
       if (matchingObject.isPresent()) {
         break;
       }
     }
-    
+
     if (matchingObject.isEmpty()) {
       return;
     }
-    
+
     var selectedObject = matchingObject.get();
     Pose2d robotPose = swerveDriveSubsystem.getState().Pose;
     Pose2d objectPose = selectedObject.getPose().toPose2d();
