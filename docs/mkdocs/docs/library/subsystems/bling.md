@@ -3,6 +3,9 @@
 ## Overview
 The BlingSubsystem controls LED lighting (Bling) on the robot using a CTRE CANdle controller. This subsystem provides comprehensive LED control capabilities, including solid colors, animations, queued patterns, and alliance-based color schemes. The system is designed to provide visual feedback about robot state and enhance field presence.
 
+Related commands:
+- [DefaultSetToAllianceColor](../../commands/defaultsettoalliancecolor.md) for automatic alliance color management
+
 ## Core Features
 The subsystem provides robust LED control through several key mechanisms:
 

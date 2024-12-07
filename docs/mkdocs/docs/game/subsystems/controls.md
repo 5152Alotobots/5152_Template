@@ -6,6 +6,8 @@ This system integrates with:
 - [SwerveDrive Subsystem](../../library/subsystems/swerve.md) for robot movement
 - [DriveFacingBestObject](../../library/commands/drivefacingbestobject.md) for assisted driving
 - [PathfindToBestObject](../../library/commands/pathfindtobestobject.md) for autonomous navigation
+- [DriveFacingPose](../../library/commands/drivefacingpose.md) for targeting specific field locations
+- [DefaultSetToAllianceColor](../../library/commands/defaultsettoalliancecolor.md) for alliance indicators
 
 ## Input Processing Features
 
