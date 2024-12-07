@@ -13,24 +13,29 @@ import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 
 public class PathfindToBestObject extends InstantCommand {
-  PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
-  SwerveDriveSubsystem swerveDriveSubsystem;
-  SwerveDrivePathPlanner pathPlanner;
+  private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
+  private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private final SwerveDrivePathPlanner pathPlanner;
+  private final String targetGameElementName;
 
   public PathfindToBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
-      SwerveDrivePathPlanner pathPlanner) {
+      SwerveDrivePathPlanner pathPlanner,
+      String targetGameElementName) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.pathPlanner = pathPlanner;
+    this.targetGameElementName = targetGameElementName;
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
   }
 
   @Override
   public void initialize() {
-    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    var detectedObjects = objectDetectionSubsystem.getDetectedObjects().stream()
+        .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
+        .toList();
     if (detectedObjects.isEmpty()) {
       return;
     }
