@@ -3,6 +3,7 @@ package frc.alotobots.library.drivetrains.swerve.ctre.commands;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,9 @@ import java.util.function.DoubleSupplier;
  * <p>The command requires both the vision and drive subsystems to operate.
  */
 public class DriveFacingPose extends Command {
+  /** The target pose to face */
+  private final Pose2d targetPose;
+
   /** The subsystem handling object detection via PhotonVision */
   private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
 
@@ -56,12 +60,13 @@ public class DriveFacingPose extends Command {
    * @param velocityRotation Supplier for rotational velocity
    */
   public DriveFacingPose(
+      Pose2d targetPose,
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
-      DoubleSupplier velocityRotation,
-      String... targetGameElementNames) {
+      DoubleSupplier velocityRotation) {
+    this.targetPose = targetPose;
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.velocityX = velocityX;
@@ -84,25 +89,16 @@ public class DriveFacingPose extends Command {
    */
   @Override
   public void execute() {
-    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    // Calculate angle to target pose
+    var currentPose = swerveDriveSubsystem.getPose();
+    double dx = targetPose.getX() - currentPose.getX();
+    double dy = targetPose.getY() - currentPose.getY();
+    Rotation2d angleToTarget = new Rotation2d(Math.atan2(dy, dx));
 
-    // Find first matching object based on priority order
-    var matchingObject = java.util.Optional.<DetectedObject>empty();
-    for (String elementName : targetGameElementNames) {
-      matchingObject =
-          detectedObjects.stream()
-              .filter(obj -> obj.getGameElement().getName().equals(elementName))
-              .findFirst();
-      if (matchingObject.isPresent()) {
-        break;
-      }
-    }
-
-    if (matchingObject.isPresent()) {
-      Rotation2d angle = matchingObject.get().getAngle();
+    if (Math.abs(velocityRotation.getAsDouble()) < 0.1) {
       swerveDriveSubsystem.setControl(
           driveFacingAngle
-              .withTargetDirection(angle)
+              .withTargetDirection(angleToTarget)
               .withVelocityX(velocityX.getAsDouble())
               .withVelocityY(velocityY.getAsDouble()));
     } else {
