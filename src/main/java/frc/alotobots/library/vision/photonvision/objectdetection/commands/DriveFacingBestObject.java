@@ -27,6 +27,9 @@ public class DriveFacingBestObject extends Command {
   /** The swerve drive subsystem for robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
 
+  /** The specific game element type to target */
+  private final GameElement targetGameElement;
+
   /** Supplier for X velocity (forward/backward) */
   private final DoubleSupplier velocityX;
 
@@ -57,11 +60,13 @@ public class DriveFacingBestObject extends Command {
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
+      GameElement targetGameElement,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
       DoubleSupplier velocityRotation) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
+    this.targetGameElement = targetGameElement;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
     this.velocityRotation = velocityRotation;
@@ -82,8 +87,12 @@ public class DriveFacingBestObject extends Command {
    */
   @Override
   public void execute() {
-    if (!objectDetectionSubsystem.getDetectedObjects().isEmpty()) {
-      Rotation2d angle = objectDetectionSubsystem.getDetectedObjects().get(0).getAngle();
+    var detectedObjects = objectDetectionSubsystem.getDetectedObjects().stream()
+        .filter(obj -> obj.getGameElement().getName().equals(targetGameElement.getName()))
+        .toList();
+
+    if (!detectedObjects.isEmpty()) {
+      Rotation2d angle = detectedObjects.get(0).getAngle();
       swerveDriveSubsystem.setControl(
           driveFacingAngle
               .withTargetDirection(angle)
@@ -98,7 +107,7 @@ public class DriveFacingBestObject extends Command {
     }
 
     // Rotation override timeout
-    if (!objectDetectionSubsystem.getDetectedObjects().isEmpty()
+    if (!detectedObjects.isEmpty()
         && velocityRotation.getAsDouble() != 0) {
       overrideTimer.start();
     } else {
