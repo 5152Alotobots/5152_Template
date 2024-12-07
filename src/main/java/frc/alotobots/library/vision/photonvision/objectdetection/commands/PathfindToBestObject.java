@@ -36,7 +36,7 @@ public class PathfindToBestObject extends InstantCommand {
     var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
     
     // Try each target game element name in priority order
-    var matchingObject = java.util.Optional.empty();
+    java.util.Optional<DetectedObject> matchingObject = java.util.Optional.empty();
     for (String targetName : targetGameElementNames) {
       matchingObject = detectedObjects.stream()
           .filter(obj -> obj.getGameElement().getName().equals(targetName))
