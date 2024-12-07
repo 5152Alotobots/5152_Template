@@ -16,7 +16,7 @@ See also: [PathfindToBestObject](./pathfindtobestobject.md) for autonomous navig
 public DriveFacingBestObject(
     PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
     SwerveDriveSubsystem swerveDriveSubsystem,
-    String targetGameElementName,
+    String... targetGameElementNames,
     DoubleSupplier velocityX,
     DoubleSupplier velocityY,
     DoubleSupplier velocityRotation
@@ -30,7 +30,8 @@ The constructor accepts suppliers for velocity control, allowing flexible input 
 ### Object Detected Mode
 When objects are detected, the command:
 - Maintains field-centric translation using manual X/Y inputs
-- Automatically rotates to face the highest-confidence detected object
+- Automatically rotates to face the first detected object matching the provided game element names
+- Prioritizes objects based on the order of targetGameElementNames
 - Uses a PID controller (P=5.0) for rotation control
 
 ### No Detection Mode

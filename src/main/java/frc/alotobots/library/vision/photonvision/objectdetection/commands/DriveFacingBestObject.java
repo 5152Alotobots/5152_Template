@@ -27,8 +27,8 @@ public class DriveFacingBestObject extends Command {
   /** The swerve drive subsystem for robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
 
-  /** The name of the game element type to target */
-  private final String targetGameElementName;
+  /** The names of game element types to target, in priority order */
+  private final String[] targetGameElementNames;
 
   /** Supplier for X velocity (forward/backward) */
   private final DoubleSupplier velocityX;
@@ -60,13 +60,13 @@ public class DriveFacingBestObject extends Command {
   public DriveFacingBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
-      String targetGameElementName,
+      String... targetGameElementNames,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
       DoubleSupplier velocityRotation) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
-    this.targetGameElementName = targetGameElementName;
+    this.targetGameElementNames = targetGameElementNames;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
     this.velocityRotation = velocityRotation;
@@ -87,13 +87,21 @@ public class DriveFacingBestObject extends Command {
    */
   @Override
   public void execute() {
-    var detectedObjects =
-        objectDetectionSubsystem.getDetectedObjects().stream()
-            .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
-            .toList();
+    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    
+    // Find first matching object based on priority order
+    var matchingObject = java.util.Optional.<DetectedObject>empty();
+    for (String elementName : targetGameElementNames) {
+      matchingObject = detectedObjects.stream()
+          .filter(obj -> obj.getGameElement().getName().equals(elementName))
+          .findFirst();
+      if (matchingObject.isPresent()) {
+        break;
+      }
+    }
 
-    if (!detectedObjects.isEmpty()) {
-      Rotation2d angle = detectedObjects.get(0).getAngle();
+    if (matchingObject.isPresent()) {
+      Rotation2d angle = matchingObject.get().getAngle();
       swerveDriveSubsystem.setControl(
           driveFacingAngle
               .withTargetDirection(angle)
@@ -108,7 +116,7 @@ public class DriveFacingBestObject extends Command {
     }
 
     // Rotation override timeout
-    if (!detectedObjects.isEmpty() && velocityRotation.getAsDouble() != 0) {
+    if (matchingObject.isPresent() && velocityRotation.getAsDouble() != 0) {
       overrideTimer.start();
     } else {
       overrideTimer.reset();
