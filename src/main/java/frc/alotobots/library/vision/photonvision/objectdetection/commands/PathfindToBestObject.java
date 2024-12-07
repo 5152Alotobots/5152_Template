@@ -16,33 +16,43 @@ public class PathfindToBestObject extends InstantCommand {
   private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
   private final SwerveDriveSubsystem swerveDriveSubsystem;
   private final SwerveDrivePathPlanner pathPlanner;
-  private final String targetGameElementName;
+  private final String[] targetGameElementNames;
 
   public PathfindToBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
       SwerveDrivePathPlanner pathPlanner,
-      String targetGameElementName) {
+      String... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.pathPlanner = pathPlanner;
-    this.targetGameElementName = targetGameElementName;
+    this.targetGameElementNames = targetGameElementNames;
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
   }
 
   @Override
   public void initialize() {
-    var detectedObjects =
-        objectDetectionSubsystem.getDetectedObjects().stream()
-            .filter(obj -> obj.getGameElement().getName().equals(targetGameElementName))
-            .toList();
-    if (detectedObjects.isEmpty()) {
+    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    
+    // Try each target game element name in priority order
+    var matchingObject = java.util.Optional.empty();
+    for (String targetName : targetGameElementNames) {
+      matchingObject = detectedObjects.stream()
+          .filter(obj -> obj.getGameElement().getName().equals(targetName))
+          .findFirst();
+      if (matchingObject.isPresent()) {
+        break;
+      }
+    }
+    
+    if (matchingObject.isEmpty()) {
       return;
     }
-
+    
+    var selectedObject = matchingObject.get();
     Pose2d robotPose = swerveDriveSubsystem.getState().Pose;
-    Pose2d objectPose = detectedObjects.get(0).getPose().toPose2d();
+    Pose2d objectPose = selectedObject.getPose().toPose2d();
 
     // Calculate direction from robot to object
     Translation2d toObject = objectPose.getTranslation().minus(robotPose.getTranslation());
