@@ -11,14 +11,15 @@ import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import java.util.function.DoubleSupplier;
 
 /**
- * Command that drives the robot while automatically facing the best detected object. Uses
- * PhotonVision object detection to identify targets and adjusts robot orientation accordingly.
+ * Command that drives the robot while automatically facing a specified pose on the field.
  *
- * <p>This command: - Takes manual drive inputs for X/Y translation - Automatically rotates to face
- * the highest-confidence detected object - Falls back to manual rotation control when no objects
- * are detected - Allows temporary manual rotation override with a timeout
+ * <p>This command:
+ * - Takes manual drive inputs for X/Y translation
+ * - Automatically rotates to face the target pose
+ * - Allows temporary manual rotation override with a timeout
+ * - Uses field-relative coordinates for all movements
  *
- * <p>The command requires both the vision and drive subsystems to operate.
+ * <p>The command requires the swerve drive subsystem to operate.
  */
 public class DriveFacingPose extends Command {
   /** The target pose to face */
