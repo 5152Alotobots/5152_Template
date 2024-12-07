@@ -83,7 +83,7 @@ public class DriveFacingPose extends Command {
   @Override
   public void execute() {
     // Calculate angle to target pose
-    var currentPose = swerveDriveSubsystem.getPose();
+    var currentPose = swerveDriveSubsystem.getState().Pose;
     double dx = targetPose.getX() - currentPose.getX();
     double dy = targetPose.getY() - currentPose.getY();
     Rotation2d angleToTarget = new Rotation2d(Math.atan2(dy, dx));
