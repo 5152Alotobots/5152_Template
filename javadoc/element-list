@@ -5,6 +5,7 @@ frc.alotobots.library.bling
 frc.alotobots.library.bling.commands
 frc.alotobots.library.driverstation
 frc.alotobots.library.drivetrains.swerve.ctre
+frc.alotobots.library.drivetrains.swerve.ctre.commands
 frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023
 frc.alotobots.library.drivetrains.swerve.ctre.mk4il32024
 frc.alotobots.library.pneumatics
