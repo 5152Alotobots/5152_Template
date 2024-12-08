@@ -43,7 +43,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
-import frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.TunerConstants2023;
+import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
 import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
 import frc.robot.util.LocalADStarAK;
@@ -63,12 +63,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
           ROBOT_MASS_KG,
           ROBOT_MOI,
           new ModuleConfig(
-              TunerConstants2023.FrontLeft.WheelRadius,
-              TunerConstants2023.kSpeedAt12Volts.in(MetersPerSecond),
+              tunerConstants.getFrontLeft().getWheelRadius(),
+              tunerConstants.getMaxSpeed().in(MetersPerSecond),
               WHEEL_COF,
               DCMotor.getKrakenX60Foc(1)
-                  .withReduction(TunerConstants2023.FrontLeft.DriveMotorGearRatio),
-              TunerConstants2023.FrontLeft.SlipCurrent,
+                  .withReduction(tunerConstants.getFrontLeft().getDriveMotorGearRatio()),
+              tunerConstants.getFrontLeft().getSlipCurrent(),
               1),
           getModuleTranslations());
 
@@ -92,17 +92,21 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
+  private final TunerConstants tunerConstants;
+
   public SwerveDriveSubsystem(
+      TunerConstants tunerConstants,
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
+    this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
-    modules[0] = new Module(flModuleIO, 0, TunerConstants2023.FrontLeft);
-    modules[1] = new Module(frModuleIO, 1, TunerConstants2023.FrontRight);
-    modules[2] = new Module(blModuleIO, 2, TunerConstants2023.BackLeft);
-    modules[3] = new Module(brModuleIO, 3, TunerConstants2023.BackRight);
+    modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
+    modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
+    modules[2] = new Module(blModuleIO, 2, tunerConstants.getBackLeft());
+    modules[3] = new Module(brModuleIO, 3, tunerConstants.getBackRight());
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -212,7 +216,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Calculate module setpoints
     speeds.discretize(0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants2023.kSpeedAt12Volts);
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, tunerConstants.getMaxSpeed());
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -334,25 +338,25 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return TunerConstants2023.kSpeedAt12Volts.in(MetersPerSecond);
+    return tunerConstants.getMaxSpeed().in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return getMaxLinearSpeedMetersPerSec() / TunerConstants2023.DRIVE_BASE_RADIUS;
+    return getMaxLinearSpeedMetersPerSec() / tunerConstants.getDriveBaseRadius();
   }
 
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
       new Translation2d(
-          TunerConstants2023.FrontLeft.LocationX, TunerConstants2023.FrontLeft.LocationY),
+          tunerConstants.getFrontLeft().getLocationX(), tunerConstants.getFrontLeft().getLocationY()),
       new Translation2d(
-          TunerConstants2023.FrontRight.LocationX, TunerConstants2023.FrontRight.LocationY),
+          tunerConstants.getFrontRight().getLocationX(), tunerConstants.getFrontRight().getLocationY()),
       new Translation2d(
-          TunerConstants2023.BackLeft.LocationX, TunerConstants2023.BackLeft.LocationY),
+          tunerConstants.getBackLeft().getLocationX(), tunerConstants.getBackLeft().getLocationY()),
       new Translation2d(
-          TunerConstants2023.BackRight.LocationX, TunerConstants2023.BackRight.LocationY)
+          tunerConstants.getBackRight().getLocationX(), tunerConstants.getBackRight().getLocationY())
     };
   }
 }
