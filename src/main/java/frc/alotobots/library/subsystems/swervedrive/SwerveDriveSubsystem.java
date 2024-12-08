@@ -54,23 +54,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-  // PathPlanner config constants
-  private static final double ROBOT_MASS_KG = 74.088;
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
-  private static final RobotConfig PP_CONFIG =
-      new RobotConfig(
-          ROBOT_MASS_KG,
-          ROBOT_MOI,
-          new ModuleConfig(
-              tunerConstants.getFrontLeft().getWheelRadius(),
-              tunerConstants.getMaxSpeed().in(MetersPerSecond),
-              WHEEL_COF,
-              DCMotor.getKrakenX60Foc(1)
-                  .withReduction(tunerConstants.getFrontLeft().getDriveMotorGearRatio()),
-              tunerConstants.getFrontLeft().getSlipCurrent(),
-              1),
-          getModuleTranslations());
+  private final RobotConfig PP_CONFIG;
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -103,6 +87,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       ModuleIO brModuleIO) {
     this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
+    
+    // Initialize PathPlanner config
+    this.PP_CONFIG = tunerConstants.getDrivetrainConstants().getPathPlannerConfig();
     modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
     modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
     modules[2] = new Module(blModuleIO, 2, tunerConstants.getBackLeft());
