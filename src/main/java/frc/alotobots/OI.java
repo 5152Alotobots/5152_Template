@@ -43,21 +43,16 @@ public class OI {
     public static final Trigger driverLeftStickButton = driverController.leftStick();
     public static final Trigger driverRightStickButton = driverController.rightStick();
 
-    // Driver Controller Axes
-    public static double getDriverLeftX() {
-        return driverController.getLeftX();  // Left stick X axis - Used for strafing
+    // Driver Controller Methods
+    public static Translation2d getDriverLinearVelocity() {
+        return getLinearVelocityFromJoysticks(
+            driverController.getLeftX(),
+            -driverController.getLeftY()  // Y-axis is inverted
+        );
     }
 
-    public static double getDriverLeftY() {
-        return -driverController.getLeftY(); // Left stick Y axis - Forward/backward movement
-    }
-
-    public static double getDriverRightX() {
-        return driverController.getRightX(); // Right stick X axis - Rotation
-    }
-
-    public static double getDriverRightY() {
-        return -driverController.getRightY(); // Right stick Y axis
+    public static double getDriverRotation() {
+        return MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
     }
 
     public static double getDriverLeftTrigger() {
@@ -67,6 +62,5 @@ public class OI {
     public static double getDriverRightTrigger() {
         return driverController.getRightTriggerAxis(); // Right trigger - Variable control (e.g., shoot speed)
     }
-
 
 }
