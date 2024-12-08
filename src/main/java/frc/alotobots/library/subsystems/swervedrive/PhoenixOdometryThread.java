@@ -14,7 +14,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
+import frc.alotobots.Constants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -38,21 +38,13 @@ public class PhoenixOdometryThread extends Thread {
   private boolean isCANFD;
 
   private void configure() {
-    this.isCANFD = new CANBus(Constants.tunerConstants.getDrivetrainConstants().CANBusName).isNetworkFD();
-  }
-
-  public static PhoenixOdometryThread initialize() {
-    if (instance == null) {
-      instance = new PhoenixOdometryThread();
-      instance.configure();
-    }
-    return instance;
+    this.isCANFD =
+        new CANBus(Constants.tunerConstants.getDrivetrainConstants().CANBusName).isNetworkFD();
   }
 
   public static PhoenixOdometryThread getInstance() {
     if (instance == null) {
-      throw new IllegalStateException(
-          "PhoenixOdometryThread must be initialized with initialize(TunerConstants) first");
+      instance = new PhoenixOdometryThread();
     }
     return instance;
   }
@@ -118,7 +110,8 @@ public class PhoenixOdometryThread extends Thread {
       signalsLock.lock();
       try {
         if (isCANFD && phoenixSignals.length > 0) {
-          BaseStatusSignal.waitForAll(2.0 / Constants.tunerConstants.getOdometryFrequency(), phoenixSignals);
+          BaseStatusSignal.waitForAll(
+              2.0 / Constants.tunerConstants.getOdometryFrequency(), phoenixSignals);
         } else {
           Thread.sleep((long) (1000.0 / Constants.tunerConstants.getOdometryFrequency()));
           if (phoenixSignals.length > 0) BaseStatusSignal.refreshAll(phoenixSignals);

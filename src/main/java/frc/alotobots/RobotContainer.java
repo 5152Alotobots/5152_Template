@@ -9,13 +9,14 @@
 // Robot Code
 package frc.alotobots;
 
-import static frc.alotobots.Constants.tunerConstants;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.subsystems.swervedrive.ModulePosition;
 import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
+import frc.alotobots.library.subsystems.swervedrive.commands.FeedforwardCharacterization;
+import frc.alotobots.library.subsystems.swervedrive.commands.WheelRadiusCharacterization;
 import frc.alotobots.library.subsystems.swervedrive.io.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -39,31 +40,28 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
-                tunerConstants,
-                new GyroIOPigeon2(tunerConstants),
-                new ModuleIOTalonFX(ModulePosition.FRONT_LEFT.index, tunerConstants),
-                new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index, tunerConstants),
-                new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index, tunerConstants),
-                new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index, tunerConstants));
+                new GyroIOPigeon2(),
+                new ModuleIOTalonFX(ModulePosition.FRONT_LEFT.index),
+                new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index),
+                new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index),
+                new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index));
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
-                tunerConstants,
                 new GyroIO() {},
-                new ModuleIOSim(ModulePosition.FRONT_LEFT.index, tunerConstants),
-                new ModuleIOSim(ModulePosition.FRONT_RIGHT.index, tunerConstants),
-                new ModuleIOSim(ModulePosition.BACK_LEFT.index, tunerConstants),
-                new ModuleIOSim(ModulePosition.BACK_RIGHT.index, tunerConstants));
+                new ModuleIOSim(ModulePosition.FRONT_LEFT.index),
+                new ModuleIOSim(ModulePosition.FRONT_RIGHT.index),
+                new ModuleIOSim(ModulePosition.BACK_LEFT.index),
+                new ModuleIOSim(ModulePosition.BACK_RIGHT.index));
         break;
 
       default:
         // Replayed robot, disable IO implementations
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
-                tunerConstants,
                 new GyroIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
@@ -74,6 +72,25 @@ public class RobotContainer {
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // Set up SysId routines
+    autoChooser.addOption(
+        "Drive Wheel Radius Characterization",
+        new WheelRadiusCharacterization(swerveDriveSubsystem));
+    autoChooser.addOption(
+        "Drive Simple FF Characterization", new FeedforwardCharacterization(swerveDriveSubsystem));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Forward)",
+        swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Reverse)",
+        swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Forward)",
+        swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Reverse)",
+        swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // run configure
     configureDefaultCommands();

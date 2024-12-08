@@ -36,13 +36,12 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.alotobots.Constants;
 import frc.alotobots.library.subsystems.swervedrive.PhoenixOdometryThread;
-import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import java.util.Queue;
 
 public class ModuleIOTalonFX implements ModuleIO {
   private final SwerveModuleConstants constants;
-  private final TunerConstants tunerConstants;
 
   // Hardware objects
   private final TalonFX driveTalon;
@@ -84,8 +83,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
   private final Debouncer turnEncoderConnectedDebounce = new Debouncer(0.5);
 
-  public ModuleIOTalonFX(int moduleIndex, TunerConstants tunerConstants) {
-    this.tunerConstants = tunerConstants;
+  public ModuleIOTalonFX(int moduleIndex) {
     this.constants =
         switch (moduleIndex) {
           case 0 -> Constants.tunerConstants.getFrontLeft();
@@ -96,11 +94,14 @@ public class ModuleIOTalonFX implements ModuleIO {
         };
 
     driveTalon =
-        new TalonFX(constants.DriveMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
+        new TalonFX(
+            constants.DriveMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
     turnTalon =
-        new TalonFX(constants.SteerMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
+        new TalonFX(
+            constants.SteerMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
     cancoder =
-        new CANcoder(constants.CANcoderId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
+        new CANcoder(
+            constants.CANcoderId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
 
     // Configure drive motor
     var driveConfig = constants.DriveMotorInitialConfigs;
@@ -172,7 +173,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
-        tunerConstants.getOdometryFrequency(), drivePosition, turnPosition);
+        Constants.tunerConstants.getOdometryFrequency(), drivePosition, turnPosition);
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
         driveVelocity,

@@ -52,7 +52,7 @@ public class TunerConstants2023 implements TunerConstants {
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(5.5).withKI(0).withKD(0).withKS(0.13).withKV(0.099).withKA(0);
+      new Slot0Configs().withKP(.05).withKI(0).withKD(0.002).withKS(0.13).withKV(0.73).withKA(0.01);
 
   // Pathplanner
   public static final PathConstraints PATHFINDING_CONSTRAINTS =
@@ -224,9 +224,9 @@ public class TunerConstants2023 implements TunerConstants {
           kCanCoderInverted);
 
   // Constants for PathPlanner config
-  private static final double ROBOT_MASS_KG = 74.088;
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
+  private static final double ROBOT_MASS_KG = 34;
+  private static final double ROBOT_MOI = 2.550;
+  private static final double WHEEL_COF = 0.6;
 
   private final RobotConfig pathPlannerConfig =
       new RobotConfig(

@@ -40,7 +40,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
-import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIOInputsAutoLogged;
 import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
@@ -52,7 +51,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-  private final RobotConfig PP_CONFIG;
+  private final RobotConfig PP_CONFIG = Constants.tunerConstants.getPathPlannerConfig();
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
@@ -62,7 +61,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
-  private SwerveDriveKinematics kinematics;
+  private SwerveDriveKinematics kinematics =
+      new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
       new SwerveModulePosition[] {
@@ -82,21 +82,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
 
-    // Initialize kinematics and PathPlanner config
-    this.kinematics = new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
-    this.PP_CONFIG = Constants.tunerConstants.getPathPlannerConfig();
-
     // Initialize modules
-    modules[0] = new Module(flModuleIO, 0);
-    modules[1] = new Module(frModuleIO, 1);
-    modules[2] = new Module(blModuleIO, 2);
-    modules[3] = new Module(brModuleIO, 3);
+    modules[0] = new Module(flModuleIO, 0, Constants.tunerConstants.getFrontLeft());
+    modules[1] = new Module(frModuleIO, 1, Constants.tunerConstants.getFrontRight());
+    modules[2] = new Module(blModuleIO, 2, Constants.tunerConstants.getBackLeft());
+    modules[3] = new Module(brModuleIO, 3, Constants.tunerConstants.getBackRight());
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
     // Initialize and start odometry thread
-    PhoenixOdometryThread.initialize().start();
+    PhoenixOdometryThread.getInstance().start();
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
@@ -200,7 +196,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Calculate module setpoints
     speeds.discretize(0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);

@@ -18,8 +18,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import frc.alotobots.Constants;
 import frc.alotobots.library.subsystems.swervedrive.PhoenixOdometryThread;
-import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import java.util.Queue;
 
 /** IO implementation for Pigeon 2. */

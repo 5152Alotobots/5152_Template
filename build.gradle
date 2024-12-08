@@ -14,7 +14,7 @@ java {
     }
 }
 
-def ROBOT_MAIN_CLASS = "frc.alotobots.Robot"
+def ROBOT_MAIN_CLASS = "frc.alotobots.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
