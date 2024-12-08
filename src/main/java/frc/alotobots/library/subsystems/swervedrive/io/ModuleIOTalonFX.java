@@ -88,19 +88,19 @@ public class ModuleIOTalonFX implements ModuleIO {
     this.tunerConstants = tunerConstants;
     this.constants =
         switch (moduleIndex) {
-          case 0 -> tunerConstants.getFrontLeft();
-          case 1 -> tunerConstants.getFrontRight();
-          case 2 -> tunerConstants.getBackLeft();
-          case 3 -> tunerConstants.getBackRight();
+          case 0 -> Constants.tunerConstants.getFrontLeft();
+          case 1 -> Constants.tunerConstants.getFrontRight();
+          case 2 -> Constants.tunerConstants.getBackLeft();
+          case 3 -> Constants.tunerConstants.getBackRight();
           default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
         };
 
     driveTalon =
-        new TalonFX(constants.DriveMotorId, tunerConstants.getDrivetrainConstants().CANBusName);
+        new TalonFX(constants.DriveMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
     turnTalon =
-        new TalonFX(constants.SteerMotorId, tunerConstants.getDrivetrainConstants().CANBusName);
+        new TalonFX(constants.SteerMotorId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
     cancoder =
-        new CANcoder(constants.CANcoderId, tunerConstants.getDrivetrainConstants().CANBusName);
+        new CANcoder(constants.CANcoderId, Constants.tunerConstants.getDrivetrainConstants().CANBusName);
 
     // Configure drive motor
     var driveConfig = constants.DriveMotorInitialConfigs;
