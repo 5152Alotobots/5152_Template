@@ -8,21 +8,9 @@ theme:
 nav:
   - Home: index.md
   - Game:
-      - Controls: game/subsystems/controls.md
   - Library:
       - Commands:
-          - library/commands/drivefacingbestobject.md
-          - library/commands/pathfindtobestobject.md
-          - library/commands/defaultsettoalliancecolor.md
-          - library/commands/drivefacingpose.md
-          - library/commands/pathfindtopose.md
       - Subsystems:
-          - Bling: library/subsystems/bling.md
-          - Pneumatics: library/subsystems/pneumatics.md
-          - Swerve: library/subsystems/swerve.md
-          - Vision:
-            - AprilTag: library/subsystems/vision/apriltag.md
-            - Object Detection: library/subsystems/vision/objectdetection.md
   - API Documentation: ./javadoc
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: 5152Alotobots/5152_Template
