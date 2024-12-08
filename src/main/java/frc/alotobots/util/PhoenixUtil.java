@@ -7,6 +7,17 @@
 //
 // 2025 ALOTOBOTS FRC 5152
 // Robot Code
-package frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023;
+package frc.alotobots.util;
 
-public class SwerveDriveConstants {}
+import com.ctre.phoenix6.StatusCode;
+import java.util.function.Supplier;
+
+public class PhoenixUtil {
+  /** Attempts to run the command until no error is produced. */
+  public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
+    for (int i = 0; i < maxAttempts; i++) {
+      var error = command.get();
+      if (error.isOK()) break;
+    }
+  }
+}

@@ -89,7 +89,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Initialize kinematics and PathPlanner config
     this.kinematics = new SwerveDriveKinematics(tunerConstants.getModuleTranslations());
     this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
-    
+
     // Initialize modules
     modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
     modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());

@@ -10,6 +10,8 @@
 package frc.alotobots;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
+import frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.TunerConstants2023;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -32,11 +34,12 @@ public final class Constants {
     REPLAY
   }
 
+  public static final TunerConstants tunerConstants = new TunerConstants2023();
+
   @UtilityClass
-  /** CAN bus device IDs */
   /**
-   * CAN bus device ID assignments. Maps CAN IDs for motors, sensors and other CAN-connected
-   * devices.
+   * CAN bus device IDs CAN bus device ID assignments. Maps CAN IDs for motors, sensors and other
+   * CAN-connected devices.
    */
   public static final class CanId {
     /** Power Distribution Panel CAN ID */
@@ -87,5 +90,4 @@ public final class Constants {
     /** CANdle LED controller CAN ID */
     public static final int CANDLE_CAN_ID = 40;
   }
-
 }

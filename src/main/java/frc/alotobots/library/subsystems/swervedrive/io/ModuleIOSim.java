@@ -18,6 +18,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 
 /**
  * Physics sim implementation of module IO. The sim models are configured using a set of module
@@ -49,13 +50,14 @@ public class ModuleIOSim implements ModuleIO {
 
   public ModuleIOSim(int moduleIndex, TunerConstants tunerConstants) {
     // Get module constants based on index
-    SwerveModuleConstants constants = switch (moduleIndex) {
-      case 0 -> tunerConstants.getFrontLeft();
-      case 1 -> tunerConstants.getFrontRight();
-      case 2 -> tunerConstants.getBackLeft();
-      case 3 -> tunerConstants.getBackRight();
-      default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
-    };
+    SwerveModuleConstants constants =
+        switch (moduleIndex) {
+          case 0 -> tunerConstants.getFrontLeft();
+          case 1 -> tunerConstants.getFrontRight();
+          case 2 -> tunerConstants.getBackLeft();
+          case 3 -> tunerConstants.getBackRight();
+          default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
+        };
 
     // Create drive and turn sim models
     driveSim =
