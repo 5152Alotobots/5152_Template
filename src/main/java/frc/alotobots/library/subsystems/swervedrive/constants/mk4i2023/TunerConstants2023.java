@@ -221,30 +221,30 @@ public class TunerConstants2023 implements TunerConstants {
           kSteerMotorInverted,
           kCanCoderInverted);
 
-    // Constants for PathPlanner config
-    private static final double ROBOT_MASS_KG = 74.088;
-    private static final double ROBOT_MOI = 6.883;
-    private static final double WHEEL_COF = 1.2;
+  // Constants for PathPlanner config
+  private static final double ROBOT_MASS_KG = 74.088;
+  private static final double ROBOT_MOI = 6.883;
+  private static final double WHEEL_COF = 1.2;
 
-    private final RobotConfig pathPlannerConfig = new RobotConfig(
-            ROBOT_MASS_KG,
-            ROBOT_MOI,
-            new ModuleConfig(
-                    FrontLeft.WheelRadius,
-                    kSpeedAt12Volts.in(MetersPerSecond),
-                    WHEEL_COF,
-                    DCMotor.getFalcon500(1).withReduction(FrontLeft.DriveMotorGearRatio),
-                    FrontLeft.SlipCurrent,
-                    1),
-            new Translation2d[] {
-                    new Translation2d(FrontLeft.LocationX, FrontLeft.LocationY),
-                    new Translation2d(FrontRight.LocationX, FrontRight.LocationY),
-                    new Translation2d(BackLeft.LocationX, BackLeft.LocationY),
-                    new Translation2d(BackRight.LocationX, BackRight.LocationY)
-            });
+  private final RobotConfig pathPlannerConfig =
+      new RobotConfig(
+          ROBOT_MASS_KG,
+          ROBOT_MOI,
+          new ModuleConfig(
+              FrontLeft.WheelRadius,
+              kSpeedAt12Volts.in(MetersPerSecond),
+              WHEEL_COF,
+              DCMotor.getFalcon500(1).withReduction(FrontLeft.DriveMotorGearRatio),
+              FrontLeft.SlipCurrent,
+              1),
+          new Translation2d[] {
+            new Translation2d(FrontLeft.LocationX, FrontLeft.LocationY),
+            new Translation2d(FrontRight.LocationX, FrontRight.LocationY),
+            new Translation2d(BackLeft.LocationX, BackLeft.LocationY),
+            new Translation2d(BackRight.LocationX, BackRight.LocationY)
+          });
 
-
-    public static final double DRIVE_BASE_RADIUS =
+  public static final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
               Math.hypot(FrontLeft.LocationX, FrontRight.LocationY),

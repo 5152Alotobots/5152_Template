@@ -5,9 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class OI {
 
@@ -29,25 +27,12 @@ public class OI {
 
     // Controllers
     private static final CommandXboxController driverController = new CommandXboxController(0);
-    private static final CommandXboxController operatorController = new CommandXboxController(1);
-
-    // Driver Controller Buttons
-    public static final Trigger driverA = driverController.a();
-    public static final Trigger driverB = driverController.b();
-    public static final Trigger driverX = driverController.x();
-    public static final Trigger driverY = driverController.y();
-    public static final Trigger driverLeftBumper = driverController.leftBumper();
-    public static final Trigger driverRightBumper = driverController.rightBumper();
-    public static final Trigger driverBackButton = driverController.back();
-    public static final Trigger driverStartButton = driverController.start();
-    public static final Trigger driverLeftStickButton = driverController.leftStick();
-    public static final Trigger driverRightStickButton = driverController.rightStick();
 
     // Driver Controller Methods
     public static Translation2d getDriverLinearVelocity() {
         return getLinearVelocityFromJoysticks(
             driverController.getLeftX(),
-            -driverController.getLeftY()  // Y-axis is inverted
+            driverController.getLeftY()
         );
     }
 
@@ -55,12 +40,5 @@ public class OI {
         return MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
     }
 
-    public static double getDriverLeftTrigger() {
-        return driverController.getLeftTriggerAxis(); // Left trigger - Variable control (e.g., slow mode)
-    }
-
-    public static double getDriverRightTrigger() {
-        return driverController.getRightTriggerAxis(); // Right trigger - Variable control (e.g., shoot speed)
-    }
 
 }
