@@ -49,10 +49,10 @@ public class RobotContainer {
             new SwerveDriveSubsystem(
                     TUNER_CONSTANTS,
                 new GyroIOPigeon2(TUNER_CONSTANTS),
-                    new ModuleIOTalonFX(0, TUNER_CONSTANTS),
-                    new ModuleIOTalonFX(1, TUNER_CONSTANTS),
-                    new ModuleIOTalonFX(2, TUNER_CONSTANTS),
-                    new ModuleIOTalonFX(3, TUNER_CONSTANTS)
+                    new ModuleIOTalonFX(ModulePosition.FRONT_LEFT.index, TUNER_CONSTANTS),
+                    new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index, TUNER_CONSTANTS),
+                    new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index, TUNER_CONSTANTS),
+                    new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index, TUNER_CONSTANTS)
                     );
         break;
 
@@ -62,10 +62,10 @@ public class RobotContainer {
             new SwerveDriveSubsystem(
                     TUNER_CONSTANTS,
                 new GyroIO() {},
-                new ModuleIOSim(0, TUNER_CONSTANTS),
-                new ModuleIOSim(1, TUNER_CONSTANTS),
-                new ModuleIOSim(2, TUNER_CONSTANTS),
-                new ModuleIOSim(3, TUNER_CONSTANTS));
+                new ModuleIOSim(ModulePosition.FRONT_LEFT.index, TUNER_CONSTANTS),
+                new ModuleIOSim(ModulePosition.FRONT_RIGHT.index, TUNER_CONSTANTS),
+                new ModuleIOSim(ModulePosition.BACK_LEFT.index, TUNER_CONSTANTS),
+                new ModuleIOSim(ModulePosition.BACK_RIGHT.index, TUNER_CONSTANTS));
         break;
 
       default:
