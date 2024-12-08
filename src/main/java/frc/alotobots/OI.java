@@ -13,7 +13,7 @@ public class OI {
 
     public static final double DEADBAND = 0.1;
 
-    private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+    private static Translation2d getLinearVelocityFromJoysticks(double x, double y, Drive drive) {
         // Apply deadband
         double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
         Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
@@ -35,9 +35,16 @@ public class OI {
                               Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
         }
 
-        // Return new linear velocity
+        // Convert to field relative based on alliance
+        boolean isFlipped = DriverStation.getAlliance().isPresent() 
+            && DriverStation.getAlliance().get() == Alliance.Red;
+        Rotation2d fieldRotation = isFlipped ? 
+            drive.getRotation().plus(new Rotation2d(Math.PI)) : 
+            drive.getRotation();
+
+        // Return new linear velocity with field relative conversion
         return new Pose2d(new Translation2d(), linearDirection)
-                .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+                .transformBy(new Transform2d(linearMagnitude, 0.0, fieldRotation))
                 .getTranslation();
     }
 
@@ -45,10 +52,11 @@ public class OI {
     private static final CommandXboxController driverController = new CommandXboxController(0);
 
     // Driver Controller Methods
-    public static Translation2d getDriverLinearVelocity() {
+    public static Translation2d getDriverLinearVelocity(Drive drive) {
         return getLinearVelocityFromJoysticks(
             driverController.getLeftX(),
-            driverController.getLeftY()
+            driverController.getLeftY(),
+            drive
         );
     }
 

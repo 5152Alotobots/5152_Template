@@ -19,26 +19,15 @@ public class DefaultDrive extends Command {
 
     @Override
     public void execute() {
-        // Get linear velocity from OI
-        Translation2d linearVelocity = OI.getDriverLinearVelocity();
-        
-        // Get rotation from OI
+        // Get inputs from OI (already field-relative)
+        Translation2d linearVelocity = OI.getDriverLinearVelocity(drive);
         double omega = OI.getDriverRotation();
 
-        // Convert to field relative speeds
+        // Convert to chassis speeds
         ChassisSpeeds speeds = new ChassisSpeeds(
             linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
             linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
             omega * drive.getMaxAngularSpeedRadPerSec()
-        );
-
-        // Handle alliance-based field orientation
-        boolean isFlipped = DriverStation.getAlliance().isPresent() 
-            && DriverStation.getAlliance().get() == Alliance.Red;
-        
-        speeds.toRobotRelativeSpeeds(
-            isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) 
-                     : drive.getRotation()
         );
 
         // Apply speeds to drive
