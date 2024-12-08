@@ -18,7 +18,8 @@ public DriveFacingBestObject(
     SwerveDriveSubsystem swerveDriveSubsystem,
     DoubleSupplier velocityX,
     DoubleSupplier velocityY,
-    DoubleSupplier velocityRotation
+    DoubleSupplier velocityRotation,
+    String... targetGameElementNames
 )
 ```
 
@@ -29,7 +30,8 @@ The constructor accepts suppliers for velocity control, allowing flexible input 
 ### Object Detected Mode
 When objects are detected, the command:
 - Maintains field-centric translation using manual X/Y inputs
-- Automatically rotates to face the highest-confidence detected object
+- Automatically rotates to face the first detected object matching the provided game element names
+- Prioritizes objects based on the order of targetGameElementNames
 - Uses a PID controller (P=5.0) for rotation control
 
 ### No Detection Mode
@@ -59,9 +61,10 @@ private static final double OVERRIDE_TIMEOUT_SECONDS = 0.1;
 new DriveFacingBestObject(
     visionSubsystem,
     driveSubsystem,
-    () -> -driverController.getLeftY(),   // Forward/back
-    () -> -driverController.getLeftX(),   // Left/right
-    () -> -driverController.getRightX()   // Manual rotation override
+    () -> -driverController.getLeftY(),     // Forward/back
+    () -> -driverController.getLeftX(),     // Left/right
+    () -> -driverController.getRightX(),    // Manual rotation override
+    "Cone", "Cube"                          // Game elements in priority order
 );
 ```
 

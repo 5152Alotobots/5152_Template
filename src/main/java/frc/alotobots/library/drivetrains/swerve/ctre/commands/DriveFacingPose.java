@@ -1,35 +1,33 @@
-package frc.alotobots.library.vision.photonvision.objectdetection.commands;
+package frc.alotobots.library.drivetrains.swerve.ctre.commands;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
-import frc.alotobots.library.vision.photonvision.objectdetection.DetectedObject;
-import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 import java.util.function.DoubleSupplier;
 
 /**
- * Command that drives the robot while automatically facing the best detected object. Uses
- * PhotonVision object detection to identify targets and adjusts robot orientation accordingly.
+ * Command that drives the robot while automatically facing a specified pose on the field.
  *
- * <p>This command: - Takes manual drive inputs for X/Y translation - Automatically rotates to face
- * the highest-confidence detected object - Falls back to manual rotation control when no objects
- * are detected - Allows temporary manual rotation override with a timeout
+ * <p>This command:
+ * - Takes manual drive inputs for X/Y translation
+ * - Automatically rotates to face the target pose
+ * - Allows temporary manual rotation override with a timeout
+ * - Uses field-relative coordinates for all movements
  *
- * <p>The command requires both the vision and drive subsystems to operate.
+ * <p>The command requires the swerve drive subsystem to operate.
  */
-public class DriveFacingBestObject extends Command {
-  /** The subsystem handling object detection via PhotonVision */
-  private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
+public class DriveFacingPose extends Command {
+  /** The target pose to face */
+  private final Pose2d targetPose;
+
 
   /** The swerve drive subsystem for robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
-
-  /** The names of game element types to target, in priority order */
-  private final String[] targetGameElementNames;
 
   /** Supplier for X velocity (forward/backward) */
   private final DoubleSupplier velocityX;
@@ -52,27 +50,24 @@ public class DriveFacingBestObject extends Command {
   /**
    * Creates a new DriveFacingBestObject command.
    *
-   * @param objectDetectionSubsystem The subsystem for detecting objects
    * @param swerveDriveSubsystem The subsystem for controlling robot movement
    * @param velocityX Supplier for forward/backward velocity
    * @param velocityY Supplier for left/right velocity
    * @param velocityRotation Supplier for rotational velocity
    */
-  public DriveFacingBestObject(
-      PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
+  public DriveFacingPose(
+      Pose2d targetPose,
       SwerveDriveSubsystem swerveDriveSubsystem,
       DoubleSupplier velocityX,
       DoubleSupplier velocityY,
-      DoubleSupplier velocityRotation,
-      String... targetGameElementNames) {
-    this.objectDetectionSubsystem = objectDetectionSubsystem;
+      DoubleSupplier velocityRotation) {
+    this.targetPose = targetPose;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
-    this.targetGameElementNames = targetGameElementNames;
     this.velocityX = velocityX;
     this.velocityY = velocityY;
     this.velocityRotation = velocityRotation;
 
-    addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
+    addRequirements(swerveDriveSubsystem);
 
     driveFacingAngle.HeadingController = new PhoenixPIDController(5.0, 0, 0.0);
   }
@@ -88,25 +83,16 @@ public class DriveFacingBestObject extends Command {
    */
   @Override
   public void execute() {
-    var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
+    // Calculate angle to target pose
+    var currentPose = swerveDriveSubsystem.getState().Pose;
+    double dx = targetPose.getX() - currentPose.getX();
+    double dy = targetPose.getY() - currentPose.getY();
+    Rotation2d angleToTarget = new Rotation2d(Math.atan2(dy, dx));
 
-    // Find first matching object based on priority order
-    var matchingObject = java.util.Optional.<DetectedObject>empty();
-    for (String elementName : targetGameElementNames) {
-      matchingObject =
-          detectedObjects.stream()
-              .filter(obj -> obj.getGameElement().getName().equals(elementName))
-              .findFirst();
-      if (matchingObject.isPresent()) {
-        break;
-      }
-    }
-
-    if (matchingObject.isPresent()) {
-      Rotation2d angle = matchingObject.get().getAngle();
+    if (Math.abs(velocityRotation.getAsDouble()) < 0.1) {
       swerveDriveSubsystem.setControl(
           driveFacingAngle
-              .withTargetDirection(angle)
+              .withTargetDirection(angleToTarget)
               .withVelocityX(velocityX.getAsDouble())
               .withVelocityY(velocityY.getAsDouble()));
     } else {
@@ -117,8 +103,8 @@ public class DriveFacingBestObject extends Command {
               .withRotationalRate(velocityRotation.getAsDouble()));
     }
 
-    // Rotation override timeout
-    if (matchingObject.isPresent() && velocityRotation.getAsDouble() != 0) {
+    // Start override timer when manual rotation is used
+    if (Math.abs(velocityRotation.getAsDouble()) > 0.1) {
       overrideTimer.start();
     } else {
       overrideTimer.reset();

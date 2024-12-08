@@ -117,7 +117,7 @@ public class RobotContainer {
     // Test OTF Pathplanner to best object
     hmiStation.testOTFPathplannerButton.onTrue(
         new PathfindToBestObject(
-            photonvisionObjectDetectionSubsystem, drivetrainSubsystem, pathPlanner));
+            photonvisionObjectDetectionSubsystem, drivetrainSubsystem, pathPlanner, "Note"));
     // Test Object Detection and FieldCentricFacingAngle
     hmiStation.driveWhileFacingBestObjectTrigger.toggleOnTrue(
         new DriveFacingBestObject(
@@ -125,7 +125,8 @@ public class RobotContainer {
             drivetrainSubsystem,
             () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
             () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode(),
-            () -> hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode()));
+            () -> hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode(),
+            "Note"));
 
     // Add other logic-based commands here
   }

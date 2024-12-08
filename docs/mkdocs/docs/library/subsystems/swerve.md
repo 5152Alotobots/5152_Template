@@ -37,7 +37,7 @@ Module configuration is handled in the year-specific TunerConstants files. To co
 // PID Gains
 private static final Slot0Configs steerGains = new Slot0Configs()
     .withKP(100)  // Adjust based on your robot's steering response
-    .withKI(0)    
+    .withKI(0)
     .withKD(0.2);
 
 private static final Slot0Configs driveGains = new Slot0Configs()
@@ -63,7 +63,7 @@ public static final PathConstraints PATHFINDING_CONSTRAINTS = new PathConstraint
 
 2. Configure the holonomic drive controller:
 ```java
-public static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER = 
+public static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER =
     new PPHolonomicDriveController(
         new PIDConstants(2.4, 0, 0.015),  // Translation PID
         new PIDConstants(7.8, 0, 0.015)   // Rotation PID
@@ -136,7 +136,7 @@ Command pathfindCommand = pathPlanner.getPathFinderCommand(
 
 ### Manual Drive Control
 ```java
-swerve.applyRequest(() -> 
+swerve.applyRequest(() ->
     new SwerveRequest.FieldCentric()
         .withVelocityX(joystickX)
         .withVelocityY(joystickY)

@@ -21,6 +21,23 @@ public class DetectedObject {
   @Getter private final PhotonTrackedTarget target;
   @Getter private final Transform3d robotToCamera;
   @Getter private double confidence;
+
+  /**
+   * Gets the GameElement type of this detected object.
+   *
+   * @return The GameElement representing this object's type, or null if target is null
+   */
+  public GameElement getGameElement() {
+    if (target == null) {
+      return null;
+    }
+    int classId = target.getDetectedObjectClassID();
+    if (classId >= GAME_ELEMENTS.length) {
+      throw new IllegalArgumentException("Invalid class ID: " + classId);
+    }
+    return GAME_ELEMENTS[classId];
+  }
+
   private double lastUpdateTime;
 
   /**

@@ -10,20 +10,24 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDrivePathPlanner;
 import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
 import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
+import frc.alotobots.library.vision.photonvision.objectdetection.DetectedObject;
 import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
 
 public class PathfindToBestObject extends InstantCommand {
-  PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
-  SwerveDriveSubsystem swerveDriveSubsystem;
-  SwerveDrivePathPlanner pathPlanner;
+  private final PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem;
+  private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private final SwerveDrivePathPlanner pathPlanner;
+  private final String[] targetGameElementNames;
 
   public PathfindToBestObject(
       PhotonVisionObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
-      SwerveDrivePathPlanner pathPlanner) {
+      SwerveDrivePathPlanner pathPlanner,
+      String... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.pathPlanner = pathPlanner;
+    this.targetGameElementNames = targetGameElementNames;
 
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
   }
@@ -31,12 +35,26 @@ public class PathfindToBestObject extends InstantCommand {
   @Override
   public void initialize() {
     var detectedObjects = objectDetectionSubsystem.getDetectedObjects();
-    if (detectedObjects.isEmpty()) {
+
+    // Try each target game element name in priority order
+    java.util.Optional<DetectedObject> matchingObject = java.util.Optional.empty();
+    for (String targetName : targetGameElementNames) {
+      matchingObject =
+          detectedObjects.stream()
+              .filter(obj -> obj.getGameElement().getName().equals(targetName))
+              .findFirst();
+      if (matchingObject.isPresent()) {
+        break;
+      }
+    }
+
+    if (matchingObject.isEmpty()) {
       return;
     }
 
+    var selectedObject = matchingObject.get();
     Pose2d robotPose = swerveDriveSubsystem.getState().Pose;
-    Pose2d objectPose = detectedObjects.get(0).getPose().toPose2d();
+    Pose2d objectPose = selectedObject.getPose().toPose2d();
 
     // Calculate direction from robot to object
     Translation2d toObject = objectPose.getTranslation().minus(robotPose.getTranslation());
