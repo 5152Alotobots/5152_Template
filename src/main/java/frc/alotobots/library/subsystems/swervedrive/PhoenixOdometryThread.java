@@ -45,7 +45,8 @@ public class PhoenixOdometryThread extends Thread {
 
   public static PhoenixOdometryThread initialize(TunerConstants constants) {
     if (instance == null) {
-      instance = new PhoenixOdometryThread(constants);
+      instance = new PhoenixOdometryThread();
+      instance.configure(constants);
     }
     return instance;
   }
@@ -58,8 +59,7 @@ public class PhoenixOdometryThread extends Thread {
     return instance;
   }
 
-  private PhoenixOdometryThread(TunerConstants constants) {
-    configure(constants);
+  private PhoenixOdometryThread() {
     setName("PhoenixOdometryThread");
     setDaemon(true);
   }
