@@ -87,10 +87,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     this.PP_CONFIG = Constants.tunerConstants.getPathPlannerConfig();
 
     // Initialize modules
-    modules[0] = new Module(flModuleIO, 0, Constants.tunerConstants.getFrontLeft());
-    modules[1] = new Module(frModuleIO, 1, Constants.tunerConstants.getFrontRight());
-    modules[2] = new Module(blModuleIO, 2, Constants.tunerConstants.getBackLeft());
-    modules[3] = new Module(brModuleIO, 3, Constants.tunerConstants.getBackRight());
+    modules[0] = new Module(flModuleIO, 0);
+    modules[1] = new Module(frModuleIO, 1);
+    modules[2] = new Module(blModuleIO, 2);
+    modules[3] = new Module(brModuleIO, 3);
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
