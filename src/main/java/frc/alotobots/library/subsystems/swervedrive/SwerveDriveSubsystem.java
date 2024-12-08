@@ -62,7 +62,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
-  private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(tunerConstants.getModuleTranslations());
+  private SwerveDriveKinematics kinematics;
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
       new SwerveModulePosition[] {
@@ -86,7 +86,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
 
-    // Initialize PathPlanner config
+    // Initialize kinematics and PathPlanner config
+    this.kinematics = new SwerveDriveKinematics(tunerConstants.getModuleTranslations());
     this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
     modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
     modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
