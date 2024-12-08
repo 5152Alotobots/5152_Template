@@ -30,18 +30,18 @@ public class GyroIOPigeon2 implements GyroIO {
   private final Queue<Double> yawTimestampQueue;
   private final StatusSignal<AngularVelocity> yawVelocity;
 
-  public GyroIOPigeon2(TunerConstants constants) {
+  public GyroIOPigeon2() {
     pigeon =
         new Pigeon2(
-            constants.getDrivetrainConstants().Pigeon2Id,
-            constants.getDrivetrainConstants().CANBusName);
+            Constants.tunerConstants.getDrivetrainConstants().Pigeon2Id,
+            Constants.tunerConstants.getDrivetrainConstants().CANBusName);
 
     yaw = pigeon.getYaw();
     yawVelocity = pigeon.getAngularVelocityZWorld();
 
     pigeon.getConfigurator().apply(new Pigeon2Configuration());
     pigeon.getConfigurator().setYaw(0.0);
-    yaw.setUpdateFrequency(constants.getOdometryFrequency());
+    yaw.setUpdateFrequency(Constants.tunerConstants.getOdometryFrequency());
     yawVelocity.setUpdateFrequency(50.0);
     pigeon.optimizeBusUtilization();
 
