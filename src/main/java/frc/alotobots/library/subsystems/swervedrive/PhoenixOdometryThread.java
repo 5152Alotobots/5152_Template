@@ -34,9 +34,14 @@ public class PhoenixOdometryThread extends Thread {
   private final List<Queue<Double>> genericQueues = new ArrayList<>();
   private final List<Queue<Double>> timestampQueues = new ArrayList<>();
 
-  private final TunerConstants tunerConstants;
+  private TunerConstants tunerConstants;
   private static PhoenixOdometryThread instance = null;
-  private final boolean isCANFD;
+  private boolean isCANFD;
+
+  public void configure(TunerConstants constants) {
+    this.tunerConstants = constants;
+    this.isCANFD = new CANBus(constants.getDrivetrainConstants().CANBusName).isNetworkFD();
+  }
 
   public static PhoenixOdometryThread initialize(TunerConstants constants) {
     if (instance == null) {
@@ -54,8 +59,7 @@ public class PhoenixOdometryThread extends Thread {
   }
 
   private PhoenixOdometryThread(TunerConstants constants) {
-    this.tunerConstants = constants;
-    this.isCANFD = new CANBus(constants.getDrivetrainConstants().CANBusName).isNetworkFD();
+    configure(constants);
     setName("PhoenixOdometryThread");
     setDaemon(true);
   }
