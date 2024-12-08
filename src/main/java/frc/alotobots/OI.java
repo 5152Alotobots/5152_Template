@@ -1,10 +1,31 @@
 package frc.alotobots;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class OI {
+
+    public static final double DEADBAND = 0.1;
+
+    private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+        // Apply deadband
+        double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
+        Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+
+        // Square magnitude for more precise control
+        linearMagnitude = linearMagnitude * linearMagnitude;
+
+        // Return new linear velocity
+        return new Pose2d(new Translation2d(), linearDirection)
+                .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+                .getTranslation();
+    }
 
     // Controllers
     private static final CommandXboxController driverController = new CommandXboxController(0);
@@ -47,47 +68,5 @@ public class OI {
         return driverController.getRightTriggerAxis(); // Right trigger - Variable control (e.g., shoot speed)
     }
 
-    // Operator Controller Buttons
-    public static final Trigger operatorA = operatorController.a();
-    public static final Trigger operatorB = operatorController.b();
-    public static final Trigger operatorX = operatorController.x();
-    public static final Trigger operatorY = operatorController.y();
-    public static final Trigger operatorLeftBumper = operatorController.leftBumper();
-    public static final Trigger operatorRightBumper = operatorController.rightBumper();
-    public static final Trigger operatorBackButton = operatorController.back();
-    public static final Trigger operatorStartButton = operatorController.start();
 
-    // Operator Controller Axes
-    public static double getOperatorLeftX() {
-        return operatorController.getLeftX();  // Left stick X axis - Mechanism control
-    }
-
-    public static double getOperatorLeftY() {
-        return -operatorController.getLeftY(); // Left stick Y axis - Mechanism control
-    }
-
-    public static double getOperatorRightX() {
-        return operatorController.getRightX(); // Right stick X axis - Mechanism control
-    }
-
-    public static double getOperatorRightY() {
-        return -operatorController.getRightY(); // Right stick Y axis - Mechanism control
-    }
-
-    public static double getOperatorLeftTrigger() {
-        return operatorController.getLeftTriggerAxis(); // Left trigger - Variable mechanism control
-    }
-
-    public static double getOperatorRightTrigger() {
-        return operatorController.getRightTriggerAxis(); // Right trigger - Variable mechanism control
-    }
-
-    // D-Pad (POV) Methods
-    public static int getDriverPOV() {
-        return driverController.getHID().getPOV();
-    }
-
-    public static int getOperatorPOV() {
-        return operatorController.getHID().getPOV();
-    }
 }
