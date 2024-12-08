@@ -19,6 +19,20 @@ public class OI {
         // Square magnitude for more precise control
         linearMagnitude = linearMagnitude * linearMagnitude;
 
+        // Apply speed modes based on triggers
+        double leftTrigger = driverController.getLeftTriggerAxis();
+        double rightTrigger = driverController.getRightTriggerAxis();
+
+        if (leftTrigger > DEADBAND) {
+            // Turtle mode - scale down to turtle speed
+            linearMagnitude *= Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond) / 
+                              Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+        } else if (rightTrigger > DEADBAND) {
+            // Turbo mode - scale up to turbo speed
+            linearMagnitude *= Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond) / 
+                              Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+        }
+
         // Return new linear velocity
         return new Pose2d(new Translation2d(), linearDirection)
                 .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))

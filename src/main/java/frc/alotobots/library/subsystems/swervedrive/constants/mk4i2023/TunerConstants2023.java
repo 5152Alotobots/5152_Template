@@ -77,8 +77,10 @@ public class TunerConstants2023 implements TunerConstants {
   // The stator current at which the wheels start to slip;
   private static final Current kSlipCurrent = Amps.of(27.16);
 
-  // Theoretical free speed (m/s) at 12 V applied output
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.02);
+  // Speed modes
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.02); // Normal speed
+  public static final LinearVelocity kTurtleSpeed = MetersPerSecond.of(2.0); // Slow mode
+  public static final LinearVelocity kTurboSpeed = MetersPerSecond.of(6.5); // Fast mode
 
   // Initial configs for the drive and steer motors and the CANcoder
   private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
@@ -321,6 +323,16 @@ public class TunerConstants2023 implements TunerConstants {
   @Override
   public LinearVelocity getSpeedAt12Volts() {
     return kSpeedAt12Volts;
+  }
+
+  @Override
+  public LinearVelocity getTurtleSpeed() {
+    return kTurtleSpeed;
+  }
+
+  @Override
+  public LinearVelocity getTurboSpeed() {
+    return kTurboSpeed;
   }
 
   @Override

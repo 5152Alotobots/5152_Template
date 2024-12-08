@@ -36,6 +36,10 @@ public interface TunerConstants {
 
   LinearVelocity getSpeedAt12Volts();
 
+  LinearVelocity getTurtleSpeed();
+
+  LinearVelocity getTurboSpeed();
+
   double getOdometryFrequency();
 
   // Physical Dimensions
