@@ -74,33 +74,29 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  private final TunerConstants tunerConstants;
-
   public SwerveDriveSubsystem(
-      TunerConstants tunerConstants,
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
-    this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
 
     // Initialize kinematics and PathPlanner config
-    this.kinematics = new SwerveDriveKinematics(tunerConstants.getModuleTranslations());
-    this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
+    this.kinematics = new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
+    this.PP_CONFIG = Constants.tunerConstants.getPathPlannerConfig();
 
     // Initialize modules
-    modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
-    modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
-    modules[2] = new Module(blModuleIO, 2, tunerConstants.getBackLeft());
-    modules[3] = new Module(brModuleIO, 3, tunerConstants.getBackRight());
+    modules[0] = new Module(flModuleIO, 0, Constants.tunerConstants.getFrontLeft());
+    modules[1] = new Module(frModuleIO, 1, Constants.tunerConstants.getFrontRight());
+    modules[2] = new Module(blModuleIO, 2, Constants.tunerConstants.getBackLeft());
+    modules[3] = new Module(brModuleIO, 3, Constants.tunerConstants.getBackRight());
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
     // Initialize and start odometry thread
-    PhoenixOdometryThread.initialize(tunerConstants).start();
+    PhoenixOdometryThread.initialize(Constants.tunerConstants).start();
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
@@ -204,7 +200,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Calculate module setpoints
     speeds.discretize(0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, tunerConstants.getSpeedAt12Volts());
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -238,7 +234,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
-      headings[i] = tunerConstants.getModuleTranslations()[i].getAngle();
+      headings[i] = Constants.tunerConstants.getModuleTranslations()[i].getAngle();
     }
     kinematics.resetHeadings(headings);
     stop();
@@ -326,11 +322,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+    return Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
-    return getMaxLinearSpeedMetersPerSec() / tunerConstants.getDriveBaseRadius();
+    return getMaxLinearSpeedMetersPerSec() / Constants.tunerConstants.getDriveBaseRadius();
   }
 }
