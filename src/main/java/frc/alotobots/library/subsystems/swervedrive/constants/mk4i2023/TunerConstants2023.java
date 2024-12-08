@@ -317,4 +317,14 @@ public class TunerConstants2023 implements TunerConstants {
   public Slot0Configs getDriveGains() {
     return driveGains;
   }
+
+  @Override
+  public LinearVelocity getMaxSpeed() {
+    return kSpeedAt12Volts;
+  }
+
+  @Override
+  public RobotConfig getPathPlannerConfig() {
+    return pathPlannerConfig;
+  }
 }
