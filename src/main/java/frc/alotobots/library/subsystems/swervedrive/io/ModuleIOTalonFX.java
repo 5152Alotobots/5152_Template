@@ -84,9 +84,15 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
   private final Debouncer turnEncoderConnectedDebounce = new Debouncer(0.5);
 
-  public ModuleIOTalonFX(SwerveModuleConstants moduleConstants, TunerConstants tunerConstants) {
-    this.constants = moduleConstants;
+  public ModuleIOTalonFX(int moduleIndex, TunerConstants tunerConstants) {
     this.tunerConstants = tunerConstants;
+    this.constants = switch (moduleIndex) {
+      case 0 -> tunerConstants.getFrontLeft();
+      case 1 -> tunerConstants.getFrontRight();
+      case 2 -> tunerConstants.getBackLeft();
+      case 3 -> tunerConstants.getBackRight();
+      default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
+    };
 
     driveTalon =
         new TalonFX(constants.DriveMotorId, tunerConstants.getDrivetrainConstants().CANBusName);
