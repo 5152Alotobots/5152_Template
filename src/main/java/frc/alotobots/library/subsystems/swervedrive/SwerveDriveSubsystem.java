@@ -96,7 +96,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
     // Initialize and start odometry thread
-    PhoenixOdometryThread.initialize(Constants.tunerConstants).start();
+    PhoenixOdometryThread.initialize().start();
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(

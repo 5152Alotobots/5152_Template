@@ -34,19 +34,17 @@ public class PhoenixOdometryThread extends Thread {
   private final List<Queue<Double>> genericQueues = new ArrayList<>();
   private final List<Queue<Double>> timestampQueues = new ArrayList<>();
 
-  private TunerConstants tunerConstants;
   private static PhoenixOdometryThread instance = null;
   private boolean isCANFD;
 
-  private void configure(TunerConstants constants) {
-    this.tunerConstants = constants;
-    this.isCANFD = new CANBus(constants.getDrivetrainConstants().CANBusName).isNetworkFD();
+  private void configure() {
+    this.isCANFD = new CANBus(Constants.tunerConstants.getDrivetrainConstants().CANBusName).isNetworkFD();
   }
 
-  public static PhoenixOdometryThread initialize(TunerConstants constants) {
+  public static PhoenixOdometryThread initialize() {
     if (instance == null) {
       instance = new PhoenixOdometryThread();
-      instance.configure(constants);
+      instance.configure();
     }
     return instance;
   }
@@ -120,9 +118,9 @@ public class PhoenixOdometryThread extends Thread {
       signalsLock.lock();
       try {
         if (isCANFD && phoenixSignals.length > 0) {
-          BaseStatusSignal.waitForAll(2.0 / tunerConstants.getOdometryFrequency(), phoenixSignals);
+          BaseStatusSignal.waitForAll(2.0 / Constants.tunerConstants.getOdometryFrequency(), phoenixSignals);
         } else {
-          Thread.sleep((long) (1000.0 / tunerConstants.getOdometryFrequency()));
+          Thread.sleep((long) (1000.0 / Constants.tunerConstants.getOdometryFrequency()));
           if (phoenixSignals.length > 0) BaseStatusSignal.refreshAll(phoenixSignals);
         }
       } catch (InterruptedException e) {
