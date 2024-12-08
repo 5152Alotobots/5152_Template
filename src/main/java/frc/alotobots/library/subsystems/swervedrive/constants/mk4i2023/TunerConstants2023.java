@@ -319,7 +319,7 @@ public class TunerConstants2023 implements TunerConstants {
   }
 
   @Override
-  public LinearVelocity getMaxSpeed() {
+  public LinearVelocity getSpeedAt12Volts() {
     return kSpeedAt12Volts;
   }
 

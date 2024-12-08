@@ -203,7 +203,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Calculate module setpoints
     speeds.discretize(0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, tunerConstants.getMaxSpeed());
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, tunerConstants.getSpeedAt12Volts());
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -325,7 +325,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return tunerConstants.getMaxSpeed().in(MetersPerSecond);
+    return tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */
