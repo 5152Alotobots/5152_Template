@@ -12,7 +12,6 @@ package frc.alotobots.library.subsystems.swervedrive;
 import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -25,7 +24,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -33,7 +31,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,6 +42,7 @@ import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
 import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
+import frc.alotobots.library.subsystems.swervedrive.io.GyroIOInputsAutoLogged;
 import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
 import frc.alotobots.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -64,7 +62,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
-  private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
+  private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(tunerConstants.getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
       new SwerveModulePosition[] {
@@ -87,7 +85,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       ModuleIO brModuleIO) {
     this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
-    
+
     // Initialize PathPlanner config
     this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
     modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
@@ -237,7 +235,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
-      headings[i] = getModuleTranslations()[i].getAngle();
+      headings[i] = tunerConstants.getModuleTranslations()[i].getAngle();
     }
     kinematics.resetHeadings(headings);
     stop();
@@ -331,19 +329,5 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
     return getMaxLinearSpeedMetersPerSec() / tunerConstants.getDriveBaseRadius();
-  }
-
-  /** Returns an array of module translations. */
-  public static Translation2d[] getModuleTranslations() {
-    return new Translation2d[] {
-      new Translation2d(
-          tunerConstants.getFrontLeft().getLocationX(), tunerConstants.getFrontLeft().getLocationY()),
-      new Translation2d(
-          tunerConstants.getFrontRight().getLocationX(), tunerConstants.getFrontRight().getLocationY()),
-      new Translation2d(
-          tunerConstants.getBackLeft().getLocationX(), tunerConstants.getBackLeft().getLocationY()),
-      new Translation2d(
-          tunerConstants.getBackRight().getLocationX(), tunerConstants.getBackRight().getLocationY())
-    };
   }
 }
