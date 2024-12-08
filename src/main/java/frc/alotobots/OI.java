@@ -53,7 +53,8 @@ public class OI {
     }
 
     public static double getDriverRotation() {
-        return MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
+        double rotation = MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
+        return Math.copySign(rotation * rotation, rotation);
     }
 
 
