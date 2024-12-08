@@ -76,7 +76,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   private final TunerConstants tunerConstants;
 
-  public SwerveDriveSubsystem(TunerConstants tunerConstants, GyroIO gyroIO) {
+  public SwerveDriveSubsystem(
+      TunerConstants tunerConstants,
+      GyroIO gyroIO,
+      ModuleIO flModuleIO,
+      ModuleIO frModuleIO,
+      ModuleIO blModuleIO,
+      ModuleIO brModuleIO) {
     this.tunerConstants = tunerConstants;
     this.gyroIO = gyroIO;
 
@@ -85,16 +91,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
     
     // Initialize modules
-    for (int i = 0; i < 4; i++) {
-      modules[i] = new Module(new ModuleIOTalonFX(i, tunerConstants), i, 
-          switch (i) {
-            case 0 -> tunerConstants.getFrontLeft();
-            case 1 -> tunerConstants.getFrontRight();
-            case 2 -> tunerConstants.getBackLeft();
-            case 3 -> tunerConstants.getBackRight();
-            default -> throw new IllegalArgumentException("Invalid module index: " + i);
-          });
-    }
+    modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
+    modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
+    modules[2] = new Module(blModuleIO, 2, tunerConstants.getBackLeft());
+    modules[3] = new Module(brModuleIO, 3, tunerConstants.getBackRight());
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
