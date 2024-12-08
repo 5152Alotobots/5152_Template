@@ -63,12 +63,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
           ROBOT_MASS_KG,
           ROBOT_MOI,
           new ModuleConfig(
-              TunerConstants.FrontLeft.WheelRadius,
-              TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+              TunerConstants2023.FrontLeft.WheelRadius,
+              TunerConstants2023.kSpeedAt12Volts.in(MetersPerSecond),
               WHEEL_COF,
               DCMotor.getKrakenX60Foc(1)
-                  .withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
-              TunerConstants.FrontLeft.SlipCurrent,
+                  .withReduction(TunerConstants2023.FrontLeft.DriveMotorGearRatio),
+              TunerConstants2023.FrontLeft.SlipCurrent,
               1),
           getModuleTranslations());
 
@@ -99,10 +99,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
-    modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
-    modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
-    modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
-    modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+    modules[0] = new Module(flModuleIO, 0, TunerConstants2023.FrontLeft);
+    modules[1] = new Module(frModuleIO, 1, TunerConstants2023.FrontRight);
+    modules[2] = new Module(blModuleIO, 2, TunerConstants2023.BackLeft);
+    modules[3] = new Module(brModuleIO, 3, TunerConstants2023.BackRight);
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -212,7 +212,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     // Calculate module setpoints
     speeds.discretize(0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
+    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants2023.kSpeedAt12Volts);
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -334,7 +334,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
-    return TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    return TunerConstants2023.kSpeedAt12Volts.in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */
@@ -345,10 +345,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
-      new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-      new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
-      new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-      new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+      new Translation2d(TunerConstants2023.FrontLeft.LocationX, TunerConstants2023.FrontLeft.LocationY),
+      new Translation2d(TunerConstants2023.FrontRight.LocationX, TunerConstants2023.FrontRight.LocationY),
+      new Translation2d(TunerConstants2023.BackLeft.LocationX, TunerConstants2023.BackLeft.LocationY),
+      new Translation2d(TunerConstants2023.BackRight.LocationX, TunerConstants2023.BackRight.LocationY)
     };
   }
 }
