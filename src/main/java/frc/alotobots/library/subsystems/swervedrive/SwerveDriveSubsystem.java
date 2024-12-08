@@ -89,7 +89,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     this.gyroIO = gyroIO;
     
     // Initialize PathPlanner config
-    this.PP_CONFIG = tunerConstants.getDrivetrainConstants().getPathPlannerConfig();
+    this.PP_CONFIG = tunerConstants.getPathPlannerConfig();
     modules[0] = new Module(flModuleIO, 0, tunerConstants.getFrontLeft());
     modules[1] = new Module(frModuleIO, 1, tunerConstants.getFrontRight());
     modules[2] = new Module(blModuleIO, 2, tunerConstants.getBackLeft());
