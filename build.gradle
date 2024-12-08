@@ -203,6 +203,10 @@ spotless {
             exclude "**/build/**", "**/build-*/**"
         }
         toggleOffOn()
+        licenseHeader '''
+// Copyright (c) $YEAR AloToBots FRC 5152
+// This code is licensed under MIT license (see LICENSE.txt for details)
+'''
         googleJavaFormat()
         removeUnusedImports()
         trimTrailingWhitespace()
