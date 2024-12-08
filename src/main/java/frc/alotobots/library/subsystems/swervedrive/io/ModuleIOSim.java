@@ -48,14 +48,14 @@ public class ModuleIOSim implements ModuleIO {
   private double driveAppliedVolts = 0.0;
   private double turnAppliedVolts = 0.0;
 
-  public ModuleIOSim(int moduleIndex, TunerConstants tunerConstants) {
+  public ModuleIOSim(int moduleIndex) {
     // Get module constants based on index
     SwerveModuleConstants constants =
         switch (moduleIndex) {
-          case 0 -> tunerConstants.getFrontLeft();
-          case 1 -> tunerConstants.getFrontRight();
-          case 2 -> tunerConstants.getBackLeft();
-          case 3 -> tunerConstants.getBackRight();
+          case 0 -> Constants.tunerConstants.getFrontLeft();
+          case 1 -> Constants.tunerConstants.getFrontRight();
+          case 2 -> Constants.tunerConstants.getBackLeft();
+          case 3 -> Constants.tunerConstants.getBackRight();
           default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
         };
 
