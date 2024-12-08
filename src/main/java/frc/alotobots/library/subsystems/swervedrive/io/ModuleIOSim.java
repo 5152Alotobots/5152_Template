@@ -47,7 +47,16 @@ public class ModuleIOSim implements ModuleIO {
   private double driveAppliedVolts = 0.0;
   private double turnAppliedVolts = 0.0;
 
-  public ModuleIOSim(SwerveModuleConstants constants) {
+  public ModuleIOSim(int moduleIndex, TunerConstants tunerConstants) {
+    // Get module constants based on index
+    SwerveModuleConstants constants = switch (moduleIndex) {
+      case 0 -> tunerConstants.getFrontLeft();
+      case 1 -> tunerConstants.getFrontRight();
+      case 2 -> tunerConstants.getBackLeft();
+      case 3 -> tunerConstants.getBackRight();
+      default -> throw new IllegalArgumentException("Invalid module index: " + moduleIndex);
+    };
+
     // Create drive and turn sim models
     driveSim =
         new DCMotorSim(
