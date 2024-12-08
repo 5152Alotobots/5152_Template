@@ -46,7 +46,7 @@ import frc.alotobots.Constants.Mode;
 import frc.alotobots.library.subsystems.swervedrive.constants.TunerConstants;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
 import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
-import frc.robot.util.LocalADStarAK;
+import frc.alotobots.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
