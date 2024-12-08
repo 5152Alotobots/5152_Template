@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 public class OI {
 
     public static final double DEADBAND = 0.1;
