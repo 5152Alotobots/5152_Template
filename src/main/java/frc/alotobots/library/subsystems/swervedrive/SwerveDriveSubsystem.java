@@ -11,7 +11,6 @@ package frc.alotobots.library.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -45,6 +44,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
 import frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.TunerConstants2023;
+import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
+import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -52,7 +53,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
-
 
   // PathPlanner config constants
   private static final double ROBOT_MASS_KG = 74.088;
@@ -345,10 +345,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
-      new Translation2d(TunerConstants2023.FrontLeft.LocationX, TunerConstants2023.FrontLeft.LocationY),
-      new Translation2d(TunerConstants2023.FrontRight.LocationX, TunerConstants2023.FrontRight.LocationY),
-      new Translation2d(TunerConstants2023.BackLeft.LocationX, TunerConstants2023.BackLeft.LocationY),
-      new Translation2d(TunerConstants2023.BackRight.LocationX, TunerConstants2023.BackRight.LocationY)
+      new Translation2d(
+          TunerConstants2023.FrontLeft.LocationX, TunerConstants2023.FrontLeft.LocationY),
+      new Translation2d(
+          TunerConstants2023.FrontRight.LocationX, TunerConstants2023.FrontRight.LocationY),
+      new Translation2d(
+          TunerConstants2023.BackLeft.LocationX, TunerConstants2023.BackLeft.LocationY),
+      new Translation2d(
+          TunerConstants2023.BackRight.LocationX, TunerConstants2023.BackRight.LocationY)
     };
   }
 }
