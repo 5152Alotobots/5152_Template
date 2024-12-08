@@ -38,7 +38,7 @@ public class PhoenixOdometryThread extends Thread {
   private static PhoenixOdometryThread instance = null;
   private boolean isCANFD;
 
-  public void configure(TunerConstants constants) {
+  private void configure(TunerConstants constants) {
     this.tunerConstants = constants;
     this.isCANFD = new CANBus(constants.getDrivetrainConstants().CANBusName).isNetworkFD();
   }
@@ -53,7 +53,7 @@ public class PhoenixOdometryThread extends Thread {
   public static PhoenixOdometryThread getInstance() {
     if (instance == null) {
       throw new IllegalStateException(
-          "PhoenixOdometryThread must be initialized with constants first");
+          "PhoenixOdometryThread must be initialized with initialize(TunerConstants) first");
     }
     return instance;
   }
