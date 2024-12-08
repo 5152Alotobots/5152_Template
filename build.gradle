@@ -14,7 +14,7 @@ java {
     }
 }
 
-def ROBOT_MAIN_CLASS = "frc.alotobots.Main"
+def ROBOT_MAIN_CLASS = "frc.alotobots.Robot"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -153,7 +153,7 @@ tasks.withType(JavaCompile) {
 project.compileJava.dependsOn(createVersionFile)
 gversion {
     srcDir       = "src/main/java/"
-    classPackage = "frc.robot"
+    classPackage = "frc.alotobots"
     className    = "BuildConstants"
     dateFormat   = "yyyy-MM-dd HH:mm:ss z"
     timeZone     = "America/New_York"
