@@ -81,7 +81,17 @@ public class TunerConstants2023 {
     private static final CANBus kCANBus = new CANBus("", "./logs/example.hoot");
 
     // The frequency to run the odometry loop at
-    private static final double kOdometryFrequency = 150.0; // Hz
+    public static final double ODOMETRY_FREQUENCY = 
+        kCANBus.isNetworkFD() ? 250.0 : 100.0;
+
+    public static final double DRIVE_BASE_RADIUS = 
+        Math.max(
+            Math.max(
+                Math.hypot(FrontLeft.LocationX, FrontRight.LocationY),
+                Math.hypot(FrontRight.LocationX, FrontRight.LocationY)),
+            Math.max(
+                Math.hypot(BackLeft.LocationX, BackLeft.LocationY),
+                Math.hypot(BackRight.LocationX, BackRight.LocationY)));
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
     private static final double kCoupleRatio = 3.5714285714285716;
