@@ -327,4 +327,14 @@ public class TunerConstants2023 implements TunerConstants {
   public RobotConfig getPathPlannerConfig() {
     return pathPlannerConfig;
   }
+
+  @Override
+  public Translation2d[] getModuleTranslations() {
+    return new Translation2d[] {
+      new Translation2d(FrontLeft.LocationX, FrontLeft.LocationY),
+      new Translation2d(FrontRight.LocationX, FrontRight.LocationY),
+      new Translation2d(BackLeft.LocationX, BackLeft.LocationY),
+      new Translation2d(BackRight.LocationX, BackRight.LocationY)
+    };
+  }
 }
