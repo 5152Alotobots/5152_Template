@@ -40,18 +40,20 @@ public class OI {
 
     if (leftTrigger > DEADBAND) {
       // Turtle mode - scale down to turtle speed
-      double turtleScale = Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
-          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      double turtleScale =
+          Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
+              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
       linearMagnitude *= turtleScale;
       angleMultiplier = turtleScale;
     } else if (rightTrigger > DEADBAND) {
       // Turbo mode - scale up to turbo speed
-      double turboScale = Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
-          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      double turboScale =
+          Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
+              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
       linearMagnitude *= turboScale;
       angleMultiplier = turboScale;
     }
-    
+
     // Apply scaling to direction
     linearDirection = new Rotation2d(linearDirection.getRadians() * angleMultiplier);
 
@@ -82,21 +84,23 @@ public class OI {
   public static double getDriverRotation() {
     double rotation = MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
     rotation = Math.copySign(rotation * rotation, rotation);
-    
+
     // Apply speed modes based on triggers
     double leftTrigger = driverController.getLeftTriggerAxis();
     double rightTrigger = driverController.getRightTriggerAxis();
 
     if (leftTrigger > DEADBAND) {
       // Turtle mode - scale down rotation
-      rotation *= Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
-          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      rotation *=
+          Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
+              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
     } else if (rightTrigger > DEADBAND) {
       // Turbo mode - scale up rotation
-      rotation *= Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
-          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      rotation *=
+          Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
+              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
     }
-    
+
     return rotation;
   }
 }
