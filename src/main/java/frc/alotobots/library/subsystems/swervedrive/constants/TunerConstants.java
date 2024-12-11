@@ -38,7 +38,11 @@ public interface TunerConstants {
 
   LinearVelocity getTurtleSpeed();
 
+  LinearVelocity getNominalSpeed();
+
   LinearVelocity getTurboSpeed();
+
+  double getMaxModularRotationalRate();
 
   double getOdometryFrequency();
 

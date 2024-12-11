@@ -75,12 +75,15 @@ public class TunerConstants2023 implements TunerConstants {
   private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
   // The stator current at which the wheels start to slip;
-  private static final Current kSlipCurrent = Amps.of(27.16);
+  private static final Current kSlipCurrent = Amps.of(27.16); //  27.16 BAD WHEELS
 
+  // Max module rotational rate
+  public static final double kMaxModularRotationalRate = Units.rotationsToRadians(5);
   // Speed modes
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.02); // MAX THEORETICAL speed
-  public static final LinearVelocity kTurtleSpeed = MetersPerSecond.of(2.0); // Slow mode
-  public static final LinearVelocity kNominalSpeed = MetersPerSecond.of(3.5); // Normal mode
+  public static final LinearVelocity kSpeedAt12Volts =
+      MetersPerSecond.of(5.02); // MAX THEORETICAL speed
+  public static final LinearVelocity kTurtleSpeed = MetersPerSecond.of(1.0); // Slow mode
+  public static final LinearVelocity kNominalSpeed = MetersPerSecond.of(3.0); // Normal mode
   public static final LinearVelocity kTurboSpeed = MetersPerSecond.of(4.8); // Fast mode
 
   // Initial configs for the drive and steer motors and the CANcoder
@@ -332,8 +335,18 @@ public class TunerConstants2023 implements TunerConstants {
   }
 
   @Override
+  public LinearVelocity getNominalSpeed() {
+    return kNominalSpeed;
+  }
+
+  @Override
   public LinearVelocity getTurboSpeed() {
     return kTurboSpeed;
+  }
+
+  @Override
+  public double getMaxModularRotationalRate() {
+    return kMaxModularRotationalRate;
   }
 
   @Override

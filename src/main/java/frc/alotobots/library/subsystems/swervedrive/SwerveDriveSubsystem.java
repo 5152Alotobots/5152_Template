@@ -12,11 +12,11 @@ package frc.alotobots.library.subsystems.swervedrive;
 import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.pathplanner.lib.util.swerve.SwerveSetpoint;
+import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
@@ -51,8 +51,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
 
-  private final RobotConfig PP_CONFIG = Constants.tunerConstants.getPathPlannerConfig();
-
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -60,6 +58,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+  private final SwerveSetpointGenerator setpointGenerator;
+  private SwerveSetpoint previousSetpoint;
 
   private SwerveDriveKinematics kinematics =
       new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
@@ -100,9 +100,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
-        new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
-        PP_CONFIG,
+        Constants.tunerConstants.getHolonomicDriveController(),
+        Constants.tunerConstants.getPathPlannerConfig(),
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
@@ -115,6 +114,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
+
+    setpointGenerator =
+        new SwerveSetpointGenerator(
+            Constants.tunerConstants
+                .getPathPlannerConfig(), // The robot configuration. This is the same config used
+            // for generating trajectories and running path following
+            // commands.
+            Constants.tunerConstants
+                .getMaxModularRotationalRate() // The max rotation velocity of a swerve module in
+            // radians per second. This should probably be stored
+            // in your Constants file
+            );
+    previousSetpoint =
+        new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
 
     // Configure SysId
     sysId =
@@ -194,8 +207,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
   public void runVelocity(ChassisSpeeds speeds) {
     // Calculate module setpoints
-    speeds.discretize(0.02);
-    SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
+    previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
+    SwerveModuleState[] setpointStates = previousSetpoint.moduleStates();
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
         setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
 
