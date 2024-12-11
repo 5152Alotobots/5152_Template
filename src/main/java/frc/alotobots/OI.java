@@ -30,8 +30,9 @@ public class OI {
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
-    // Square magnitude for more precise control
+    // Square magnitude and direction for more precise control
     linearMagnitude = linearMagnitude * linearMagnitude;
+    double angleMultiplier = 1.0;
 
     // Apply speed modes based on triggers
     double leftTrigger = driverController.getLeftTriggerAxis();
@@ -39,15 +40,20 @@ public class OI {
 
     if (leftTrigger > DEADBAND) {
       // Turtle mode - scale down to turtle speed
-      linearMagnitude *=
-          Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
-              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      double turtleScale = Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
+          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      linearMagnitude *= turtleScale;
+      angleMultiplier = turtleScale;
     } else if (rightTrigger > DEADBAND) {
       // Turbo mode - scale up to turbo speed
-      linearMagnitude *=
-          Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
-              / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      double turboScale = Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
+          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+      linearMagnitude *= turboScale;
+      angleMultiplier = turboScale;
     }
+    
+    // Apply scaling to direction
+    linearDirection = new Rotation2d(linearDirection.getRadians() * angleMultiplier);
 
     // Convert to field relative based on alliance
     boolean isFlipped =
@@ -75,6 +81,22 @@ public class OI {
 
   public static double getDriverRotation() {
     double rotation = MathUtil.applyDeadband(driverController.getRightX(), DEADBAND);
-    return Math.copySign(rotation * rotation, rotation);
+    rotation = Math.copySign(rotation * rotation, rotation);
+    
+    // Apply speed modes based on triggers
+    double leftTrigger = driverController.getLeftTriggerAxis();
+    double rightTrigger = driverController.getRightTriggerAxis();
+
+    if (leftTrigger > DEADBAND) {
+      // Turtle mode - scale down rotation
+      rotation *= Constants.tunerConstants.getTurtleSpeed().in(MetersPerSecond)
+          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+    } else if (rightTrigger > DEADBAND) {
+      // Turbo mode - scale up rotation
+      rotation *= Constants.tunerConstants.getTurboSpeed().in(MetersPerSecond)
+          / Constants.tunerConstants.getSpeedAt12Volts().in(MetersPerSecond);
+    }
+    
+    return rotation;
   }
 }
