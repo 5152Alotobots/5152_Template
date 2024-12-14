@@ -18,6 +18,11 @@ import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
 import frc.alotobots.library.subsystems.swervedrive.commands.FeedforwardCharacterization;
 import frc.alotobots.library.subsystems.swervedrive.commands.WheelRadiusCharacterization;
 import frc.alotobots.library.subsystems.swervedrive.io.*;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.AprilTagConstants;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVision;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -29,6 +34,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private final AprilTagSubsystem aprilTagSubsystem;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -45,6 +51,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index));
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
         break;
 
       case SIM:
@@ -56,6 +67,13 @@ public class RobotContainer {
                 new ModuleIOSim(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOSim(ModulePosition.BACK_LEFT.index),
                 new ModuleIOSim(ModulePosition.BACK_RIGHT.index));
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIOPhotonVisionSim(
+                    AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
+                new AprilTagIOPhotonVisionSim(
+                    AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
         break;
 
       default:
@@ -67,6 +85,12 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        // MAKE SURE TO USE THE SAME NUMBER OF CAMERAS AS REAL ROBOT!!
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIO() {},
+                new AprilTagIO() {});
         break;
     }
 
@@ -91,7 +115,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)",
         swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // run configure
     configureDefaultCommands();
     configureLogicCommands();

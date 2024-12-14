@@ -206,7 +206,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param speeds Speeds in meters/sec
    */
   public void runVelocity(ChassisSpeeds speeds) {
-    // Calculate module setpoints
+    // Calculate module states (Normal) USE THIS FOR TUNING!!
+    //    speeds.discretize(0.02);
+    //    SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
+
+    // Calculate module setpoints (SetpointGen)
     previousSetpoint = setpointGenerator.generateSetpoint(previousSetpoint, speeds, 0.02);
     SwerveModuleState[] setpointStates = previousSetpoint.moduleStates();
 

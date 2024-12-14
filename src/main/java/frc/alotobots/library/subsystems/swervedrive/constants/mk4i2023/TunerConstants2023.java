@@ -52,11 +52,17 @@ public class TunerConstants2023 implements TunerConstants {
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(.05).withKI(0).withKD(0.002).withKS(0.13).withKV(0.73).withKA(0.01);
+      new Slot0Configs()
+          .withKP(.05)
+          .withKI(0)
+          .withKD(0.002)
+          .withKS(0.19437)
+          .withKV(0.75843)
+          .withKA(0.01);
 
   // Pathplanner
   public static final PathConstraints PATHFINDING_CONSTRAINTS =
-      new PathConstraints(5.2, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
+      new PathConstraints(5.02, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
 
   public static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(
@@ -78,7 +84,7 @@ public class TunerConstants2023 implements TunerConstants {
   private static final Current kSlipCurrent = Amps.of(27.16); //  27.16 BAD WHEELS
 
   // Max module rotational rate
-  public static final double kMaxModularRotationalRate = Units.rotationsToRadians(5);
+  public static final double kMaxModularRotationalRate = Units.rotationsToRadians(12);
   // Speed modes
   public static final LinearVelocity kSpeedAt12Volts =
       MetersPerSecond.of(5.02); // MAX THEORETICAL speed
