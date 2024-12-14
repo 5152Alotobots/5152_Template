@@ -23,6 +23,10 @@ import frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.A
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVision;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -35,6 +39,7 @@ public class RobotContainer {
   // Subsystems
   private final SwerveDriveSubsystem swerveDriveSubsystem;
   private final AprilTagSubsystem aprilTagSubsystem;
+  private final ObjectDetectionSubsystem objectDetectionSubsystem;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -56,6 +61,10 @@ public class RobotContainer {
                 swerveDriveSubsystem::addVisionMeasurement,
                 new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
                 new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(
+                swerveDriveSubsystem,
+                new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         break;
 
       case SIM:
@@ -74,6 +83,11 @@ public class RobotContainer {
                     AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
                 new AprilTagIOPhotonVisionSim(
                     AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
+        // TODO: SIM SUPPORT
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(
+                swerveDriveSubsystem,
+                new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         break;
 
       default:
@@ -91,6 +105,8 @@ public class RobotContainer {
                 swerveDriveSubsystem::addVisionMeasurement,
                 new AprilTagIO() {},
                 new AprilTagIO() {});
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(swerveDriveSubsystem, new ObjectDetectionIO() {});
         break;
     }
 
