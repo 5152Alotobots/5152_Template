@@ -162,7 +162,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     }
 
     return new DetectedObject(
-        targetPose, classId, ObjectDetectionConstants.INITIAL_CONFIDENCE, Timer.getFPGATimestamp());
+        targetPose, classId, ObjectDetectionConstants.INITIAL_CONFIDENCE, Timer.getTimestamp());
   }
 
   private void processDetectedObject(DetectedObject object, int cameraIndex) {
