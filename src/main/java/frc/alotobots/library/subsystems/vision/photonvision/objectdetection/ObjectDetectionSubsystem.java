@@ -57,6 +57,8 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double currentTimestamp = Timer.getTimestamp();
+    
     // Reset pose counts
     for (int i = 0; i < io.length; i++) {
       confirmedPoseCount[i] = 0;
@@ -79,7 +81,8 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
                   inputs[i].targetYaws[t],
                   inputs[i].targetPitches[t],
                   inputs[i].targetClassIds[t],
-                  robotToCamera);
+                  robotToCamera,
+                  currentTimestamp);
 
           if (object != null) {
             processDetectedObject(object, i);
@@ -91,7 +94,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     // Update confidence and remove stale objects
     List<DetectedObject> updatedObjects = new ArrayList<>();
     for (DetectedObject obj : activeObjects) {
-      DetectedObject updated = updateConfidence(obj);
+      DetectedObject updated = updateConfidence(obj, currentTimestamp);
       if (!isStale(updated)) {
         updatedObjects.add(updated);
       }
@@ -117,7 +120,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
   }
 
   private DetectedObject calculateDetectedObject(
-      double yaw, double pitch, int classId, Transform3d robotToCamera) {
+      double yaw, double pitch, int classId, Transform3d robotToCamera, double timestamp) {
     if (classId >= ObjectDetectionConstants.GAME_ELEMENTS.length) {
       return null;
     }
@@ -162,7 +165,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     }
 
     return new DetectedObject(
-        targetPose, classId, ObjectDetectionConstants.INITIAL_CONFIDENCE, Timer.getTimestamp());
+        targetPose, classId, ObjectDetectionConstants.INITIAL_CONFIDENCE, timestamp);
   }
 
   private void processDetectedObject(DetectedObject object, int cameraIndex) {
@@ -204,14 +207,13 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     }
   }
 
-  private DetectedObject updateConfidence(DetectedObject object) {
-    double currentTime = Timer.getTimestamp();
-    double timeDelta = currentTime - object.lastUpdateTime();
+  private DetectedObject updateConfidence(DetectedObject object, double currentTimestamp) {
+    double timeDelta = currentTimestamp - object.lastUpdateTime();
     double newConfidence =
         Math.max(
             ObjectDetectionConstants.MIN_CONFIDENCE,
             object.confidence() - (ObjectDetectionConstants.CONFIDENCE_DECAY_RATE * timeDelta));
-    return new DetectedObject(object.pose(), object.classId(), newConfidence, currentTime);
+    return new DetectedObject(object.pose(), object.classId(), newConfidence, currentTimestamp);
   }
 
   private boolean isStale(DetectedObject object) {
