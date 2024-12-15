@@ -14,44 +14,46 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.CameraConfig;
 import org.photonvision.PhotonCamera;
 
-/** Real implementation of ObjectDetectionIO using PhotonVision. */
 public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
-  private final PhotonCamera camera;
-  private final Transform3d cameraOffset;
+  protected final PhotonCamera camera;
+  protected final Transform3d robotToCamera;
 
   public ObjectDetectionIOPhotonVision(CameraConfig config) {
     this.camera = new PhotonCamera(config.name());
-    this.cameraOffset = config.robotToCamera();
+    this.robotToCamera = config.robotToCamera();
   }
 
   @Override
   public void updateInputs(ObjectDetectionInputs inputs) {
-    inputs.timestamp = Timer.getFPGATimestamp();
+    inputs.timestamp = Timer.getTimestamp();
+    inputs.hasTargets = false;
+    inputs.targetYaws = new double[0];
+    inputs.targetPitches = new double[0];
+    inputs.targetClassIds = new int[0];
+    inputs.targetAreas = new double[0];
 
     var results = camera.getAllUnreadResults();
     if (!results.isEmpty()) {
       var result = results.get(0);
-      inputs.hasTargets = result.hasTargets();
-
       var targets = result.getTargets();
-      int numTargets = targets.size();
 
-      // Initialize arrays with the correct size based on number of targets
-      inputs.targetYaws = new double[numTargets];
-      inputs.targetPitches = new double[numTargets];
-      inputs.targetClassIds = new int[numTargets];
-      inputs.targetAreas = new double[numTargets];
+      if (!targets.isEmpty()) {
+        inputs.hasTargets = true;
+        int numTargets = targets.size();
 
-      // Fill arrays with target data
-      for (int i = 0; i < numTargets; i++) {
-        var target = targets.get(i);
-        inputs.targetYaws[i] = target.getYaw();
-        inputs.targetPitches[i] = target.getPitch();
-        inputs.targetClassIds[i] = target.getDetectedObjectClassID();
-        inputs.targetAreas[i] = target.getArea();
+        inputs.targetYaws = new double[numTargets];
+        inputs.targetPitches = new double[numTargets];
+        inputs.targetClassIds = new int[numTargets];
+        inputs.targetAreas = new double[numTargets];
+
+        for (int i = 0; i < numTargets; i++) {
+          var target = targets.get(i);
+          inputs.targetYaws[i] = target.getYaw();
+          inputs.targetPitches[i] = target.getPitch();
+          inputs.targetClassIds[i] = target.getDetectedObjectClassID();
+          inputs.targetAreas[i] = target.getArea();
+        }
       }
-
-      inputs.cameraToRobot = cameraOffset;
     }
   }
 }
