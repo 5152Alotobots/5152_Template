@@ -25,14 +25,13 @@ public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
 
   @Override
   public void updateInputs(ObjectDetectionInputs inputs) {
-    inputs.timestamp = Timer.getTimestamp();
     inputs.hasTargets = false;
     inputs.targetYaws = new double[0];
     inputs.targetPitches = new double[0];
     inputs.targetClassIds = new int[0];
     inputs.targetAreas = new double[0];
 
-    var results = camera.getAllUnreadResults();
+    var results = camera.getLatestResult();
     if (!results.isEmpty()) {
       var result = results.get(0);
       var targets = result.getTargets();
