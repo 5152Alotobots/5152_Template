@@ -15,16 +15,14 @@ import org.littletonrobotics.junction.AutoLog;
 /** Interface for a single camera's object detection IO operations. */
 public interface ObjectDetectionIO {
   @AutoLog
-  public static class ObjectDetectionInputs {
-    public double timestamp = 0.0;
-    public boolean hasTargets = false;
-    public double[] targetYaws = new double[0];
-    public double[] targetPitches = new double[0];
-    public int[] targetClassIds = new int[0];
-    public double[] targetAreas = new double[0];
-    public Transform3d cameraToRobot = new Transform3d();
+  public static class ObjectDetectionIOInputs {
+    public boolean connected = false;
+    public DetectedObject[] detectedObjects = new DetectedObject[0];
   }
 
+  public static record DetectedObject(
+      double timestamp, Transform3d targetToRobot, double confidence, int classId) {}
+
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(ObjectDetectionInputs inputs) {}
+  public default void updateInputs(ObjectDetectionIOInputs inputs) {}
 }

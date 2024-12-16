@@ -12,12 +12,12 @@ package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.uti
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
-import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
+import java.util.function.Supplier;
 import org.photonvision.PhotonUtils;
 
-public record DetectedObject(
-    SwerveDriveSubsystem drive,
+public record DetectedObject_TEMP(
+    Supplier<Pose2d> poseSupplier,
     Pose3d pose,
     int classId,
     Transform3d robotToCamera,
@@ -25,38 +25,38 @@ public record DetectedObject(
     double lastUpdateTime) {
 
   /** Creates a DetectedObject with initial confidence */
-  public static DetectedObject create(
-      SwerveDriveSubsystem drive, Pose3d pose, int classId, Transform3d robotToCamera) {
-    return new DetectedObject(
-        drive,
+  public static DetectedObject_TEMP create(
+      Supplier<Pose2d> poseSupplier, Pose3d pose, int classId, Transform3d robotToCamera) {
+    return new DetectedObject_TEMP(
+        poseSupplier,
         pose,
         classId,
         robotToCamera,
         ObjectDetectionConstants.INITIAL_CONFIDENCE,
-        Timer.getFPGATimestamp());
+        Timer.getTimestamp());
   }
 
   /** Creates a default DetectedObject */
-  public static DetectedObject createDefault(SwerveDriveSubsystem drive) {
-    if (drive == null) {
+  public static DetectedObject_TEMP createDefault(Supplier<Pose2d> poseSupplier) {
+    if (poseSupplier == null) {
       throw new IllegalArgumentException("SwerveDriveSubsystem cannot be null");
     }
-    return new DetectedObject(
-        drive,
+    return new DetectedObject_TEMP(
+        poseSupplier,
         new Pose3d(),
         -1,
         null,
         ObjectDetectionConstants.INITIAL_CONFIDENCE,
-        Timer.getFPGATimestamp());
+        Timer.getTimestamp());
   }
 
   /** Creates a new DetectedObject from raw vision data */
-  public static DetectedObject fromVisionData(
+  public static DetectedObject_TEMP fromVisionData(
       double yaw,
       double pitch,
       int classId,
       Transform3d robotToCamera,
-      SwerveDriveSubsystem drive) {
+      Supplier<Pose2d> poseSupplier) {
     // Validate input parameters
     if (robotToCamera == null) {
       throw new IllegalArgumentException("robotToCamera must not be null");
@@ -96,18 +96,18 @@ public record DetectedObject(
     Transform3d targetToRobot = robotToCamera.plus(cameraToTarget);
 
     // If we have drive data, convert to field space
-    if (drive != null) {
+    if (poseSupplier != null) {
       Pose3d robotPose =
           new Pose3d(
-              drive.getPose().getX(),
-              drive.getPose().getY(),
+              poseSupplier.get().getX(),
+              poseSupplier.get().getY(),
               0.0,
-              new Rotation3d(0, 0, drive.getPose().getRotation().getRadians()));
-      return create(drive, robotPose.transformBy(targetToRobot), classId, robotToCamera);
+              new Rotation3d(0, 0, poseSupplier.get().getRotation().getRadians()));
+      return create(poseSupplier, robotPose.transformBy(targetToRobot), classId, robotToCamera);
     }
 
     // If no drive data, return in robot space
-    return create(drive, new Pose3d().transformBy(targetToRobot), classId, robotToCamera);
+    return create(poseSupplier, new Pose3d().transformBy(targetToRobot), classId, robotToCamera);
   }
 
   public GameElement getGameElement() {
@@ -121,29 +121,30 @@ public record DetectedObject(
     if (robotToCamera == null) {
       return 0;
     }
-    return PhotonUtils.getDistanceToPose(drive.getPose(), pose.toPose2d());
+    return PhotonUtils.getDistanceToPose(poseSupplier.get(), pose.toPose2d());
   }
 
   public Rotation2d getAngle() {
-    if (drive == null) {
+    if (poseSupplier == null) {
       return new Rotation2d();
     }
     Translation2d robotToTarget =
-        pose.toPose2d().getTranslation().minus(drive.getPose().getTranslation());
+        pose.toPose2d().getTranslation().minus(poseSupplier.get().getTranslation());
     return new Rotation2d(robotToTarget.getX(), robotToTarget.getY()).plus(new Rotation2d(Math.PI));
   }
 
-  public DetectedObject withUpdatedConfidence() {
-    double currentTime = Timer.getFPGATimestamp();
+  public DetectedObject_TEMP withUpdatedConfidence() {
+    double currentTime = Timer.getTimestamp();
     double timeDelta = currentTime - lastUpdateTime;
     double newConfidence =
         Math.max(
             ObjectDetectionConstants.MIN_CONFIDENCE,
             confidence - (ObjectDetectionConstants.CONFIDENCE_DECAY_RATE * timeDelta));
-    return new DetectedObject(drive, pose, classId, robotToCamera, newConfidence, currentTime);
+    return new DetectedObject_TEMP(
+        poseSupplier, pose, classId, robotToCamera, newConfidence, currentTime);
   }
 
-  public boolean matchesPosition(DetectedObject other) {
+  public boolean matchesPosition(DetectedObject_TEMP other) {
     if (other == null || other.pose == null || this.pose == null) {
       return false;
     }
@@ -157,14 +158,14 @@ public record DetectedObject(
     return confidence <= ObjectDetectionConstants.MIN_CONFIDENCE;
   }
 
-  public DetectedObject refresh() {
-    return new DetectedObject(
-        drive,
+  public DetectedObject_TEMP refresh() {
+    return new DetectedObject_TEMP(
+        poseSupplier,
         pose,
         classId,
         robotToCamera,
         ObjectDetectionConstants.INITIAL_CONFIDENCE,
-        Timer.getFPGATimestamp());
+        Timer.getTimestamp());
   }
 
   @Override

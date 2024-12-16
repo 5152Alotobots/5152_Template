@@ -9,10 +9,15 @@
 // Robot Code
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io;
 
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.CameraConfig;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
+import java.util.LinkedList;
+import java.util.List;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 
 public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
   protected final PhotonCamera camera;
@@ -21,38 +26,69 @@ public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
   public ObjectDetectionIOPhotonVision(CameraConfig config) {
     this.camera = new PhotonCamera(config.name());
     this.robotToCamera = config.robotToCamera();
+
+    if (ObjectDetectionConstants.GAME_ELEMENTS.length == 0) {
+      throw new IllegalStateException("No game elements configured while running ObjectDetection!");
+    }
   }
 
   @Override
-  public void updateInputs(ObjectDetectionInputs inputs) {
-    inputs.hasTargets = false;
-    inputs.targetYaws = new double[0];
-    inputs.targetPitches = new double[0];
-    inputs.targetClassIds = new int[0];
-    inputs.targetAreas = new double[0];
+  public void updateInputs(ObjectDetectionIOInputs inputs) {
+    inputs.connected = camera.isConnected();
 
-    var results = camera.getLatestResult();
-    if (!results.isEmpty()) {
-      var result = results.get(0);
-      var targets = result.getTargets();
+    List<DetectedObject> detectedObjects = new LinkedList<>();
+    for (var result : camera.getAllUnreadResults()) {
+      // First check if we have targets
+      if (result.hasTargets()) {
+        // Loop through each result
+        for (var target : result.getTargets()) {
+          // Basic data
+          int classId = target.getDetectedObjectClassID();
+          float confidence = target.getDetectedObjectConfidence();
 
-      if (!targets.isEmpty()) {
-        inputs.hasTargets = true;
-        int numTargets = targets.size();
+          // Make sure we have the object in our list of game elements
+          if (ObjectDetectionConstants.GAME_ELEMENTS[target.getDetectedObjectClassID()] == null) {
+            throw new IllegalStateException("No object detected for class: " + classId);
+          }
 
-        inputs.targetYaws = new double[numTargets];
-        inputs.targetPitches = new double[numTargets];
-        inputs.targetClassIds = new int[numTargets];
-        inputs.targetAreas = new double[numTargets];
+          // Match object with list of game elements
+          GameElement matchedElement = ObjectDetectionConstants.GAME_ELEMENTS[classId];
 
-        for (int i = 0; i < numTargets; i++) {
-          var target = targets.get(i);
-          inputs.targetYaws[i] = target.getYaw();
-          inputs.targetPitches[i] = target.getPitch();
-          inputs.targetClassIds[i] = target.getDetectedObjectClassID();
-          inputs.targetAreas[i] = target.getArea();
+          // Compute robot relative pose
+          // Calculate distance using the matched element's height
+          double targetToCameraDistance =
+              PhotonUtils.calculateDistanceToTargetMeters(
+                  robotToCamera.getZ(),
+                  matchedElement.height(),
+                  robotToCamera.getRotation().getY(),
+                  Units.degreesToRadians(target.getPitch()));
+
+          // Get the 2D translation in camera space
+          Translation2d targetToCamera2d =
+              PhotonUtils.estimateCameraToTargetTranslation(
+                  targetToCameraDistance, Rotation2d.fromDegrees(-target.getYaw()));
+
+          // Convert the 2D translation to a 3D transform, assume that z is 0 as object is on the
+          // ground
+          Transform3d cameraToTarget =
+              new Transform3d(
+                  new Translation3d(targetToCamera2d.getX(), targetToCamera2d.getY(), 0),
+                  new Rotation3d());
+
+          // Now combine the transforms to get target in robot space
+          Transform3d targetToRobot = robotToCamera.plus(cameraToTarget);
+
+          // Finally add to the array
+          detectedObjects.add(
+              new DetectedObject(result.getTimestampSeconds(), targetToRobot, confidence, classId));
         }
       }
+    }
+
+    // Save detected objects to inputs object
+    inputs.detectedObjects = new ObjectDetectionIO.DetectedObject[detectedObjects.size()];
+    for (int i = 0; i < detectedObjects.size(); i++) {
+      inputs.detectedObjects[i] = detectedObjects.get(i);
     }
   }
 }

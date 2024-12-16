@@ -63,7 +63,7 @@ public class RobotContainer {
                 new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(
-                swerveDriveSubsystem,
+                swerveDriveSubsystem::getPose,
                 new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         break;
 
@@ -86,7 +86,7 @@ public class RobotContainer {
         // TODO: SIM SUPPORT
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(
-                swerveDriveSubsystem,
+                swerveDriveSubsystem::getPose,
                 new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         break;
 
@@ -106,7 +106,7 @@ public class RobotContainer {
                 new AprilTagIO() {},
                 new AprilTagIO() {});
         objectDetectionSubsystem =
-            new ObjectDetectionSubsystem(swerveDriveSubsystem, new ObjectDetectionIO() {});
+            new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         break;
     }
 
