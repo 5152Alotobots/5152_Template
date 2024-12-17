@@ -40,9 +40,25 @@ public class ObjectDetectionConstants {
         new GameElement("Note", .36, .36, .05) // Class ID 0 (represented by array index)
       };
 
-  // Object tracking constants
-  public static final double INITIAL_CONFIDENCE = 0.99;
-  public static final double CONFIDENCE_DECAY_RATE = 0.33;
-  public static final double MIN_CONFIDENCE = 0.0;
+  // TUNE ON COMP. DAY!!
+  /**
+   * The number of detections to save in history, the smaller the better, but still needs to be
+   * enough to ensure we have a good detection
+   */
+  public static final int HISTORY_LENGTH = 30;
+
+  /**
+   * Number of detections in history that need to be detected with that object for it to be
+   * considered stable
+   */
+  public static final int REQUIRED_DETECTIONS = 10;
+
+  /**
+   * Number of missed detections IN A ROW of a stable object for it to be removed from the stable
+   * list
+   */
+  public static final int MISSING_FRAMES_THRESHOLD = 10;
+
+  /*** Distance between objects considered as the same */
   public static final double POSITION_MATCH_TOLERANCE = 0.2; // meters
 }

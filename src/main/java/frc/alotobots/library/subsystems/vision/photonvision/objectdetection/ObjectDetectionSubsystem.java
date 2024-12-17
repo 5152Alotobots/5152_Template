@@ -8,8 +8,7 @@
 // Robot Code
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection;
 
-import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.CAMERA_CONFIGS;
-import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.POSITION_MATCH_TOLERANCE;
+import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -24,9 +23,6 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class ObjectDetectionSubsystem extends SubsystemBase {
-  private static final int HISTORY_LENGTH = 300;
-  private static final int REQUIRED_DETECTIONS = 150;
-  private static final int MISSING_FRAMES_THRESHOLD = 10;
 
   private final Supplier<Pose2d> robotPose;
   private final ObjectDetectionIO[] io;
