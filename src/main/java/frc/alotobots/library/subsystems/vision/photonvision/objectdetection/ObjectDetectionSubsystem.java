@@ -35,36 +35,36 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
   private final Map<ObjectDetectionIO.DetectedObject, DetectionHistory> detectionHistories =
       new LinkedHashMap<>();
+  // Using LinkedHashSet to maintain insertion order with better performance
   private final Set<ObjectDetectionIO.DetectedObject> pendingObjects = new LinkedHashSet<>();
   private final Set<ObjectDetectionIO.DetectedObject> stableObjects = new LinkedHashSet<>();
 
   private static class DetectionHistory {
-    private final LinkedList<Boolean> history = new LinkedList<>();
+    private final Deque<Boolean> history;
     private boolean isStable = false;
     private ObjectDetectionIO.DetectedObject lastSeen = null;
 
+    public DetectionHistory() {
+      // Using ArrayDeque for better performance than LinkedList while maintaining order
+      this.history = new ArrayDeque<>(HISTORY_LENGTH);
+    }
+
     public void addDetection(boolean detected, ObjectDetectionIO.DetectedObject currentObject) {
+      if (history.size() >= HISTORY_LENGTH) {
+        history.removeLast();
+      }
       history.addFirst(detected);
+
       if (detected) {
         lastSeen = currentObject;
       }
-      if (history.size() > HISTORY_LENGTH) {
-        history.removeLast();
-      }
 
-      // Use total detections for stability gain
       int totalDetections = getRecentDetectionCount();
 
       if (!isStable && totalDetections >= REQUIRED_DETECTIONS) {
         isStable = true;
-        System.out.println(
-            "Object became stable with " + totalDetections + " total detections in history");
       } else if (isStable && getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
         isStable = false;
-        System.out.println(
-            "Object lost stability after "
-                + getMissedFramesInARow()
-                + " consecutive missed frames");
       }
     }
 
@@ -77,11 +77,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     }
 
     public int getRecentDetectionCount() {
-      int count = 0;
-      for (Boolean detected : history) {
-        if (detected) count++;
-      }
-      return count;
+      return (int) history.stream().filter(Boolean::booleanValue).count();
     }
 
     public int getMissedFramesInARow() {
@@ -166,13 +162,6 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
         if (stillDetected && currentMatchedObject != null) {
           if (history.isStable() && !wasStable) {
             // Object became stable
-            System.out.println("Attempting to move object to stable list");
-            System.out.println(
-                "Before move - Pending size: "
-                    + pendingObjects.size()
-                    + ", Stable size: "
-                    + stableObjects.size());
-
             ObjectDetectionIO.DetectedObject toRemove = null;
             for (ObjectDetectionIO.DetectedObject pending : pendingObjects) {
               if (objectsMatch(pending, trackedObject)) {
@@ -184,21 +173,9 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
             if (toRemove != null) {
               pendingObjects.remove(toRemove);
               stableObjects.add(currentMatchedObject);
-              System.out.println("Successfully moved object from pending to stable");
-            } else {
-              System.out.println("Failed to find matching object in pending list");
             }
-
-            System.out.println(
-                "After move - Pending size: "
-                    + pendingObjects.size()
-                    + ", Stable size: "
-                    + stableObjects.size());
           } else if (!history.isStable() && wasStable) {
             // Object lost stability
-            System.out.println("Attempting to remove unstable object from stable list");
-            System.out.println("Before remove - Stable size: " + stableObjects.size());
-
             ObjectDetectionIO.DetectedObject toRemove = null;
             for (ObjectDetectionIO.DetectedObject stable : stableObjects) {
               if (objectsMatch(stable, trackedObject)) {
@@ -210,24 +187,12 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
             if (toRemove != null) {
               stableObjects.remove(toRemove);
               pendingObjects.add(currentMatchedObject);
-              System.out.println("Successfully moved unstable object back to pending");
-            } else {
-              System.out.println("Failed to find matching object in stable list");
             }
-
-            System.out.println("After remove - Stable size: " + stableObjects.size());
           }
         }
 
         // Remove if missing too long
         if (history.getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
-          System.out.println("Removing object that's been missing too long");
-          System.out.println(
-              "Before removal - Pending size: "
-                  + pendingObjects.size()
-                  + ", Stable size: "
-                  + stableObjects.size());
-
           // Remove from histories
           it.remove();
 
@@ -241,7 +206,6 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
           }
           if (toRemoveStable != null) {
             stableObjects.remove(toRemoveStable);
-            System.out.println("Removed from stable objects");
           }
 
           // Find and remove from pending objects if present
@@ -254,14 +218,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
           }
           if (toRemovePending != null) {
             pendingObjects.remove(toRemovePending);
-            System.out.println("Removed from pending objects");
           }
-
-          System.out.println(
-              "After removal - Pending size: "
-                  + pendingObjects.size()
-                  + ", Stable size: "
-                  + stableObjects.size());
         }
       }
 
@@ -315,28 +272,10 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
   private boolean objectsMatch(
       ObjectDetectionIO.DetectedObject obj1, ObjectDetectionIO.DetectedObject obj2) {
-    System.out.println("Comparing objects:");
-    System.out.println(
-        "Obj1: x="
-            + obj1.targetToRobot().getX()
-            + " y="
-            + obj1.targetToRobot().getY()
-            + " class="
-            + obj1.classId());
-    System.out.println(
-        "Obj2: x="
-            + obj2.targetToRobot().getX()
-            + " y="
-            + obj2.targetToRobot().getY()
-            + " class="
-            + obj2.classId());
-
     double positionDiff =
         Math.sqrt(
             Math.pow(obj1.targetToRobot().getX() - obj2.targetToRobot().getX(), 2)
                 + Math.pow(obj1.targetToRobot().getY() - obj2.targetToRobot().getY(), 2));
-    System.out.println(
-        "Position difference: " + positionDiff + " (tolerance: " + POSITION_MATCH_TOLERANCE + ")");
 
     if (positionDiff > POSITION_MATCH_TOLERANCE) {
       return false;
@@ -360,7 +299,8 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
   }
 
   private Pose3d[] toFieldRelative(ObjectDetectionIO.DetectedObject[] detectedObjects) {
-    LinkedList<Pose3d> fieldRelativePoses = new LinkedList<>();
+    // Using ArrayList instead of LinkedList since we're just building and converting to array
+    List<Pose3d> fieldRelativePoses = new ArrayList<>();
     for (ObjectDetectionIO.DetectedObject detectedObject : detectedObjects) {
       fieldRelativePoses.add(toFieldRelative(detectedObject));
     }
