@@ -1,8 +1,9 @@
-//  ____  _ ____ ____       _    _     ___ _____ ___  ____   ___ _____ ____
-// | ___|/ | ___|___ \     / \  | |   / _ \_   _/ _ \| __ ) / _ \_   _/ ___|
-// |___ \| |___ \ __) |   / _ \ | |  | | | || || | | |  _ \| | | || | \___ \
-//  ___) | |___) / __/   / ___ \| |__| |_| || || |_| | |_) | |_| || |  ___) |
-// |____/|_|____/_____| /_/   \_\_____\___/ |_| \___/|____/ \___/ |_| |____/
+//   ____  _ ____ ____       _    _     ___ _____ ___  ____   ___ _____ ____
+//  | ___|/ | ___|___      /   | |   / _ _   _/ _ | __ ) / _ _   _/ ___|
+//  |___ | |___  __) |   / _  | |  | | | || || | | |  _ | | | || | ___ //   ___) | |___) / __/   /
+// ___ | |__| |_| || || |_| | |_) | |_| || |  ___) |
+//  |____/|_|____/_____| /_/   _________/ |_| ___/|____/ ___/ |_| |____/
+//
 // 2025 ALOTOBOTS FRC 5152
 // Robot Code
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection;
@@ -23,8 +24,8 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class ObjectDetectionSubsystem extends SubsystemBase {
-  private static final int HISTORY_LENGTH = 20;
-  private static final int REQUIRED_DETECTIONS = 3;
+  private static final int HISTORY_LENGTH = 300;
+  private static final int REQUIRED_DETECTIONS = 150;
   private static final int MISSING_FRAMES_THRESHOLD = 10;
 
   private final Supplier<Pose2d> robotPose;
@@ -51,10 +52,19 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
         history.removeLast();
       }
 
-      if (!isStable && getRecentDetectionCount() >= REQUIRED_DETECTIONS) {
+      // Use total detections for stability gain
+      int totalDetections = getRecentDetectionCount();
+
+      if (!isStable && totalDetections >= REQUIRED_DETECTIONS) {
         isStable = true;
+        System.out.println(
+            "Object became stable with " + totalDetections + " total detections in history");
       } else if (isStable && getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
         isStable = false;
+        System.out.println(
+            "Object lost stability after "
+                + getMissedFramesInARow()
+                + " consecutive missed frames");
       }
     }
 
@@ -102,7 +112,6 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Checks if an object already exists in either the pending or stable lists */
   private boolean objectExistsInLists(ObjectDetectionIO.DetectedObject obj) {
     for (ObjectDetectionIO.DetectedObject pending : pendingObjects) {
       if (objectsMatch(pending, obj)) return true;
@@ -153,43 +162,106 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
         }
 
         history.addDetection(stillDetected, currentMatchedObject);
-        
-        // Handle state changes
+
         if (stillDetected && currentMatchedObject != null) {
           if (history.isStable() && !wasStable) {
-            // Object became stable - remove from pending if present, add to stable if not already
-            // there
-            pendingObjects.remove(trackedObject);
-            if (!objectExistsInLists(currentMatchedObject)) {
+            // Object became stable
+            System.out.println("Attempting to move object to stable list");
+            System.out.println(
+                "Before move - Pending size: "
+                    + pendingObjects.size()
+                    + ", Stable size: "
+                    + stableObjects.size());
+
+            ObjectDetectionIO.DetectedObject toRemove = null;
+            for (ObjectDetectionIO.DetectedObject pending : pendingObjects) {
+              if (objectsMatch(pending, trackedObject)) {
+                toRemove = pending;
+                break;
+              }
+            }
+
+            if (toRemove != null) {
+              pendingObjects.remove(toRemove);
               stableObjects.add(currentMatchedObject);
-            }
-          } else if (!history.isStable() && wasStable) {
-            // Object lost stability - remove from stable, add to pending if not already there
-            stableObjects.remove(trackedObject);
-            if (!objectExistsInLists(currentMatchedObject)) {
-              pendingObjects.add(currentMatchedObject);
-            }
-          } else {
-            // Update position if needed
-            if (wasStable) {
-              if (stableObjects.remove(trackedObject)
-                  && !objectExistsInLists(currentMatchedObject)) {
-                stableObjects.add(currentMatchedObject);
-              }
+              System.out.println("Successfully moved object from pending to stable");
             } else {
-              if (pendingObjects.remove(trackedObject)
-                  && !objectExistsInLists(currentMatchedObject)) {
-                pendingObjects.add(currentMatchedObject);
+              System.out.println("Failed to find matching object in pending list");
+            }
+
+            System.out.println(
+                "After move - Pending size: "
+                    + pendingObjects.size()
+                    + ", Stable size: "
+                    + stableObjects.size());
+          } else if (!history.isStable() && wasStable) {
+            // Object lost stability
+            System.out.println("Attempting to remove unstable object from stable list");
+            System.out.println("Before remove - Stable size: " + stableObjects.size());
+
+            ObjectDetectionIO.DetectedObject toRemove = null;
+            for (ObjectDetectionIO.DetectedObject stable : stableObjects) {
+              if (objectsMatch(stable, trackedObject)) {
+                toRemove = stable;
+                break;
               }
             }
+
+            if (toRemove != null) {
+              stableObjects.remove(toRemove);
+              pendingObjects.add(currentMatchedObject);
+              System.out.println("Successfully moved unstable object back to pending");
+            } else {
+              System.out.println("Failed to find matching object in stable list");
+            }
+
+            System.out.println("After remove - Stable size: " + stableObjects.size());
           }
         }
 
         // Remove if missing too long
         if (history.getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
+          System.out.println("Removing object that's been missing too long");
+          System.out.println(
+              "Before removal - Pending size: "
+                  + pendingObjects.size()
+                  + ", Stable size: "
+                  + stableObjects.size());
+
+          // Remove from histories
           it.remove();
-          pendingObjects.remove(trackedObject);
-          stableObjects.remove(trackedObject);
+
+          // Find and remove from stable objects if present
+          ObjectDetectionIO.DetectedObject toRemoveStable = null;
+          for (ObjectDetectionIO.DetectedObject stable : stableObjects) {
+            if (objectsMatch(stable, trackedObject)) {
+              toRemoveStable = stable;
+              break;
+            }
+          }
+          if (toRemoveStable != null) {
+            stableObjects.remove(toRemoveStable);
+            System.out.println("Removed from stable objects");
+          }
+
+          // Find and remove from pending objects if present
+          ObjectDetectionIO.DetectedObject toRemovePending = null;
+          for (ObjectDetectionIO.DetectedObject pending : pendingObjects) {
+            if (objectsMatch(pending, trackedObject)) {
+              toRemovePending = pending;
+              break;
+            }
+          }
+          if (toRemovePending != null) {
+            pendingObjects.remove(toRemovePending);
+            System.out.println("Removed from pending objects");
+          }
+
+          System.out.println(
+              "After removal - Pending size: "
+                  + pendingObjects.size()
+                  + ", Stable size: "
+                  + stableObjects.size());
         }
       }
 
@@ -243,10 +315,29 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
   private boolean objectsMatch(
       ObjectDetectionIO.DetectedObject obj1, ObjectDetectionIO.DetectedObject obj2) {
+    System.out.println("Comparing objects:");
+    System.out.println(
+        "Obj1: x="
+            + obj1.targetToRobot().getX()
+            + " y="
+            + obj1.targetToRobot().getY()
+            + " class="
+            + obj1.classId());
+    System.out.println(
+        "Obj2: x="
+            + obj2.targetToRobot().getX()
+            + " y="
+            + obj2.targetToRobot().getY()
+            + " class="
+            + obj2.classId());
+
     double positionDiff =
         Math.sqrt(
             Math.pow(obj1.targetToRobot().getX() - obj2.targetToRobot().getX(), 2)
                 + Math.pow(obj1.targetToRobot().getY() - obj2.targetToRobot().getY(), 2));
+    System.out.println(
+        "Position difference: " + positionDiff + " (tolerance: " + POSITION_MATCH_TOLERANCE + ")");
+
     if (positionDiff > POSITION_MATCH_TOLERANCE) {
       return false;
     }
@@ -273,6 +364,6 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     for (ObjectDetectionIO.DetectedObject detectedObject : detectedObjects) {
       fieldRelativePoses.add(toFieldRelative(detectedObject));
     }
-    return fieldRelativePoses.toArray(new Pose3d[fieldRelativePoses.size()]);
+    return fieldRelativePoses.toArray(new Pose3d[0]);
   }
 }
