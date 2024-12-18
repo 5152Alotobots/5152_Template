@@ -35,9 +35,10 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
   private final Map<ObjectDetectionIO.DetectedObject, DetectionHistory> detectionHistories =
       new LinkedHashMap<>();
-  // Using LinkedHashSet to maintain insertion order with better performance
   private final Set<ObjectDetectionIO.DetectedObject> pendingObjects = new LinkedHashSet<>();
   private final Set<ObjectDetectionIO.DetectedObject> stableObjects = new LinkedHashSet<>();
+  private final Map<ObjectDetectionIO.DetectedObject, Pose3d> fieldPositionCache =
+      new LinkedHashMap<>();
 
   private static class DetectionHistory {
     private final Deque<Boolean> history;
@@ -45,7 +46,6 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     private ObjectDetectionIO.DetectedObject lastSeen = null;
 
     public DetectionHistory() {
-      // Using ArrayDeque for better performance than LinkedList while maintaining order
       this.history = new ArrayDeque<>(HISTORY_LENGTH);
     }
 
@@ -193,8 +193,9 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
         // Remove if missing too long
         if (history.getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
-          // Remove from histories
+          // Remove from histories and cache
           it.remove();
+          fieldPositionCache.remove(trackedObject);
 
           // Find and remove from stable objects if present
           ObjectDetectionIO.DetectedObject toRemoveStable = null;
@@ -277,29 +278,33 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
             Math.pow(obj1.targetToRobot().getX() - obj2.targetToRobot().getX(), 2)
                 + Math.pow(obj1.targetToRobot().getY() - obj2.targetToRobot().getY(), 2));
 
-    if (positionDiff > POSITION_MATCH_TOLERANCE) {
-      return false;
-    }
-
-    if (obj1.classId() != obj2.classId()) {
-      return false;
-    }
-
-    return true;
+    return positionDiff <= POSITION_MATCH_TOLERANCE && obj1.classId() == obj2.classId();
   }
 
   public Pose3d toFieldRelative(ObjectDetectionIO.DetectedObject detectedObject) {
+    // If we already have a cached position, use it
+    if (fieldPositionCache.containsKey(detectedObject)) {
+      return fieldPositionCache.get(detectedObject);
+    }
+
+    // Calculate field position for new objects
+    Pose2d robotPose2d = robotPose.get();
     Pose3d robotPose3d =
         new Pose3d(
-            robotPose.get().getX(),
-            robotPose.get().getY(),
+            robotPose2d.getX(),
+            robotPose2d.getY(),
             0.0,
-            new Rotation3d(0, 0, robotPose.get().getRotation().getRadians()));
-    return robotPose3d.transformBy(detectedObject.targetToRobot());
+            new Rotation3d(0, 0, robotPose2d.getRotation().getRadians()));
+
+    Pose3d fieldPosition = robotPose3d.transformBy(detectedObject.targetToRobot());
+
+    // Cache the position
+    fieldPositionCache.put(detectedObject, fieldPosition);
+
+    return fieldPosition;
   }
 
   public Pose3d[] toFieldRelative(ObjectDetectionIO.DetectedObject[] detectedObjects) {
-    // Using ArrayList instead of LinkedList since we're just building and converting to array
     List<Pose3d> fieldRelativePoses = new ArrayList<>();
     for (ObjectDetectionIO.DetectedObject detectedObject : detectedObjects) {
       fieldRelativePoses.add(toFieldRelative(detectedObject));
@@ -307,77 +312,36 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     return fieldRelativePoses.toArray(new Pose3d[0]);
   }
 
-  // Public methods
-  /**
-   * Gets all currently detected objects, with stable objects first followed by pending objects.
-   * Objects are returned in their original detection order.
-   *
-   * @param includeUnstable If true, includes pending (unstable) objects in the result
-   * @return List of detected objects, ordered with stable objects first
-   */
   public List<ObjectDetectionIO.DetectedObject> getDetectedObjects(boolean includeUnstable) {
     List<ObjectDetectionIO.DetectedObject> detectedObjects = new ArrayList<>();
-
-    // Add stable objects first (maintaining their original order)
     detectedObjects.addAll(stableObjects);
-
-    // Add pending objects if requested
     if (includeUnstable) {
       detectedObjects.addAll(pendingObjects);
     }
-
     return detectedObjects;
   }
 
-  /**
-   * Gets all stable detected objects (excluding pending/unstable objects).
-   *
-   * @return List of stable detected objects in their original detection order
-   */
   public List<ObjectDetectionIO.DetectedObject> getStableDetectedObjects() {
     return getDetectedObjects(false);
   }
 
-  /**
-   * Gets all detected objects, including both stable and pending objects.
-   *
-   * @return List of all detected objects, with stable objects first
-   */
   public List<ObjectDetectionIO.DetectedObject> getAllDetectedObjects() {
     return getDetectedObjects(true);
   }
 
-  /**
-   * Gets the field-relative poses of detected objects.
-   *
-   * @param includeUnstable If true, includes pending (unstable) objects in the result
-   * @return List of field-relative poses, ordered with stable objects first
-   */
   public List<Pose3d> getFieldRelativePoses(boolean includeUnstable) {
     List<ObjectDetectionIO.DetectedObject> objects = getDetectedObjects(includeUnstable);
     List<Pose3d> poses = new ArrayList<>();
-
     for (ObjectDetectionIO.DetectedObject object : objects) {
       poses.add(toFieldRelative(object));
     }
-
     return poses;
   }
 
-  /**
-   * Gets the field-relative poses of stable detected objects.
-   *
-   * @return List of field-relative poses for stable objects
-   */
   public List<Pose3d> getStableFieldRelativePoses() {
     return getFieldRelativePoses(false);
   }
 
-  /**
-   * Gets the field-relative poses of all detected objects.
-   *
-   * @return List of field-relative poses for all objects, with stable objects first
-   */
   public List<Pose3d> getAllFieldRelativePoses() {
     return getFieldRelativePoses(true);
   }

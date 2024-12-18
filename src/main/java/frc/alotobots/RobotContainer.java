@@ -152,7 +152,7 @@ public class RobotContainer {
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
-    driveFacingBestObjectButton.whileTrue(
+    driveFacingBestObjectButton.toggleOnTrue(
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     // Add other logic-based commands here
   }

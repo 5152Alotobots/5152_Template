@@ -48,7 +48,7 @@ public class ObjectDetectionConstants {
   // TUNE ON COMP. DAY!!
   /**
    * The number of detections to save in history, the smaller the better, but still needs to be
-   * enough to ensure we have a good detection
+   * enough to ensure we have a good detection. Remember, the loop time is about 20ms 1s = 50 frames
    */
   public static final int HISTORY_LENGTH = 30;
 
@@ -62,8 +62,8 @@ public class ObjectDetectionConstants {
    * Number of missed detections IN A ROW of a stable object for it to be removed from the stable
    * list
    */
-  public static final int MISSING_FRAMES_THRESHOLD = 10;
+  public static final int MISSING_FRAMES_THRESHOLD = 15;
 
   /*** Distance between objects considered as the same */
-  public static final double POSITION_MATCH_TOLERANCE = 0.2; // meters
+  public static final double POSITION_MATCH_TOLERANCE = 0.4; // meters
 }
