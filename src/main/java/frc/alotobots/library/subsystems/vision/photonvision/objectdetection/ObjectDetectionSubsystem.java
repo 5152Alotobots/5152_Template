@@ -312,6 +312,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     return fieldRelativePoses.toArray(new Pose3d[0]);
   }
 
+  // DO NOT USE TRANSLATION FOR ANY MOVEMENT, IT IS TIED TO THE ROBOT SPACE AND NOT FIELD SPACE!
   public List<ObjectDetectionIO.DetectedObject> getDetectedObjects(boolean includeUnstable) {
     List<ObjectDetectionIO.DetectedObject> detectedObjects = new ArrayList<>();
     detectedObjects.addAll(stableObjects);
@@ -321,10 +322,12 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
     return detectedObjects;
   }
 
+  // DO NOT USE TRANSLATION FOR ANY MOVEMENT, IT IS TIED TO THE ROBOT SPACE AND NOT FIELD SPACE!
   public List<ObjectDetectionIO.DetectedObject> getStableDetectedObjects() {
     return getDetectedObjects(false);
   }
 
+  // DO NOT USE TRANSLATION FOR ANY MOVEMENT, IT IS TIED TO THE ROBOT SPACE AND NOT FIELD SPACE!
   public List<ObjectDetectionIO.DetectedObject> getAllDetectedObjects() {
     return getDetectedObjects(true);
   }

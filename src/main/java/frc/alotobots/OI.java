@@ -43,5 +43,6 @@ public class OI {
 
   // Buttons
   public static Trigger driveFacingBestObjectButton = driverController.a();
+  public static Trigger pathfindToBestObjectButton = driverController.b();
   // Add any additional controller bindings or button methods here
 }

@@ -13,6 +13,7 @@
 package frc.alotobots;
 
 import static frc.alotobots.OI.driveFacingBestObjectButton;
+import static frc.alotobots.OI.pathfindToBestObjectButton;
 import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.NOTE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -31,6 +32,7 @@ import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTag
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.PathfindToBestObject;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
@@ -154,6 +156,8 @@ public class RobotContainer {
   private void configureLogicCommands() {
     driveFacingBestObjectButton.toggleOnTrue(
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
+    pathfindToBestObjectButton.whileTrue(
+        new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     // Add other logic-based commands here
   }
 

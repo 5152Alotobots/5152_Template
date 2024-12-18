@@ -34,6 +34,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -346,5 +347,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {
     return getMaxLinearSpeedMetersPerSec() / Constants.tunerConstants.getDriveBaseRadius();
+  }
+
+  public Command getPathFinderCommand(Pose2d target, LinearVelocity velocity) {
+    return AutoBuilder.pathfindToPose(
+        target, Constants.tunerConstants.getPathfindingConstraints(), velocity);
   }
 }
