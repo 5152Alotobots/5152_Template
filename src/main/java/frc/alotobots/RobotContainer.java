@@ -12,6 +12,9 @@
 */
 package frc.alotobots;
 
+import static frc.alotobots.OI.driveFacingBestObjectButton;
+import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.NOTE;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -27,6 +30,7 @@ import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTag
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVision;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
@@ -142,13 +146,14 @@ public class RobotContainer {
   /** Configures default commands for subsystems. */
   private void configureDefaultCommands() {
 
-    swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem));
+    swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
     // Add other subsystem default commands here as needed
   }
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
-
+    driveFacingBestObjectButton.whileTrue(
+        new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     // Add other logic-based commands here
   }
 

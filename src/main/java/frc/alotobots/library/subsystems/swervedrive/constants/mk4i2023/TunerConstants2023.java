@@ -31,8 +31,10 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.*;
 import frc.alotobots.Constants;
@@ -63,19 +65,33 @@ public class TunerConstants2023 implements TunerConstants {
           .withKV(0.75843)
           .withKA(0.01);
 
+  private static final PIDConstants translationPid =
+      new PIDConstants(2.4, 0, 0.015); // Tuned for 2022 Drive
+  // PID constants for rotation
+  private static final PIDConstants rotationPid =
+      new PIDConstants(7.8, 0, 0.015); // Tuned for 2022 Drive
   // Pathplanner
-  public static final PathConstraints PATHFINDING_CONSTRAINTS =
+  private static final PathConstraints PATHFINDING_CONSTRAINTS =
       new PathConstraints(5.02, 3.5, Units.degreesToRadians(540), Units.degreesToRadians(460));
 
-  public static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER =
+  private static final PPHolonomicDriveController PP_HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(
           // PID constants for translation
-          new PIDConstants(2.4, 0, 0.015), // Tuned for 2022 Drive
+          translationPid,
           // PID constants for rotation
-          new PIDConstants(7.8, 0, 0.015)); // Tuned for 2022 Drive
+          rotationPid);
 
-  public static final Distance BUMPER_LENGTH = Distance.ofBaseUnits(.75, Meters);
-  public static final Distance BUMPER_WIDTH = Distance.ofBaseUnits(.75, Meters);
+  private static final ProfiledPIDController driveFacingAngleController =
+      new ProfiledPIDController(
+          rotationPid.kP,
+          rotationPid.kI,
+          rotationPid.kD,
+          new TrapezoidProfile.Constraints(
+              PATHFINDING_CONSTRAINTS.maxVelocityMPS(),
+              PATHFINDING_CONSTRAINTS.maxAccelerationMPSSq()));
+
+  private static final Distance BUMPER_LENGTH = Distance.ofBaseUnits(.75, Meters);
+  private static final Distance BUMPER_WIDTH = Distance.ofBaseUnits(.75, Meters);
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
@@ -87,13 +103,13 @@ public class TunerConstants2023 implements TunerConstants {
   private static final Current kSlipCurrent = Amps.of(27.16); //  27.16 BAD WHEELS
 
   // Max module rotational rate
-  public static final double kMaxModularRotationalRate = Units.rotationsToRadians(12);
+  private static final double kMaxModularRotationalRate = Units.rotationsToRadians(12);
   // Speed modes
-  public static final LinearVelocity kSpeedAt12Volts =
+  private static final LinearVelocity kSpeedAt12Volts =
       MetersPerSecond.of(5.02); // MAX THEORETICAL speed
-  public static final LinearVelocity kTurtleSpeed = MetersPerSecond.of(1.0); // Slow mode
-  public static final LinearVelocity kNominalSpeed = MetersPerSecond.of(3.0); // Normal mode
-  public static final LinearVelocity kTurboSpeed = MetersPerSecond.of(4.8); // Fast mode
+  private static final LinearVelocity kTurtleSpeed = MetersPerSecond.of(1.0); // Slow mode
+  private static final LinearVelocity kNominalSpeed = MetersPerSecond.of(3.0); // Normal mode
+  private static final LinearVelocity kTurboSpeed = MetersPerSecond.of(4.8); // Fast mode
 
   // Initial configs for the drive and steer motors and the CANcoder
   private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
@@ -110,7 +126,7 @@ public class TunerConstants2023 implements TunerConstants {
   private static final CANBus kCANBus = new CANBus("", "./logs/example.hoot");
 
   // The frequency to run the odometry loop at
-  public static final double ODOMETRY_FREQUENCY = kCANBus.isNetworkFD() ? 250.0 : 100.0;
+  private static final double ODOMETRY_FREQUENCY = kCANBus.isNetworkFD() ? 250.0 : 100.0;
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns
   private static final double kCoupleRatio = 3.5714285714285716;
@@ -189,7 +205,7 @@ public class TunerConstants2023 implements TunerConstants {
   private static final Distance kBackRightXPos = Inches.of(-9.25);
   private static final Distance kBackRightYPos = Inches.of(-9.25);
 
-  public static final SwerveModuleConstants FrontLeft =
+  private static final SwerveModuleConstants FrontLeft =
       ConstantCreator.createModuleConstants(
           kFrontLeftSteerMotorId,
           kFrontLeftDriveMotorId,
@@ -200,7 +216,7 @@ public class TunerConstants2023 implements TunerConstants {
           kInvertLeftSide,
           kSteerMotorInverted,
           kCanCoderInverted);
-  public static final SwerveModuleConstants FrontRight =
+  private static final SwerveModuleConstants FrontRight =
       ConstantCreator.createModuleConstants(
           kFrontRightSteerMotorId,
           kFrontRightDriveMotorId,
@@ -212,7 +228,7 @@ public class TunerConstants2023 implements TunerConstants {
           kSteerMotorInverted,
           kCanCoderInverted);
 
-  public static final SwerveModuleConstants BackLeft =
+  private static final SwerveModuleConstants BackLeft =
       ConstantCreator.createModuleConstants(
           kBackLeftSteerMotorId,
           kBackLeftDriveMotorId,
@@ -224,7 +240,7 @@ public class TunerConstants2023 implements TunerConstants {
           kSteerMotorInverted,
           kCanCoderInverted);
 
-  public static final SwerveModuleConstants BackRight =
+  private static final SwerveModuleConstants BackRight =
       ConstantCreator.createModuleConstants(
           kBackRightSteerMotorId,
           kBackRightDriveMotorId,
@@ -259,7 +275,7 @@ public class TunerConstants2023 implements TunerConstants {
             new Translation2d(BackRight.LocationX, BackRight.LocationY)
           });
 
-  public static final double DRIVE_BASE_RADIUS =
+  private static final double DRIVE_BASE_RADIUS =
       Math.max(
           Math.max(
               Math.hypot(FrontLeft.LocationX, FrontRight.LocationY),
@@ -361,6 +377,11 @@ public class TunerConstants2023 implements TunerConstants {
   @Override
   public RobotConfig getPathPlannerConfig() {
     return pathPlannerConfig;
+  }
+
+  @Override
+  public ProfiledPIDController getDriveFacingAnglePIDController() {
+    return driveFacingAngleController;
   }
 
   @Override

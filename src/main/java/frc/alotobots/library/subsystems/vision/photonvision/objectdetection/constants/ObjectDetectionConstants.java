@@ -36,11 +36,13 @@ public class ObjectDetectionConstants {
     new CameraConfig("FM_ObjectDetection", CAMERA_OFFSETS[0], new SimCameraProperties())
   };
 
+  // Game elements
+  public static final GameElement NOTE = new GameElement("Note", .36, .36, .05);
   // Game elements array indexed by class ID
   // Index 0 = Note (class ID 0)
   public static final GameElement[] GAME_ELEMENTS =
       new GameElement[] {
-        new GameElement("Note", .36, .36, .05) // Class ID 0 (represented by array index)
+        NOTE // Class ID 0 (represented by array index)
       };
 
   // TUNE ON COMP. DAY!!
