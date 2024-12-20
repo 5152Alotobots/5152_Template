@@ -83,7 +83,7 @@ public class DriveFacingBestObject extends Command {
     var detectedObjects = objectDetectionSubsystem.getStableDetectedObjects();
 
     // Find first matching object based on priority order
-    var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObject>empty();
+    var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObjectFieldRelative>empty();
     for (GameElement element : targetGameElementNames) {
       matchingObject =
           detectedObjects.stream()
@@ -95,7 +95,7 @@ public class DriveFacingBestObject extends Command {
     }
 
     if (matchingObject.isPresent()) {
-      Pose2d pose = objectDetectionSubsystem.toFieldRelative(matchingObject.get()).toPose2d();
+      Pose2d pose = matchingObject.get().pose().toPose2d();
       driveFacingPose.applyRequest(() -> pose); // Drive facing the pose
     } else {
       defaultDrive.applyRequest(); // Drive normal

@@ -12,6 +12,7 @@
 */
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import org.littletonrobotics.junction.AutoLog;
 
@@ -20,11 +21,14 @@ public interface ObjectDetectionIO {
   @AutoLog
   public static class ObjectDetectionIOInputs {
     public boolean connected = false;
-    public DetectedObject[] detectedObjects = new DetectedObject[0];
+    public DetectedObjectRobotRelative[] detectedObjects = new DetectedObjectRobotRelative[0];
   }
 
-  public static record DetectedObject(
+  public static record DetectedObjectRobotRelative(
       double timestamp, Transform3d targetToRobot, double confidence, int classId) {}
+
+  public static record DetectedObjectFieldRelative(
+      double timestamp, Pose3d pose, double confidence, int classId) {}
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(ObjectDetectionIOInputs inputs) {}

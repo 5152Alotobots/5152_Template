@@ -39,7 +39,7 @@ public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
   public void updateInputs(ObjectDetectionIOInputs inputs) {
     inputs.connected = camera.isConnected();
 
-    List<DetectedObject> detectedObjects = new LinkedList<>();
+    List<DetectedObjectRobotRelative> detectedObjects = new LinkedList<>();
     for (var result : camera.getAllUnreadResults()) {
       // First check if we have targets
       if (result.hasTargets()) {
@@ -83,13 +83,15 @@ public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
 
           // Finally add to the array
           detectedObjects.add(
-              new DetectedObject(result.getTimestampSeconds(), targetToRobot, confidence, classId));
+              new DetectedObjectRobotRelative(
+                  result.getTimestampSeconds(), targetToRobot, confidence, classId));
         }
       }
     }
 
     // Save detected objects to inputs object
-    inputs.detectedObjects = new ObjectDetectionIO.DetectedObject[detectedObjects.size()];
+    inputs.detectedObjects =
+        new ObjectDetectionIO.DetectedObjectRobotRelative[detectedObjects.size()];
     for (int i = 0; i < detectedObjects.size(); i++) {
       inputs.detectedObjects[i] = detectedObjects.get(i);
     }

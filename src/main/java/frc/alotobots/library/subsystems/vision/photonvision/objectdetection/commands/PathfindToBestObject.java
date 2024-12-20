@@ -68,7 +68,7 @@ public class PathfindToBestObject extends Command {
     var detectedObjects = objectDetectionSubsystem.getStableDetectedObjects();
 
     // Find first matching object based on priority order
-    var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObject>empty();
+    var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObjectFieldRelative>empty();
     for (GameElement element : targetGameElementNames) {
       matchingObject =
           detectedObjects.stream()
@@ -80,9 +80,8 @@ public class PathfindToBestObject extends Command {
     }
 
     if (matchingObject.isPresent()) {
-      var selectedObject = matchingObject.get();
       Pose2d robotPose = swerveDriveSubsystem.getPose();
-      Pose2d objectPose = objectDetectionSubsystem.toFieldRelative(selectedObject).toPose2d();
+      Pose2d objectPose = matchingObject.get().pose().toPose2d();
 
       // Calculate direction from robot to object
       Translation2d toObject = objectPose.getTranslation().minus(robotPose.getTranslation());
