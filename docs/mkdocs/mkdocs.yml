@@ -16,6 +16,10 @@ nav:
               - Drive Facing Angle: library/commands/swerve/drivefacingangle.md
               - Drive Facing Pose: library/commands/swerve/drivefacingpose.md
               - Characterization: library/commands/swerve/characterization.md
+          - Vision:
+              - Object Detection:
+                  - Drive Facing Best Object: library/commands/vision/objectdetection/drivefacingbestobject.md
+                  - Pathfind to Best Object: library/commands/vision/objectdetection/pathfindtobestobject.md
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
           - Vision:
