@@ -26,40 +26,41 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.O
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
 
 /**
- * Command that drives the robot while automatically facing the best detected object. Uses
- * PhotonVision object detection to identify targets and adjusts robot orientation accordingly.
- *
- * <p>This command: - Takes manual drive inputs for X/Y translation - Automatically rotates to face
- * the highest-confidence detected object - Falls back to manual rotation control when no objects
- * are detected - Allows temporary manual rotation override with a timeout
- *
- * <p>The command requires both the vision and drive subsystems to operate.
+ * A command that automatically rotates the robot to face detected game objects while allowing manual translation control.
+ * The robot will face the highest priority detected game element while driving. If no objects are detected,
+ * or if manual rotation override is active, falls back to standard manual control.
  */
 public class DriveFacingBestObject extends Command {
-  /** The subsystem handling object detection via PhotonVision */
+
+  /** Subsystem for detecting game objects */
   private final ObjectDetectionSubsystem objectDetectionSubsystem;
 
-  /** The swerve drive subsystem for robot movement */
+  /** Subsystem for controlling robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
 
-  /** The names of game element types to target, in priority order */
+  /** Array of game elements to target, in priority order */
   private final GameElement[] targetGameElementNames;
 
+  /** Command for driving while facing a specific pose */
   private final DriveFacingPose driveFacingPose;
+
+  /** Command for standard manual driving */
   private final DefaultDrive defaultDrive;
 
+  /** Timer for tracking manual rotation override duration */
   Timer overrideTimer = new Timer();
 
   /**
    * Creates a new DriveFacingBestObject command.
    *
-   * @param objectDetectionSubsystem The subsystem for detecting objects
-   * @param swerveDriveSubsystem The subsystem for controlling robot movement
+   * @param objectDetectionSubsystem Subsystem used for detecting game objects
+   * @param swerveDriveSubsystem Subsystem used for robot movement
+   * @param targetGameElementNames Array of game elements to target, in priority order
    */
   public DriveFacingBestObject(
-      ObjectDetectionSubsystem objectDetectionSubsystem,
-      SwerveDriveSubsystem swerveDriveSubsystem,
-      GameElement... targetGameElementNames) {
+          ObjectDetectionSubsystem objectDetectionSubsystem,
+          SwerveDriveSubsystem swerveDriveSubsystem,
+          GameElement... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.targetGameElementNames = targetGameElementNames;
@@ -70,13 +71,10 @@ public class DriveFacingBestObject extends Command {
   }
 
   /**
-   * Called repeatedly when this Command is scheduled to run. Controls robot movement while facing
-   * detected objects.
-   *
-   * <p>The control flow: 1. If objects are detected: - Uses field-centric drive with automatic
-   * rotation to face best object 2. If no objects detected: - Falls back to standard field-centric
-   * drive with manual rotation 3. If manual rotation override is active: - Starts timeout timer for
-   * returning to automatic facing
+   * Executes the command logic. Gets the latest object detections and controls robot movement:
+   * - If objects are detected, rotates to face highest priority object while allowing manual translation
+   * - If no objects detected, allows full manual control
+   * - If manual rotation override active, starts timeout timer
    */
   @Override
   public void execute() {
@@ -86,9 +84,9 @@ public class DriveFacingBestObject extends Command {
     var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObjectFieldRelative>empty();
     for (GameElement element : targetGameElementNames) {
       matchingObject =
-          detectedObjects.stream()
-              .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
-              .findFirst();
+              detectedObjects.stream()
+                      .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
+                      .findFirst();
       if (matchingObject.isPresent()) {
         break;
       }
@@ -109,12 +107,13 @@ public class DriveFacingBestObject extends Command {
     }
   }
 
+  /** Duration in seconds that manual rotation override remains active */
   private static final double OVERRIDE_TIMEOUT_SECONDS = 0.1;
 
   /**
-   * Returns true when the command should end. Ends when rotation override timeout has elapsed.
+   * Determines if the command should end.
    *
-   * @return true if the command should end
+   * @return true if manual rotation override timeout has elapsed
    */
   @Override
   public boolean isFinished() {

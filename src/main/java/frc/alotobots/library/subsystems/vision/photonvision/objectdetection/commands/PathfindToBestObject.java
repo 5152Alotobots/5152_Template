@@ -29,31 +29,42 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.Obje
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
 
+/**
+ * A command that automatically navigates the robot to the best detected game object.
+ * The robot will pathfind to an offset position near the highest priority detected game element,
+ * accounting for robot bumper dimensions when calculating the final position.
+ */
 public class PathfindToBestObject extends Command {
-  /** The subsystem handling object detection via PhotonVision */
+
+  /** Subsystem for detecting game objects */
   private final ObjectDetectionSubsystem objectDetectionSubsystem;
 
-  /** The swerve drive subsystem for robot movement */
+  /** Subsystem for controlling robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
 
-  /** The names of game element types to target, in priority order */
+  /** Array of game elements to target, in priority order */
   private final GameElement[] targetGameElementNames;
 
+  /** Command for driving while facing a specific pose */
   private final DriveFacingPose driveFacingPose;
+
+  /** Command for standard manual driving */
   private final DefaultDrive defaultDrive;
 
+  /** Timer for tracking execution duration */
   Timer overrideTimer = new Timer();
 
   /**
    * Creates a new PathfindToBestObject command.
    *
-   * @param objectDetectionSubsystem The subsystem for detecting objects
-   * @param swerveDriveSubsystem The subsystem for controlling robot movement
+   * @param objectDetectionSubsystem Subsystem used for detecting game objects
+   * @param swerveDriveSubsystem Subsystem used for robot movement
+   * @param targetGameElementNames Array of game elements to target, in priority order
    */
   public PathfindToBestObject(
-      ObjectDetectionSubsystem objectDetectionSubsystem,
-      SwerveDriveSubsystem swerveDriveSubsystem,
-      GameElement... targetGameElementNames) {
+          ObjectDetectionSubsystem objectDetectionSubsystem,
+          SwerveDriveSubsystem swerveDriveSubsystem,
+          GameElement... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.targetGameElementNames = targetGameElementNames;
@@ -63,6 +74,12 @@ public class PathfindToBestObject extends Command {
     addRequirements(swerveDriveSubsystem, objectDetectionSubsystem);
   }
 
+  /**
+   * Executes the command logic. Gets the latest object detections and generates path:
+   * - Finds highest priority detected object
+   * - Calculates offset position accounting for robot bumper dimensions
+   * - Generates and executes pathfinding command to target position
+   */
   @Override
   public void execute() {
     var detectedObjects = objectDetectionSubsystem.getStableDetectedObjects();
@@ -71,9 +88,9 @@ public class PathfindToBestObject extends Command {
     var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObjectFieldRelative>empty();
     for (GameElement element : targetGameElementNames) {
       matchingObject =
-          detectedObjects.stream()
-              .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
-              .findFirst();
+              detectedObjects.stream()
+                      .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
+                      .findFirst();
       if (matchingObject.isPresent()) {
         break;
       }
@@ -89,32 +106,33 @@ public class PathfindToBestObject extends Command {
 
       // Determine which bumper dimension to use based on approach angle
       Distance offset =
-          Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))
-              ? Constants.tunerConstants.getBumperLength()
-              : Constants.tunerConstants.getBumperWidth();
+              Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))
+                      ? Constants.tunerConstants.getBumperLength()
+                      : Constants.tunerConstants.getBumperWidth();
 
       // Calculate target pose offset from object
       double offsetMeters = offset.in(Units.Meters);
       Translation2d offsetTranslation =
-          new Translation2d(-Math.cos(angle) * offsetMeters, -Math.sin(angle) * offsetMeters);
+              new Translation2d(-Math.cos(angle) * offsetMeters, -Math.sin(angle) * offsetMeters);
 
       // Create target pose with offset
       Pose2d targetPose =
-          new Pose2d(objectPose.getTranslation().plus(offsetTranslation), objectPose.getRotation());
+              new Pose2d(objectPose.getTranslation().plus(offsetTranslation), objectPose.getRotation());
 
       Command command =
-          swerveDriveSubsystem.getPathFinderCommand(
-              targetPose, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond));
+              swerveDriveSubsystem.getPathFinderCommand(
+                      targetPose, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond));
       command.schedule();
     }
   }
 
+  /** Duration in seconds before command ends */
   private static final double OVERRIDE_TIMEOUT_SECONDS = 0.1;
 
   /**
-   * Returns true when the command should end. Ends when rotation override timeout has elapsed.
+   * Determines if the command should end.
    *
-   * @return true if the command should end
+   * @return true if timeout has elapsed
    */
   @Override
   public boolean isFinished() {
