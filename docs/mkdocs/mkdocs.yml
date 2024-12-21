@@ -18,6 +18,7 @@ nav:
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
   - API Documentation: javadoc/index.html # Point directly to index.html
+  - 404.md
 
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: 5152Alotobots/5152_Template
