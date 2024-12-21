@@ -251,3 +251,65 @@ public static final Slot0Configs driveGains = new Slot0Configs()
     .withKA(0.01);
 ```
 
+### 1.7 Turn Motor Tuning
+The turn (steering) motors require different tuning approaches than drive motors:
+
+1. Initial Setup:
+    - Ensure wheels can rotate freely
+    - Start with conservative values:
+    ```java
+    public static final Slot0Configs steerGains = new Slot0Configs()
+        .withKP(40)
+        .withKI(0)
+        .withKD(0.1)
+        .withKS(0.12)
+        .withKV(0.102);
+    ```
+
+2. Position Control Testing:
+    - Deploy code with initial values
+    - Use driver station to command 90-degree turns
+    - Watch for:
+        - Quick response without overshooting
+        - No oscillation at target position
+        - Smooth acceleration and deceleration
+        - Ability to hold position when pushed
+
+3. PID Tuning Process:
+   a. Start with Position Control:
+    - Increase kP until wheels respond quickly
+    - If oscillating, reduce kP by 25%
+    - Add kD to dampen oscillations (start with kD = kP * 0.01)
+    - Adjust until wheels snap to position without overshooting
+
+   b. Add Feed Forward:
+    - Start with small kS (0.1-0.2)
+    - Increase if modules struggle to overcome friction
+    - Add kV based on max velocity requirements
+    - Keep kA at 0 unless needed for high acceleration
+
+4. Common Issues:
+    - Oscillation: Reduce kP or increase kD
+    - Slow response: Increase kP
+    - Position drift: Increase kS slightly
+    - Overshooting: Increase kD or reduce kP
+    - Grinding noise: Check mechanical alignment and reduce gains
+
+5. Final Verification:
+    - Test rapid direction changes
+    - Verify holding position under load
+    - Check for smooth motion at various speeds
+    - Ensure all modules perform consistently
+
+Your final turn gains might look like:
+```java
+public static final Slot0Configs steerGains = new Slot0Configs()
+    .withKP(55)
+    .withKI(0)
+    .withKD(0.2)
+    .withKS(0.12)
+    .withKV(0.102)
+    .withKA(0)
+    .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+```
+
