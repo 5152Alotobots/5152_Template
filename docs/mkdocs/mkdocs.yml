@@ -7,11 +7,23 @@ theme:
     accent: grey
 nav:
   - Home: index.md
-  - Game:
+  - Game: {} # Empty section needs empty dict
   - Library:
-      - Commands:
+      - Commands: {} # Empty section needs empty dict
       - Subsystems:
-          - library/subsystems/swerve.md
-  - API Documentation: ./javadoc
+          - Swerve: library/subsystems/swerve.md
+  - API Documentation: javadoc/index.html # Point directly to index.html
+
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: 5152Alotobots/5152_Template
+
+# Optional but recommended additions:
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+
+plugins:
+  - search
