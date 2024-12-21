@@ -4,7 +4,7 @@
 The DriveFacingPose command implements advanced pose-relative driving capabilities, automatically orienting the robot to face a target position while maintaining normal drive control. This command utilizes sophisticated geometry calculations and PID control for precise orientation management.
 
 ## Required Subsystems
-- [SwerveDriveSubsystem](../../subsystems/swerve)
+- [SwerveDriveSubsystem](/5152_Template/library/subsystems/swerve/)
 
 ## Constructor Parameters
 - `swerveDriveSubsystem`: The SwerveDrive subsystem instance this command will control

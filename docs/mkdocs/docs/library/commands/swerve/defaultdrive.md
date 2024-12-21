@@ -4,7 +4,7 @@
 The DefaultDrive command implements the default driving behavior for the [SwerveDrive subsystem](../../subsystems/swerve.md). This command provides real-time velocity control based on driver inputs through the DriveCalculator utility.
 
 ## Required Subsystems
-- [SwerveDriveSubsystem](../../subsystems/swerve)
+- [SwerveDriveSubsystem](/5152_Template/library/subsystems/swerve/)
 
 ## Constructor Parameters
 - `swerveDriveSubsystem`: The SwerveDrive subsystem instance this command will control

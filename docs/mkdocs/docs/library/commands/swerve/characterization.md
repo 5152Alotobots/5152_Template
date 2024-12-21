@@ -4,7 +4,7 @@
 The characterization commands provide system identification capabilities for the swerve drive subsystem. These commands enable precise measurement and calculation of critical system parameters.
 
 ## Required Subsystems
-- [SwerveDriveSubsystem](../../subsystems/swerve)
+- [SwerveDriveSubsystem](/5152_Template/library/subsystems/swerve/)
 
 ## Commands
 
