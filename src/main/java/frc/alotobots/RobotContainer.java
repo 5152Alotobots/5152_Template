@@ -92,11 +92,9 @@ public class RobotContainer {
                     AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
                 new AprilTagIOPhotonVisionSim(
                     AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
-        // TODO: SIM SUPPORT
+        // Sim support for object detection doesn't exist yet, so use a no-op
         objectDetectionSubsystem =
-            new ObjectDetectionSubsystem(
-                swerveDriveSubsystem::getPose,
-                new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
+                new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         break;
 
       default:
