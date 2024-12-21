@@ -7,9 +7,9 @@ theme:
     accent: grey
 nav:
   - Home: index.md
-  - Game: {} # Empty section needs empty dict
+  - Game: []
   - Library:
-      - Commands: {} # Empty section needs empty dict
+      - Commands: []
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
   - API Documentation: javadoc/index.html # Point directly to index.html
