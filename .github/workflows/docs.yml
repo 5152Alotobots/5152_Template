@@ -28,9 +28,7 @@ jobs:
 
       - name: Generate and Copy Javadoc First
         run: |
-          # First run the task that generates your sources
-          ./gradlew build # Replace with your actual source generation task
-          # Then generate Javadoc
+          ./gradlew build
           ./gradlew javadoc
           mkdir -p docs/mkdocs/docs/javadoc
           cp -r build/docs/javadoc/* docs/mkdocs/docs/javadoc/
