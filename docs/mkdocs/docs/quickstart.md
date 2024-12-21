@@ -1,8 +1,12 @@
 # Robot Quickstart Guide
 
-## 1. Swerve Drive Tuning
+This guide provides step-by-step instructions for configuring and tuning your robot's swerve drive system.
+
+## 1. Swerve Drive Configuration
 
 ### 1.1 CAN ID Management
+
+> **Important**: Proper CAN ID management is critical for reliable robot operation
 Before beginning any swerve configuration, verify all CAN IDs:
 
 1. Check current CAN IDs in `Constants.java` under `CanId`:
