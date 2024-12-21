@@ -18,6 +18,8 @@ nav:
               - Characterization: library/commands/swerve/characterization.md
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
+          - Vision:
+              - Object Detection: library/subsystems/vision/objectdetection.md
   - API Documentation: javadoc/index.html # Point directly to index.html
 
 repo_url: https://github.com/5152alotobots/5152_Template
