@@ -337,13 +337,15 @@ After setting up slip current limits, configure the robot's mass for PathPlanner
 2. Update Configuration:
     - In your TunerConstants file, update the PathPlanner config:
     ```java
+    public static final double ROBOT_MASS_KG = 34; // Update with your measured mass
+    
     @Override
     public RobotConfig getPathPlannerConfig() {
         return new RobotConfig(
             kSpeedAt12Volts,                // Max speed from previous step
             new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            45.0,                           // Mass in kilograms - UPDATE THIS VALUE
+            ROBOT_MASS_KG,                  // Mass in kilograms
             getDriveBaseRadius()            // Drive base radius in meters
         );
     }
