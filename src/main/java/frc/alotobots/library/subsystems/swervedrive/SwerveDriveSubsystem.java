@@ -54,8 +54,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * The SwerveDriveSubsystem class manages the robot's swerve drive system, handling odometry, module control,
- * and autonomous path following capabilities.
+ * The SwerveDriveSubsystem class manages the robot's swerve drive system, handling odometry, module
+ * control, and autonomous path following capabilities.
  */
 public class SwerveDriveSubsystem extends SubsystemBase {
 
@@ -76,7 +76,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Alert for gyro disconnection */
   private final Alert gyroDisconnectedAlert =
-          new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+      new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
 
   /** Generator for swerve drive setpoints */
   private final SwerveSetpointGenerator setpointGenerator;
@@ -86,23 +86,23 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
   /** Kinematics calculator for the swerve drive */
   private SwerveDriveKinematics kinematics =
-          new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
+      new SwerveDriveKinematics(Constants.tunerConstants.getModuleTranslations());
 
   /** Raw rotation from the gyro */
   private Rotation2d rawGyroRotation = new Rotation2d();
 
   /** Last recorded module positions for delta tracking */
   private SwerveModulePosition[] lastModulePositions =
-          new SwerveModulePosition[] {
-                  new SwerveModulePosition(),
-                  new SwerveModulePosition(),
-                  new SwerveModulePosition(),
-                  new SwerveModulePosition()
-          };
+      new SwerveModulePosition[] {
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition()
+      };
 
   /** Pose estimator for odometry */
   private SwerveDrivePoseEstimator poseEstimator =
-          new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
   /**
    * Constructs a new SwerveDriveSubsystem.
@@ -114,11 +114,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param brModuleIO Back right module interface
    */
   public SwerveDriveSubsystem(
-          GyroIO gyroIO,
-          ModuleIO flModuleIO,
-          ModuleIO frModuleIO,
-          ModuleIO blModuleIO,
-          ModuleIO brModuleIO) {
+      GyroIO gyroIO,
+      ModuleIO flModuleIO,
+      ModuleIO frModuleIO,
+      ModuleIO blModuleIO,
+      ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
 
     // Initialize modules
@@ -135,48 +135,45 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-            this::getPose,
-            this::setPose,
-            this::getChassisSpeeds,
-            this::runVelocity,
-            Constants.tunerConstants.getHolonomicDriveController(),
-            Constants.tunerConstants.getPathPlannerConfig(),
-            () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-            this);
+        this::getPose,
+        this::setPose,
+        this::getChassisSpeeds,
+        this::runVelocity,
+        Constants.tunerConstants.getHolonomicDriveController(),
+        Constants.tunerConstants.getPathPlannerConfig(),
+        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
-            (activePath) -> {
-              Logger.recordOutput(
-                      "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-            });
+        (activePath) -> {
+          Logger.recordOutput(
+              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
     PathPlannerLogging.setLogTargetPoseCallback(
-            (targetPose) -> {
-              Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-            });
+        (targetPose) -> {
+          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
 
     setpointGenerator =
-            new SwerveSetpointGenerator(
-                    Constants.tunerConstants.getPathPlannerConfig(),
-                    Constants.tunerConstants.getMaxModularRotationalRate()
-            );
+        new SwerveSetpointGenerator(
+            Constants.tunerConstants.getPathPlannerConfig(),
+            Constants.tunerConstants.getMaxModularRotationalRate());
     previousSetpoint =
-            new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
+        new SwerveSetpoint(getChassisSpeeds(), getModuleStates(), DriveFeedforwards.zeros(4));
 
     // Configure SysId
     sysId =
-            new SysIdRoutine(
-                    new SysIdRoutine.Config(
-                            null,
-                            null,
-                            null,
-                            (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
-                    new SysIdRoutine.Mechanism(
-                            (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null,
+                (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+            new SysIdRoutine.Mechanism(
+                (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
   }
 
-  /**
-   * Periodic update function handling odometry updates and module states.
-   */
+  /** Periodic update function handling odometry updates and module states. */
   @Override
   public void periodic() {
     odometryLock.lock();
@@ -209,10 +206,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
         modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
         moduleDeltas[moduleIndex] =
-                new SwerveModulePosition(
-                        modulePositions[moduleIndex].distanceMeters
-                                - lastModulePositions[moduleIndex].distanceMeters,
-                        modulePositions[moduleIndex].angle);
+            new SwerveModulePosition(
+                modulePositions[moduleIndex].distanceMeters
+                    - lastModulePositions[moduleIndex].distanceMeters,
+                modulePositions[moduleIndex].angle);
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
@@ -239,7 +236,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     SwerveModuleState[] setpointStates = previousSetpoint.moduleStates();
 
     SwerveDriveKinematics.desaturateWheelSpeeds(
-            setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
+        setpointStates, Constants.tunerConstants.getSpeedAt12Volts());
 
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
     Logger.recordOutput("SwerveChassisSpeeds/Setpoints", speeds);
@@ -267,9 +264,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     runVelocity(new ChassisSpeeds());
   }
 
-  /**
-   * Stops drive and positions modules in X pattern to resist movement.
-   */
+  /** Stops drive and positions modules in X pattern to resist movement. */
   public void stopWithX() {
     Rotation2d[] headings = new Rotation2d[4];
     for (int i = 0; i < 4; i++) {
@@ -287,8 +282,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return run(() -> runCharacterization(0.0))
-            .withTimeout(1.0)
-            .andThen(sysId.quasistatic(direction));
+        .withTimeout(1.0)
+        .andThen(sysId.quasistatic(direction));
   }
 
   /**
@@ -298,9 +293,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @return Command for dynamic test
    */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return run(() -> runCharacterization(0.0))
-            .withTimeout(1.0)
-            .andThen(sysId.dynamic(direction));
+    return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
   }
 
   /**
@@ -404,11 +397,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @param visionMeasurementStdDevs Standard deviations of vision measurements
    */
   public void addVisionMeasurement(
-          Pose2d visionRobotPoseMeters,
-          double timestampSeconds,
-          Matrix<N3, N1> visionMeasurementStdDevs) {
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
     poseEstimator.addVisionMeasurement(
-            visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
   }
 
   /**
@@ -438,6 +431,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
   public Command getPathFinderCommand(Pose2d target, LinearVelocity velocity) {
     return AutoBuilder.pathfindToPose(
-            target, Constants.tunerConstants.getPathfindingConstraints(), velocity);
+        target, Constants.tunerConstants.getPathfindingConstraints(), velocity);
   }
 }
