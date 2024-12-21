@@ -340,7 +340,40 @@ After setting up slip current limits, configure the robot's mass for PathPlanner
     public static final double ROBOT_MASS_KG = 34; // Update with your measured mass
     ```
 
-### 1.10 Turn Motor Tuning
+### 1.10 Robot Moment of Inertia Measurement
+After configuring robot mass, measure the robot's rotational inertia for better path following:
+
+1. Setup:
+    - Clear a large, flat area
+    - Place robot on smooth surface
+    - Open AdvantageScope for data logging
+    - Create plots for:
+        - Robot angular velocity (rad/s)
+        - Applied rotational voltage
+
+2. Measurement Process:
+    - Run the "MOI Characterization" autonomous routine
+    - Command will:
+        - Gradually increase rotational voltage
+        - Record angular acceleration response
+        - Calculate MOI automatically
+    - Let test complete (about 10-15 seconds)
+    - Values will print to Driver Station console
+
+3. Update Configuration:
+    - In your TunerConstants file, update the MOI constant:
+    ```java
+    public static final double ROBOT_MOI_KGM2 = 4.24; // Update with your measured value
+    ```
+    This value represents the robot's resistance to rotational acceleration
+
+4. Verification:
+    - Deploy updated code
+    - Test rotational movements
+    - Verify smooth acceleration in turns
+    - Check path following accuracy with rotation
+
+### 1.11 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
 
 1. Initial Setup:
