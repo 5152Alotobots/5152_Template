@@ -323,7 +323,39 @@ After setting maximum speed, we need to determine the current limit that prevent
     - Verify wheels maintain traction
     - Check performance on different surfaces
 
-### 1.9 Turn Motor Tuning
+### 1.9 Robot Mass Configuration
+After setting up slip current limits, configure the robot's mass for PathPlanner:
+
+1. Measure Robot Mass:
+    - Weigh the complete robot
+    - Include all components:
+        - Battery
+        - Bumpers
+        - Game pieces (if carrying during auto)
+    - Convert to kilograms
+
+2. Update Configuration:
+    - In your TunerConstants file, update the PathPlanner config:
+    ```java
+    @Override
+    public RobotConfig getPathPlannerConfig() {
+        return new RobotConfig(
+            kSpeedAt12Volts,                // Max speed from previous step
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            45.0,                           // Mass in kilograms - UPDATE THIS VALUE
+            getDriveBaseRadius()            // Drive base radius in meters
+        );
+    }
+    ```
+
+3. Verification:
+    - Deploy updated code
+    - Test autonomous paths
+    - Verify smooth acceleration
+    - Check path following accuracy
+
+### 1.10 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
 
 1. Initial Setup:
