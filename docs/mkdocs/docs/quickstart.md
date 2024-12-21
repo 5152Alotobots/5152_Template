@@ -373,7 +373,42 @@ After configuring robot mass, measure the robot's rotational inertia for better 
     - Verify smooth acceleration in turns
     - Check path following accuracy with rotation
 
-### 1.11 Turn Motor Tuning
+### 1.11 Wheel Coefficient of Friction Measurement
+After configuring mass and MOI, measure the wheel coefficient of friction for accurate path following:
+
+1. Setup:
+    - Clear a flat, consistent surface area
+    - Place robot on competition surface material
+    - Open AdvantageScope for data logging
+    - Create plots for:
+        - Module velocities
+        - Drive motor currents
+        - Robot acceleration
+
+2. Measurement Process:
+    - Run the "Wheel COF Characterization" autonomous routine
+    - Command will:
+        - Gradually increase drive power
+        - Monitor wheel slip
+        - Calculate static and dynamic COF
+    - Test will run for about 10 seconds
+    - Results print to Driver Station console
+
+3. Update Configuration:
+    - In your TunerConstants file, update the COF constants:
+    ```java
+    public static final double WHEEL_STATIC_COF = 1.1;  // Update with measured value
+    public static final double WHEEL_DYNAMIC_COF = 0.8; // Update with measured value
+    ```
+    These values help PathPlanner calculate maximum achievable accelerations
+
+4. Verification:
+    - Deploy updated code
+    - Test aggressive path following
+    - Verify wheels maintain traction
+    - Check acceleration limits are respected
+
+### 1.12 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
 
 1. Initial Setup:
