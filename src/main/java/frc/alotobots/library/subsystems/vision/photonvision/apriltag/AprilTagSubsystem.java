@@ -30,12 +30,31 @@ import java.util.LinkedList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
+/**
+ * A subsystem that handles AprilTag detection and processing using PhotonVision.
+ * This subsystem processes AprilTag data from multiple cameras and provides pose estimation
+ * with statistical confidence measures.
+ */
 public class AprilTagSubsystem extends SubsystemBase {
+  /** Consumer interface for receiving AprilTag pose data with statistical confidence */
   private final AprilTagConsumer consumer;
+
+  /** Array of AprilTag IO interfaces for each camera */
   private final AprilTagIO[] io;
+
+  /** Array of input logs for each camera */
   private final AprilTagIOInputsAutoLogged[] inputs;
+
+  /** Array of alerts for disconnected cameras */
   private final Alert[] disconnectedAlerts;
 
+  /**
+   * Constructs a new AprilTagSubsystem.
+   *
+   * @param consumer The consumer that will receive processed AprilTag data
+   * @param io Array of AprilTagIO interfaces for each camera
+   * @throws IllegalArgumentException if camera standard deviation factors are invalid
+   */
   public AprilTagSubsystem(AprilTagConsumer consumer, AprilTagIO... io) {
     this.consumer = consumer;
     this.io = io;
@@ -50,28 +69,38 @@ public class AprilTagSubsystem extends SubsystemBase {
     this.disconnectedAlerts = new Alert[io.length];
     for (int i = 0; i < inputs.length; i++) {
       disconnectedAlerts[i] =
-          new Alert(
-              "Vision camera " + CAMERA_CONFIGS[i].name() + " is disconnected.",
-              AlertType.kWarning);
+              new Alert(
+                      "Vision camera " + CAMERA_CONFIGS[i].name() + " is disconnected.",
+                      AlertType.kWarning);
     }
 
     // Ensure no illegal values for STD factors
     for (double factor : CAMERA_STD_DEV_FACTORS) {
       if (factor < 1.0)
         throw new IllegalArgumentException(
-            "[AprilTagSubsystem] Value must be greater than or equal to 1, but was: " + factor);
+                "[AprilTagSubsystem] Value must be greater than or equal to 1, but was: " + factor);
     }
   }
 
   /**
-   * Returns the X angle to the best target, which can be used for simple servoing with vision.
+   * Returns the X angle to the best target for simple vision-based servoing.
    *
-   * @param cameraIndex The index of the camera to use.
+   * @param cameraIndex The index of the camera to use
+   * @return The rotation angle to the best target
    */
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
 
+  /**
+   * Periodic function that processes AprilTag data from all cameras.
+   * This method:
+   * - Updates camera inputs
+   * - Processes pose observations
+   * - Applies statistical confidence calculations
+   * - Logs vision data
+   * - Sends accepted pose estimates to the consumer
+   */
   @Override
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
@@ -108,17 +137,17 @@ public class AprilTagSubsystem extends SubsystemBase {
       for (var observation : inputs[cameraIndex].poseObservations) {
         // Check whether to reject pose
         boolean rejectPose =
-            observation.tagCount() == 0 // Must have at least one tag
-                || (observation.tagCount() == 1
-                    && observation.ambiguity() > MAX_AMBIGUITY) // Cannot be high ambiguity
-                || Math.abs(observation.pose().getZ())
-                    > MAX_Z_ERROR // Must have realistic Z coordinate
+                observation.tagCount() == 0 // Must have at least one tag
+                        || (observation.tagCount() == 1
+                        && observation.ambiguity() > MAX_AMBIGUITY) // Cannot be high ambiguity
+                        || Math.abs(observation.pose().getZ())
+                        > MAX_Z_ERROR // Must have realistic Z coordinate
 
-                // Must be within the field boundaries
-                || observation.pose().getX() < 0.0
-                || observation.pose().getX() > APRIL_TAG_LAYOUT.getFieldLength()
-                || observation.pose().getY() < 0.0
-                || observation.pose().getY() > APRIL_TAG_LAYOUT.getFieldWidth();
+                        // Must be within the field boundaries
+                        || observation.pose().getX() < 0.0
+                        || observation.pose().getX() > APRIL_TAG_LAYOUT.getFieldLength()
+                        || observation.pose().getY() < 0.0
+                        || observation.pose().getY() > APRIL_TAG_LAYOUT.getFieldWidth();
 
         // Add pose to log
         robotPoses.add(observation.pose());
@@ -135,7 +164,7 @@ public class AprilTagSubsystem extends SubsystemBase {
 
         // Calculate standard deviations
         double stdDevFactor =
-            Math.pow(observation.averageTagDistance(), 2.0) / observation.tagCount();
+                Math.pow(observation.averageTagDistance(), 2.0) / observation.tagCount();
         double linearStdDev = LINEAR_STD_DEV_BASE * stdDevFactor;
         double angularStdDev = ANGULAR_STD_DEV_BASE * stdDevFactor;
 
@@ -146,24 +175,24 @@ public class AprilTagSubsystem extends SubsystemBase {
 
         // Send vision observation
         consumer.accept(
-            observation.pose().toPose2d(),
-            observation.timestamp(),
-            VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
+                observation.pose().toPose2d(),
+                observation.timestamp(),
+                VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
       }
 
-      // Log camera datadata
+      // Log camera data
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/TagPoses",
-          tagPoses.toArray(new Pose3d[tagPoses.size()]));
+              "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/TagPoses",
+              tagPoses.toArray(new Pose3d[tagPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPoses",
-          robotPoses.toArray(new Pose3d[robotPoses.size()]));
+              "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPoses",
+              robotPoses.toArray(new Pose3d[robotPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesAccepted",
-          robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
+              "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesAccepted",
+              robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesRejected",
-          robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
+              "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesRejected",
+              robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
@@ -172,22 +201,32 @@ public class AprilTagSubsystem extends SubsystemBase {
 
     // Log summary data
     Logger.recordOutput(
-        "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+            "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
+            "Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPosesAccepted",
-        allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
+            "Vision/Summary/RobotPosesAccepted",
+            allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPosesRejected",
-        allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+            "Vision/Summary/RobotPosesRejected",
+            allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
   }
 
+  /**
+   * Functional interface for consuming AprilTag pose data with statistical confidence measures.
+   */
   @FunctionalInterface
   public static interface AprilTagConsumer {
+    /**
+     * Accepts AprilTag pose data with statistical confidence measures.
+     *
+     * @param visionRobotPoseMeters The estimated robot pose in field coordinates
+     * @param timestampSeconds The timestamp of the measurement in seconds
+     * @param visionMeasurementStdDevs Standard deviations for the measurement [x, y, theta]
+     */
     public void accept(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs);
+            Pose2d visionRobotPoseMeters,
+            double timestampSeconds,
+            Matrix<N3, N1> visionMeasurementStdDevs);
   }
 }
