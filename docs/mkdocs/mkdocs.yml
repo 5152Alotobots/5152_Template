@@ -11,6 +11,7 @@ nav:
   - Library:
       - Commands:
       - Subsystems:
+          - library/subsystems/swerve.md
   - API Documentation: ./javadoc
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: 5152Alotobots/5152_Template
