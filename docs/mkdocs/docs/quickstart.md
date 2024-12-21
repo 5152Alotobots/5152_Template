@@ -293,7 +293,34 @@ After tuning the drive motors, you'll need to measure the robot's actual maximum
     - Verify autonomous paths work correctly
     - Check that speed limits are respected
 
-### 1.8 Turn Motor Tuning
+### 1.8 Slip Current Measurement
+After setting maximum speed, we need to determine the current limit that prevents wheel slip:
+
+1. Setup:
+    - Position robot against a solid wall
+    - Open AdvantageScope
+    - Create plots for:
+        - Drive motor current (/Drive/Module.../DriveCurrentAmps)
+        - Drive velocity (/Drive/Module.../DriveVelocityRadPerSec)
+
+2. Measurement Process:
+    - Gradually increase forward throttle
+    - Watch velocity plot carefully
+    - When velocity suddenly increases (wheel slip), note the current
+    - This is your slip current threshold
+
+3. Updating Constants:
+    - Open your TunerConstants file
+    - Set kSlipCurrent to the measured value
+    - This prevents wheel slip during high-torque maneuvers
+
+4. Verification:
+    - Deploy updated code
+    - Test aggressive movements
+    - Verify wheels maintain traction
+    - Check performance on different surfaces
+
+### 1.9 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
 
 1. Initial Setup:
