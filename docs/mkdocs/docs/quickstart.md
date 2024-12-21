@@ -251,7 +251,52 @@ public static final Slot0Configs driveGains = new Slot0Configs()
     .withKA(0.01);
 ```
 
-### 1.7 Turn Motor Tuning
+### 1.7 Measuring Maximum Speed
+After tuning the drive motors, you'll need to measure the robot's actual maximum speed:
+
+1. Safety First:
+    - Place the robot securely on blocks
+    - Ensure all wheels are free to spin
+    - Clear the area around the robot
+    - Have emergency stop ready
+
+2. Using Phoenix Tuner X:
+    - Connect to robot
+    - Open "Plot" view
+    - Select drive motors
+    - Use "Control" tab
+    - Set to "Voltage Control"
+    - Command 12V to drive motors
+
+3. Measuring Speed:
+    - Let motors reach full speed
+    - Record velocity from plot
+    - Take measurements from all modules
+    - Average the results
+    - Convert to your preferred units (meters/second)
+
+4. Updating Constants:
+    - Open your TunerConstants file
+    - Update the speed value:
+    ```java
+    @Override
+    public LinearVelocity getSpeedAt12Volts() {
+        return LinearVelocity.fromMetersPerSecond(5.21); // Your measured value
+    }
+    ```
+    - This value is used for:
+        - Path planning
+        - Autonomous routines
+        - Speed limiting
+        - Controller scaling
+
+5. Verification:
+    - Deploy updated code
+    - Test at various speed percentages
+    - Verify autonomous paths work correctly
+    - Check that speed limits are respected
+
+### 1.8 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
 
 1. Initial Setup:
