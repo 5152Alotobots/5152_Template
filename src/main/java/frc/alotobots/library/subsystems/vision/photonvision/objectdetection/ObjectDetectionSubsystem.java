@@ -236,41 +236,46 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
       }
 
       // Update logging for this camera
+      // Field/Robot Relative (Objects)
       Logger.recordOutput(
           "Vision/ObjectDetection/Camera"
               + CAMERA_CONFIGS[cameraIndex].name()
-              + "/RobotRelative/PendingObjects",
+              + "/Objects/PendingObjects",
           pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
       Logger.recordOutput(
           "Vision/ObjectDetection/Camera"
               + CAMERA_CONFIGS[cameraIndex].name()
-              + "/RobotRelative/StableObjects",
+              + "/Objects/StableObjects",
           stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+      // Field Relative (Pose3d)
       Logger.recordOutput(
           "Vision/ObjectDetection/Camera"
               + CAMERA_CONFIGS[cameraIndex].name()
-              + "/FieldRelative/PendingObjects",
-          pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+              + "/Poses/PendingObjects",
+          toPoseArray(
+              pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
       Logger.recordOutput(
           "Vision/ObjectDetection/Camera"
               + CAMERA_CONFIGS[cameraIndex].name()
-              + "/FieldRelative/StableObjects",
-          stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+              + "/Poses/StableObjects",
+          toPoseArray(stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
     }
 
     // Log summary
+    // Field/Robot Relative (Objects)
     Logger.recordOutput(
-        "Vision/ObjectDetection/Summary/RobotRelative/PendingObjects",
+        "Vision/ObjectDetection/Summary/Objects/PendingObjects",
         pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
     Logger.recordOutput(
-        "Vision/ObjectDetection/Summary/RobotRelative/StableObjects",
+        "Vision/ObjectDetection/Summary/Objects/StableObjects",
         stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+    // Field Relative (Pose3d)
     Logger.recordOutput(
-        "Vision/ObjectDetection/Summary/FieldRelative/PendingObjects",
-        pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+        "Vision/ObjectDetection/Summary/Poses/PendingObjects",
+        toPoseArray(pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
     Logger.recordOutput(
-        "Vision/ObjectDetection/Summary/FieldRelative/StableObjects",
-        stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+        "Vision/ObjectDetection/Summary/Poses/StableObjects",
+        toPoseArray(stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
   }
 
   private boolean objectsMatch(
@@ -301,8 +306,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
             robotPose.get().getX(),
             robotPose.get().getY(),
             0.0, // Assume robot is on the ground
-            new Rotation3d() // If we need to account for rotation, change this!
-            );
+            new Rotation3d(0, 0, robotPose.get().getRotation().getRadians()));
 
     // Make new array to hold field relative objects
     ObjectDetectionIO.DetectedObjectFieldRelative[] fieldRelative =

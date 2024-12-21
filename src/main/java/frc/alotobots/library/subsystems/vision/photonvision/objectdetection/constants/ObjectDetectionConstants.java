@@ -12,11 +12,13 @@
 */
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
 import lombok.experimental.UtilityClass;
+import org.ejml.simple.SimpleMatrix;
 import org.photonvision.simulation.SimCameraProperties;
 
 @SuppressWarnings("resource")
@@ -33,7 +35,36 @@ public class ObjectDetectionConstants {
 
   // Camera configurations
   public static final CameraConfig[] CAMERA_CONFIGS = {
-    new CameraConfig("FM_ObjectDetection", CAMERA_OFFSETS[0], new SimCameraProperties())
+    new CameraConfig(
+        "FM_ObjectDetection",
+        CAMERA_OFFSETS[0],
+        new SimCameraProperties() {
+          {
+            setCalibration(
+                1280,
+                720,
+                new Matrix<>(
+                    SimpleMatrix.diag(
+                        1060.9825799706975,
+                        0.0,
+                        668.9976907781046,
+                        0.0,
+                        1090.6999107806894,
+                        342.8851810520121,
+                        0.0,
+                        0.0,
+                        1.0)),
+                new Matrix<>(
+                    SimpleMatrix.diag(
+                        -0.2710123040969841,
+                        2.0468938859882737,
+                        0.010769883028548232,
+                        0.013494108245786498,
+                        -3.0046783149407132)));
+            setFPS(30);
+            setAvgLatencyMs(25);
+          }
+        })
   };
 
   // Game elements
@@ -50,13 +81,13 @@ public class ObjectDetectionConstants {
    * The number of detections to save in history, the smaller the better, but still needs to be
    * enough to ensure we have a good detection. Remember, the loop time is about 20ms 1s = 50 frames
    */
-  public static final int HISTORY_LENGTH = 30;
+  public static final int HISTORY_LENGTH = 50;
 
   /**
    * Number of detections in history that need to be detected with that object for it to be
    * considered stable
    */
-  public static final int REQUIRED_DETECTIONS = 10;
+  public static final int REQUIRED_DETECTIONS = 20;
 
   /**
    * Number of missed detections IN A ROW of a stable object for it to be removed from the stable
@@ -65,5 +96,5 @@ public class ObjectDetectionConstants {
   public static final int MISSING_FRAMES_THRESHOLD = 15;
 
   /*** Distance between objects considered as the same */
-  public static final double POSITION_MATCH_TOLERANCE = 0.4; // meters
+  public static final double POSITION_MATCH_TOLERANCE = 0.2; // meters
 }

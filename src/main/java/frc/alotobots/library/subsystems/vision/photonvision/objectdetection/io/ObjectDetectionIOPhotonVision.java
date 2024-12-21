@@ -75,7 +75,13 @@ public class ObjectDetectionIOPhotonVision implements ObjectDetectionIO {
           // ground
           Transform3d cameraToTarget =
               new Transform3d(
-                  new Translation3d(targetToCamera2d.getX(), targetToCamera2d.getY(), 0),
+                  new Translation3d(
+                      targetToCamera2d.getX(),
+                      targetToCamera2d.getY(),
+                      -robotToCamera.getZ()
+                          + ObjectDetectionConstants.GAME_ELEMENTS[
+                              target.getDetectedObjectClassID()]
+                              .height()),
                   new Rotation3d());
 
           // Now combine the transforms to get target in robot space

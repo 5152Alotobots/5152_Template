@@ -18,6 +18,6 @@ package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.uti
  * @param name The name of the object
  * @param length The length of the object
  * @param width The width of the object
- * @param height The height of the object (floor to top)
+ * @param height The height of the object (floor to middle)
  */
 public record GameElement(String name, double length, double width, double height) {}
