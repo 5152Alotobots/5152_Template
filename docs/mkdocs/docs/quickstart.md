@@ -338,24 +338,7 @@ After setting up slip current limits, configure the robot's mass for PathPlanner
     - In your TunerConstants file, update the PathPlanner config:
     ```java
     public static final double ROBOT_MASS_KG = 34; // Update with your measured mass
-    
-    @Override
-    public RobotConfig getPathPlannerConfig() {
-        return new RobotConfig(
-            kSpeedAt12Volts,                // Max speed from previous step
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            ROBOT_MASS_KG,                  // Mass in kilograms
-            getDriveBaseRadius()            // Drive base radius in meters
-        );
-    }
     ```
-
-3. Verification:
-    - Deploy updated code
-    - Test autonomous paths
-    - Verify smooth acceleration
-    - Check path following accuracy
 
 ### 1.10 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
