@@ -9,7 +9,12 @@ nav:
   - Home: index.md
   - Game: []
   - Library:
-      - Commands: []
+      - Commands:
+          - Swerve:
+              - Default Drive: library/commands/swerve/defaultdrive.md
+              - Drive Facing Angle: library/commands/swerve/drivefacingangle.md
+              - Drive Facing Pose: library/commands/swerve/drivefacingpose.md
+              - Characterization: library/commands/swerve/characterization.md
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
   - API Documentation: javadoc/index.html # Point directly to index.html
