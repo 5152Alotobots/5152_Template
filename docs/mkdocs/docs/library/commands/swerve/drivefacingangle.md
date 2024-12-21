@@ -4,7 +4,7 @@
 The DriveFacingAngle command implements sophisticated angle-controlled driving capabilities, allowing the robot to maintain a specific heading while moving. This command utilizes a ProfiledPIDController for precise angle management.
 
 ## Required Subsystems
-- [SwerveDriveSubsystem](../../subsystems/swerve.md)
+- [SwerveDriveSubsystem](../../subsystems/swerve)
 
 ## Constructor Parameters
 - `swerveDriveSubsystem`: The SwerveDrive subsystem instance this command will control
