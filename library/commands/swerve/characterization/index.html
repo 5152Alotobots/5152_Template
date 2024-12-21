@@ -9,23 +9,25 @@
       
       
       
+        <link rel="prev" href="../drivefacingpose/">
       
-        <link rel="next" href="library/commands/swerve/defaultdrive/">
+      
+        <link rel="next" href="../../../subsystems/swerve/">
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
-        <title>Team 5152 Robot Documentation</title>
+        <title>Characterization - Team 5152 Robot Documentation</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,7 +46,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#team-5152-robot-code-documentation" class="md-skip">
+        <a href="#swerve-drive-characterization-commands" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +86,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../.." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -104,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Characterization
             
           </span>
         </div>
@@ -191,7 +193,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../.." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -218,19 +220,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -239,7 +232,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -251,7 +243,7 @@
   
   
     <li class="md-nav__item">
-      <a href="." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -268,17 +260,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -292,7 +286,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Library
@@ -303,17 +297,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
         
           
           <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
@@ -327,7 +323,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             Commands
@@ -338,17 +334,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" checked>
         
           
           <label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
@@ -362,7 +360,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_1_1">
             <span class="md-nav__icon md-icon"></span>
             Swerve
@@ -376,7 +374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="library/commands/swerve/defaultdrive/" class="md-nav__link">
+      <a href="../defaultdrive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -397,7 +395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="library/commands/swerve/drivefacingangle/" class="md-nav__link">
+      <a href="../drivefacingangle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -418,7 +416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="library/commands/swerve/drivefacingpose/" class="md-nav__link">
+      <a href="../drivefacingpose/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -436,10 +434,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="library/commands/swerve/characterization/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Characterization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -448,6 +466,143 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Subsystems
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wheelradiuscharacterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      WheelRadiusCharacterization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WheelRadiusCharacterization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedforwardcharacterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      FeedforwardCharacterization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FeedforwardCharacterization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Reference
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -511,7 +666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="library/subsystems/swerve/" class="md-nav__link">
+      <a href="../../../subsystems/swerve/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -547,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="javadoc/" class="md-nav__link">
+      <a href="../../../../javadoc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -580,6 +735,131 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#required-subsystems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Subsystems
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wheelradiuscharacterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      WheelRadiusCharacterization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WheelRadiusCharacterization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedforwardcharacterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      FeedforwardCharacterization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FeedforwardCharacterization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Requirements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Reference
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -596,8 +876,45 @@
   
 
 
-<h1 id="team-5152-robot-code-documentation">Team 5152 Robot Code Documentation</h1>
-<p>Welcome to the comprehensive documentation for Team 5152's robot code. This documentation provides an in-depth look at our robot's sophisticated control and automation systems.</p>
+<h1 id="swerve-drive-characterization-commands">Swerve Drive Characterization Commands</h1>
+<h2 id="overview">Overview</h2>
+<p>The characterization commands provide system identification capabilities for the swerve drive subsystem. These commands enable precise measurement and calculation of critical system parameters.</p>
+<h2 id="required-subsystems">Required Subsystems</h2>
+<ul>
+<li><a href="../../../subsystems/swerve/">SwerveDriveSubsystem</a></li>
+</ul>
+<h2 id="commands">Commands</h2>
+<h3 id="wheelradiuscharacterization">WheelRadiusCharacterization</h3>
+<p>Measures and calculates the effective wheel radius of the swerve modules.</p>
+<h4 id="parameters">Parameters</h4>
+<ul>
+<li><code>swerveDriveSubsystem</code>: The SwerveDrive subsystem instance to characterize</li>
+</ul>
+<h4 id="output">Output</h4>
+<p>Provides:
+- Wheel radius measurement in meters and inches
+- Wheel and gyro delta measurements
+- Calculation confidence metrics</p>
+<h3 id="feedforwardcharacterization">FeedforwardCharacterization</h3>
+<p>Determines the feedforward characterization constants for the drive motors.</p>
+<h4 id="parameters_1">Parameters</h4>
+<ul>
+<li><code>swerveDriveSubsystem</code>: The SwerveDrive subsystem instance to characterize</li>
+</ul>
+<h4 id="output_1">Output</h4>
+<p>Provides:
+- kS (static friction coefficient)
+- kV (velocity coefficient)
+- Data points for validation</p>
+<h2 id="configuration-requirements">Configuration Requirements</h2>
+<ul>
+<li>Clear operating space required</li>
+<li>Robot must be on a level surface</li>
+<li>Battery should be fully charged</li>
+<li>Robot must start in a known orientation</li>
+</ul>
+<h2 id="api-reference">API Reference</h2>
+<p>For detailed API documentation, see the <a href="/javadoc/frc/alotobots/library/commands/swervedrive/characterization/">Characterization Commands Javadoc</a></p>
 
 
 
@@ -644,10 +961,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>
