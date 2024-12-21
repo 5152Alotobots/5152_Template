@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="package-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -67,39 +71,36 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="game/package-summary.html">frc.alotobots.game</a></div>
+<div class="col-first even-row-color"><a href="util/package-summary.html">frc.alotobots.util</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="util/package-summary.html">frc.alotobots.util</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab3" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab3', 2)" class="table-tab">Enum Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Constants.html" title="class in frc.alotobots">Constants</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="BuildConstants.html" title="class in frc.alotobots">BuildConstants</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Central repository for robot-wide constant values.</div>
+<div class="block">Automatically generated file containing build version information.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Constants.Robot.html" title="class in frc.alotobots">Constants.Robot</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Constants.Robot.AnalogInputIds.html" title="class in frc.alotobots">Constants.Robot.AnalogInputIds</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Constants.Robot.CanId.html" title="class in frc.alotobots">Constants.Robot.CanId</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Constants.Robot.DigitalIoIds.html" title="class in frc.alotobots">Constants.Robot.DigitalIoIds</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Constants.Robot.Field.html" title="class in frc.alotobots">Constants.Robot.Field</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Constants.Robot.PwmIds.html" title="class in frc.alotobots">Constants.Robot.PwmIds</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Main.html" title="class in frc.alotobots">Main</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Constants.html" title="class in frc.alotobots">Constants</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">This class defines the runtime mode used by AdvantageKit.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Constants.CanId.html" title="class in frc.alotobots">Constants.CanId</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab3"><a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab3">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Main.html" title="class in frc.alotobots">Main</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Do NOT add any static variables to this class, or any initialization at all.</div>
 </div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OI.html" title="class in frc.alotobots">OI</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="Robot.html" title="class in frc.alotobots">Robot</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -108,6 +109,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="RobotContainer.html" title="class in frc.alotobots">RobotContainer</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This class is where the bulk of the robot should be declared.</div>
+</div>
 </div>
 </div>
 </div>

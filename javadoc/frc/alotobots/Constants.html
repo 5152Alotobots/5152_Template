@@ -40,13 +40,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li>Method</li>
 </ul>
@@ -73,8 +73,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Constants</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Central repository for robot-wide constant values. Contains configuration values, port mappings,
- and calibration constants.</div>
+<div class="block">This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
+ on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
+ (log replay from a file).</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -88,7 +89,31 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="Constants.Robot.html" class="type-name-link" title="class in frc.alotobots">Constants.Robot</a></code></div>
+<div class="col-second even-row-color"><code><a href="Constants.CanId.html" class="type-name-link" title="class in frc.alotobots">Constants.CanId</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="Constants.Mode.html" class="type-name-link" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
+<div class="col-second even-row-color"><code><a href="#currentMode" class="member-name-link">currentMode</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#simMode" class="member-name-link">simMode</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></code></div>
+<div class="col-second even-row-color"><code><a href="#tunerConstants" class="member-name-link">tunerConstants</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -119,6 +144,32 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="simMode">
+<h3>simMode</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></span>&nbsp;<span class="element-name">simMode</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="currentMode">
+<h3>currentMode</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></span>&nbsp;<span class="element-name">currentMode</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="tunerConstants">
+<h3>tunerConstants</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></span>&nbsp;<span class="element-name">tunerConstants</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">

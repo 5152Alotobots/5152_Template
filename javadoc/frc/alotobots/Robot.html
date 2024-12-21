@@ -71,9 +71,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class Robot" class="title">Class Robot</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">edu.wpi.first.wpilibj.RobotBase
-<div class="inheritance">edu.wpi.first.wpilibj.IterativeRobotBase
-<div class="inheritance">edu.wpi.first.wpilibj.TimedRobot
+<div class="inheritance"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">edu.wpi.first.wpilibj.RobotBase</a>
+<div class="inheritance"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">edu.wpi.first.wpilibj.IterativeRobotBase</a>
+<div class="inheritance">org.littletonrobotics.junction.LoggedRobot
 <div class="inheritance">frc.alotobots.Robot</div>
 </div>
 </div>
@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Robot</span>
-<span class="extends-implements">extends edu.wpi.first.wpilibj.TimedRobot</span></div>
+<span class="extends-implements">extends org.littletonrobotics.junction.LoggedRobot</span></div>
 <div class="block">The VM is configured to automatically run this class, and to call the functions corresponding to
  each mode, as described in the TimedRobot documentation. If you change the name of this class or
  the package after creating this project, you must also update the build.gradle file in the
@@ -99,8 +99,8 @@ loadScripts(document, 'script');</script>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
 <div class="inherited-list">
-<h3 id="fields-inherited-from-class-edu.wpi.first.wpilibj.TimedRobot">Fields inherited from class&nbsp;edu.wpi.first.wpilibj.TimedRobot</h3>
-<code>kDefaultPeriod</code></div>
+<h3 id="fields-inherited-from-class-org.littletonrobotics.junction.LoggedRobot">Fields inherited from class&nbsp;org.littletonrobotics.junction.LoggedRobot</h3>
+<code>defaultPeriodSecs</code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -140,53 +140,63 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disabledInit()" class="member-name-link">disabledInit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called once each time the robot enters Disabled mode.</div>
+<div class="block">This function is called once when the robot is disabled.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disabledPeriodic()" class="member-name-link">disabledPeriodic</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This function is called periodically when disabled.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#robotInit()" class="member-name-link">robotInit</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#robotPeriodic()" class="member-name-link">robotPeriodic</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is run when the robot is first started up and should be used for any
- initialization code.</div>
+<div class="block">This function is called periodically during all modes.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#robotPeriodic()" class="member-name-link">robotPeriodic</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#simulationInit()" class="member-name-link">simulationInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called every robot packet, no matter the mode.</div>
+<div class="block">This function is called once when the robot is first started up.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopInit()" class="member-name-link">teleopInit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#simulationPeriodic()" class="member-name-link">simulationPeriodic</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This function is called periodically whilst in simulation.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopPeriodic()" class="member-name-link">teleopPeriodic</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopInit()" class="member-name-link">teleopInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This function is called once when teleop is enabled.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopPeriodic()" class="member-name-link">teleopPeriodic</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">This function is called periodically during operator control.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testInit()" class="member-name-link">testInit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testPeriodic()" class="member-name-link">testPeriodic</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testInit()" class="member-name-link">testInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This function is called once when test mode is enabled.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testPeriodic()" class="member-name-link">testPeriodic</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">This function is called periodically during test mode.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-edu.wpi.first.wpilibj.TimedRobot">Methods inherited from class&nbsp;edu.wpi.first.wpilibj.TimedRobot</h3>
-<code>addPeriodic, addPeriodic, addPeriodic, addPeriodic, close, endCompetition, getLoopStartTime, startCompetition</code></div>
+<h3 id="methods-inherited-from-class-org.littletonrobotics.junction.LoggedRobot">Methods inherited from class&nbsp;org.littletonrobotics.junction.LoggedRobot</h3>
+<code>endCompetition, finalize, setUseTiming, startCompetition</code></div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-edu.wpi.first.wpilibj.IterativeRobotBase">Methods inherited from class&nbsp;edu.wpi.first.wpilibj.IterativeRobotBase</h3>
-<code>autonomousExit, disabledExit, driverStationConnected, enableLiveWindowInTest, getPeriod, isLiveWindowEnabledInTest, loopFunc, printWatchdogEpochs, setNetworkTablesFlushEnabled, simulationInit, simulationPeriodic, teleopExit, testExit</code></div>
+<h3 id="methods-inherited-from-class-edu.wpi.first.wpilibj.IterativeRobotBase">Methods inherited from class&nbsp;edu.wpi.first.wpilibj.<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></h3>
+<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#autonomousExit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">autonomousExit</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#disabledExit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">disabledExit</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#driverStationConnected()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">driverStationConnected</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#enableLiveWindowInTest(boolean)" title="class or interface in edu.wpi.first.wpilibj" class="external-link">enableLiveWindowInTest</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#getPeriod()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">getPeriod</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#isLiveWindowEnabledInTest()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isLiveWindowEnabledInTest</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#loopFunc()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">loopFunc</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#printWatchdogEpochs()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">printWatchdogEpochs</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#robotInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">robotInit</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#setNetworkTablesFlushEnabled(boolean)" title="class or interface in edu.wpi.first.wpilibj" class="external-link">setNetworkTablesFlushEnabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#teleopExit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">teleopExit</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#testExit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">testExit</a></code></div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-edu.wpi.first.wpilibj.RobotBase">Methods inherited from class&nbsp;edu.wpi.first.wpilibj.RobotBase</h3>
-<code>getMainThreadId, getRuntimeType, isAutonomous, isAutonomousEnabled, isDisabled, isEnabled, isReal, isSimulation, isTeleop, isTeleopEnabled, isTest, isTestEnabled, startRobot, suppressExitWarning</code></div>
+<h3 id="methods-inherited-from-class-edu.wpi.first.wpilibj.RobotBase">Methods inherited from class&nbsp;edu.wpi.first.wpilibj.<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">RobotBase</a></h3>
+<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#close()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">close</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#getMainThreadId()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">getMainThreadId</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#getRuntimeType()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">getRuntimeType</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isAutonomous()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isAutonomous</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isAutonomousEnabled()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isAutonomousEnabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isDisabled()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isDisabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isEnabled()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isEnabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isReal()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isReal</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isSimulation()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isSimulation</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isTeleop()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isTeleop</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isTeleopEnabled()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isTeleopEnabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isTest()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isTest</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#isTestEnabled()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">isTestEnabled</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#startRobot(java.util.function.Supplier)" title="class or interface in edu.wpi.first.wpilibj" class="external-link">startRobot</a>, <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/RobotBase.html#suppressExitWarning(boolean)" title="class or interface in edu.wpi.first.wpilibj" class="external-link">suppressExitWarning</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -213,29 +223,13 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="robotInit()">
-<h3>robotInit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">robotInit</span>()</div>
-<div class="block">This function is run when the robot is first started up and should be used for any
- initialization code.</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>robotInit</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="robotPeriodic()">
 <h3>robotPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">robotPeriodic</span>()</div>
-<div class="block">This function is called every robot packet, no matter the mode. Use this for items like
- diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-
- <p>This runs after the mode specific periodic functions, but before LiveWindow and
- SmartDashboard integrated updating.</div>
+<div class="block">This function is called periodically during all modes.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>robotPeriodic</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#robotPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">robotPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -243,10 +237,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="disabledInit()">
 <h3>disabledInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledInit</span>()</div>
-<div class="block">This function is called once each time the robot enters Disabled mode.</div>
+<div class="block">This function is called once when the robot is disabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>disabledInit</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#disabledInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">disabledInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -254,9 +248,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="disabledPeriodic()">
 <h3>disabledPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledPeriodic</span>()</div>
+<div class="block">This function is called periodically when disabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>disabledPeriodic</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#disabledPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">disabledPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -267,7 +262,7 @@ loadScripts(document, 'script');</script>
 <div class="block">This autonomous runs the autonomous command selected by your <a href="RobotContainer.html" title="class in frc.alotobots"><code>RobotContainer</code></a> class.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>autonomousInit</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#autonomousInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">autonomousInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -278,7 +273,7 @@ loadScripts(document, 'script');</script>
 <div class="block">This function is called periodically during autonomous.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>autonomousPeriodic</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#autonomousPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">autonomousPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -286,9 +281,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="teleopInit()">
 <h3>teleopInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">teleopInit</span>()</div>
+<div class="block">This function is called once when teleop is enabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>teleopInit</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#teleopInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">teleopInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -299,7 +295,7 @@ loadScripts(document, 'script');</script>
 <div class="block">This function is called periodically during operator control.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>teleopPeriodic</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#teleopPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">teleopPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -307,9 +303,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="testInit()">
 <h3>testInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testInit</span>()</div>
+<div class="block">This function is called once when test mode is enabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>testInit</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#testInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">testInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
@@ -320,7 +317,29 @@ loadScripts(document, 'script');</script>
 <div class="block">This function is called periodically during test mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>testPeriodic</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.IterativeRobotBase</code></dd>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#testPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">testPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="simulationInit()">
+<h3>simulationInit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">simulationInit</span>()</div>
+<div class="block">This function is called once when the robot is first started up.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#simulationInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">simulationInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="simulationPeriodic()">
+<h3>simulationPeriodic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">simulationPeriodic</span>()</div>
+<div class="block">This function is called periodically whilst in simulation.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#simulationPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">simulationPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
 </dl>
 </section>
 </li>
