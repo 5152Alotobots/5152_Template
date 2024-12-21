@@ -311,7 +311,10 @@ After setting maximum speed, we need to determine the current limit that prevent
 
 3. Updating Constants:
     - Open your TunerConstants file
-    - Set kSlipCurrent to the measured value
+    - Set kSlipCurrent to the measured value:
+    ```java
+    public static final double kSlipCurrent = 40.0; // Amperes - adjust to your measured value
+    ```
     - This prevents wheel slip during high-torque maneuvers
 
 4. Verification:
