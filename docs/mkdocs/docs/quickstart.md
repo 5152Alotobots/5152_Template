@@ -279,10 +279,7 @@ After tuning the drive motors, you'll need to measure the robot's actual maximum
     - Open your TunerConstants file
     - Update the speed value:
     ```java
-    @Override
-    public LinearVelocity getSpeedAt12Volts() {
-        return LinearVelocity.fromMetersPerSecond(5.21); // Your measured value
-    }
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.02);
     ```
     - This value is used for:
         - Path planning
