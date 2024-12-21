@@ -395,12 +395,11 @@ After configuring mass and MOI, measure the wheel coefficient of friction for ac
     - Results print to Driver Station console
 
 3. Update Configuration:
-    - In your TunerConstants file, update the COF constants:
+    - In your TunerConstants file, update the COF constant:
     ```java
-    public static final double WHEEL_STATIC_COF = 1.1;  // Update with measured value
-    public static final double WHEEL_DYNAMIC_COF = 0.8; // Update with measured value
+    public static final double WHEEL_COF = 1.1;  // Update with measured value
     ```
-    These values help PathPlanner calculate maximum achievable accelerations
+    This value helps PathPlanner calculate maximum achievable accelerations
 
 4. Verification:
     - Deploy updated code
