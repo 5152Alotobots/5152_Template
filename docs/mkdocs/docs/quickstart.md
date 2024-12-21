@@ -346,7 +346,7 @@ After configuring robot mass, measure the robot's rotational inertia for better 
 1. Setup:
     - Clear a large, flat area
     - Place robot on smooth surface
-    - Open AdvantageScope for data logging
+    - Open AdvantageScope or Tuner X for data logging
     - Create plots for:
         - Robot angular velocity (rad/s)
         - Applied rotational voltage
@@ -363,7 +363,7 @@ After configuring robot mass, measure the robot's rotational inertia for better 
 3. Update Configuration:
     - In your TunerConstants file, update the MOI constant:
     ```java
-    public static final double ROBOT_MOI_KGM2 = 4.24; // Update with your measured value
+    public static final double ROBOT_MOI = 4.24; // Update with your measured value
     ```
     This value represents the robot's resistance to rotational acceleration
 
