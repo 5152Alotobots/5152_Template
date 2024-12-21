@@ -14,4 +14,4 @@ The DefaultDrive command implements the default driving behavior for the [Swerve
 - Command uses drive calculations from SwerveDrive subsystem's configured settings
 
 ## API Reference
-For detailed API documentation, see the [DefaultDrive Javadoc](/javadoc/frc/alotobots/library/commands/swervedrive/DefaultDrive.html)
+For detailed API documentation, see the [DefaultDrive Javadoc](/5152_Template/javadoc/frc/alotobots/library/commands/swervedrive/DefaultDrive.html)

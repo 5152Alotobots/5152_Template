@@ -39,4 +39,4 @@ Provides:
 - Robot must start in a known orientation
 
 ## API Reference
-For detailed API documentation, see the [Characterization Commands Javadoc](/javadoc/frc/alotobots/library/commands/swervedrive/characterization/)
+For detailed API documentation, see the [Characterization Commands Javadoc](/5152_Template/javadoc/frc/alotobots/library/commands/swervedrive/characterization/)

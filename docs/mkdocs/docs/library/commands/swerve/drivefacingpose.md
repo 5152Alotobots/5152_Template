@@ -17,4 +17,4 @@ The following must be configured in TunerConstants:
 - Profile constraints for smooth angle transitions
 
 ## API Reference
-For detailed API documentation, see the [DriveFacingPose Javadoc](/javadoc/frc/alotobots/library/commands/swervedrive/DriveFacingPose.html)
+For detailed API documentation, see the [DriveFacingPose Javadoc](/5152_Template/javadoc/frc/alotobots/library/commands/swervedrive/DriveFacingPose.html)
