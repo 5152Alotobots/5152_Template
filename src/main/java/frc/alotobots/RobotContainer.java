@@ -94,7 +94,7 @@ public class RobotContainer {
                     AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
         // Sim support for object detection doesn't exist yet, so use a no-op
         objectDetectionSubsystem =
-                new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
+            new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         break;
 
       default:
