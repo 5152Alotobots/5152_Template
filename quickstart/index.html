@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://5152alotobots.github.io/5152_Template/quickstart/">
       
       
+        <link rel="prev" href="../library/subsystems/vision/objectdetection/">
+      
+      
+        <link rel="next" href="../javadoc/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Robot Quickstart Guide - Team 5152 Robot Documentation</title>
+        <title>Quickstart - Team 5152 Robot Documentation</title>
       
     
     
@@ -104,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Robot Quickstart Guide
+              Quickstart
             
           </span>
         </div>
@@ -717,6 +721,333 @@
             
           </ul>
         </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-swerve-drive-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Swerve Drive Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Swerve Drive Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-can-id-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 CAN ID Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-new-season-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 New Season Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-module-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.3 Module Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-drive-system-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.4 Drive System Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-drive-characterization" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.5 Drive Characterization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-drive-motor-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.6 Drive Motor Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-measuring-maximum-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.7 Measuring Maximum Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-slip-current-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.8 Slip Current Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-robot-mass-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.9 Robot Mass Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#110-robot-moment-of-inertia-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.10 Robot Moment of Inertia Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#111-wheel-coefficient-of-friction-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.11 Wheel Coefficient of Friction Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-turn-motor-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.12 Turn Motor Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-pathplanner-pid-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.13 PathPlanner PID Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-final-verification-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.14 Final Verification Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-vision-coprocessor-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Vision Coprocessor Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Vision Coprocessor Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-initial-hardware-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Initial Hardware Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-photonvision-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 PhotonVision Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-apriltag-vision-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. AprilTag Vision Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. AprilTag Vision Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-camera-offset-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Camera Offset Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-camera-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Camera Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-object-detection-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Object Detection Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Object Detection Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-initial-hardware-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Initial Hardware Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-photonvision-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 PhotonVision Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-camera-offset-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 Camera Offset Measurement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-game-element-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Game Element Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-camera-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5 Camera Verification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
