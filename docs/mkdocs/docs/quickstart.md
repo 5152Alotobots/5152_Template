@@ -729,7 +729,29 @@ After configuring camera offsets:
     - Check pose estimation quality
     - Verify reasonable distance estimates
 
-4. Common Issues:
+4. Optional Camera Tuning:
+    - Camera Trust Factors:
+        ```java
+        // Standard deviation multipliers for each camera
+        // (Adjust to trust some cameras more than others)
+        // SHOULD NEVER BE LESS THAN 1.0, NUMBERS GREATER THAN 1 = TRUST LESS
+        public static double[] CAMERA_STD_DEV_FACTORS = new double[] {1.0, 1.0};
+        ```
+        - Higher values = trust that camera less
+        - Example: `{1.0, 1.5}` trusts first camera more than second
+        - Never use values less than 1.0
+        - Useful when some cameras are more reliable than others
+
+    - Ambiguity Filtering:
+        ```java
+        public static double MAX_AMBIGUITY = 0.3;
+        ```
+        - Filters out less confident tag detections
+        - Lower values = stricter filtering
+        - Range 0.0 to 1.0
+        - Start with 0.3 and adjust based on false positive rate
+
+5. Common Issues:
     - Camera disconnections: Check USB connections
     - Poor detection: Adjust exposure/brightness
     - Incorrect poses: Double-check offset measurements
