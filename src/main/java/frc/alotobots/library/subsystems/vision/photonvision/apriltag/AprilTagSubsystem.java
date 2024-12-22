@@ -101,7 +101,7 @@ public class AprilTagSubsystem extends SubsystemBase {
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
-      Logger.processInputs("Vision/Camera" + CAMERA_CONFIGS[i].name(), inputs[i]);
+      Logger.processInputs("Vision/AprilTag/Camera" + CAMERA_CONFIGS[i].name(), inputs[i]);
     }
 
     // Initialize logging values
@@ -178,16 +178,16 @@ public class AprilTagSubsystem extends SubsystemBase {
 
       // Log camera data
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/TagPoses",
+          "Vision/AprilTag/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPoses",
+          "Vision/AprilTag/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPoses",
           robotPoses.toArray(new Pose3d[robotPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesAccepted",
+          "Vision/AprilTag/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesAccepted",
           robotPosesAccepted.toArray(new Pose3d[robotPosesAccepted.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesRejected",
+          "Vision/AprilTag/Camera" + CAMERA_CONFIGS[cameraIndex].name() + "/RobotPosesRejected",
           robotPosesRejected.toArray(new Pose3d[robotPosesRejected.size()]));
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
@@ -197,14 +197,15 @@ public class AprilTagSubsystem extends SubsystemBase {
 
     // Log summary data
     Logger.recordOutput(
-        "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+        "Vision/AprilTag/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
+        "Vision/AprilTag/Summary/RobotPoses",
+        allRobotPoses.toArray(new Pose3d[allRobotPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPosesAccepted",
+        "Vision/AprilTag/Summary/RobotPosesAccepted",
         allRobotPosesAccepted.toArray(new Pose3d[allRobotPosesAccepted.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RobotPosesRejected",
+        "Vision/AprilTag/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
   }
 

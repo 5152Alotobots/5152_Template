@@ -19,11 +19,13 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectFieldRelative;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOInputsAutoLogged;
 import java.util.*;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Subsystem that handles object detection using PhotonVision cameras. This subsystem processes
@@ -177,9 +179,160 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
   /** Periodic function that updates camera inputs and processes detections. */
   @Override
   public void periodic() {
-    // Code continues...
+    // Update camera inputs
+    for (int i = 0; i < io.length; i++) {
+      io[i].updateInputs(inputs[i]);
+      Logger.processInputs(
+          "Vision/ObjectDetection/Camera" + ObjectDetectionConstants.CAMERA_CONFIGS[i].name(),
+          inputs[i]);
+    }
 
-    // Rest of implementation remains unchanged
+    // Process each camera
+    for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
+      disconnectedAlerts[cameraIndex].set(!inputs[cameraIndex].connected);
+
+      Set<ObjectDetectionIO.DetectedObjectFieldRelative> currentFrameObjects =
+          new LinkedHashSet<>(List.of(toFieldRelative(inputs[cameraIndex].detectedObjects)));
+      Set<ObjectDetectionIO.DetectedObjectFieldRelative> trackedObjectsSeen = new LinkedHashSet<>();
+
+      // Update existing tracked objects
+      Iterator<Map.Entry<ObjectDetectionIO.DetectedObjectFieldRelative, DetectionHistory>> it =
+          detectionHistories.entrySet().iterator();
+      while (it.hasNext()) {
+        Map.Entry<ObjectDetectionIO.DetectedObjectFieldRelative, DetectionHistory> entry =
+            it.next();
+        ObjectDetectionIO.DetectedObjectFieldRelative trackedObject = entry.getKey();
+        DetectionHistory history = entry.getValue();
+        boolean wasStable = history.isStable();
+
+        boolean stillDetected = false;
+        ObjectDetectionIO.DetectedObjectFieldRelative currentMatchedObject = null;
+
+        for (ObjectDetectionIO.DetectedObjectFieldRelative currentObject : currentFrameObjects) {
+          if (objectsMatch(trackedObject, currentObject)) {
+            stillDetected = true;
+            currentMatchedObject = currentObject;
+            trackedObjectsSeen.add(currentObject);
+            break;
+          }
+        }
+
+        history.addDetection(stillDetected, currentMatchedObject);
+
+        if (stillDetected && currentMatchedObject != null) {
+          if (history.isStable() && !wasStable) {
+            // Object became stable
+            ObjectDetectionIO.DetectedObjectFieldRelative toRemove = null;
+            for (ObjectDetectionIO.DetectedObjectFieldRelative pending : pendingObjects) {
+              if (objectsMatch(pending, trackedObject)) {
+                toRemove = pending;
+                break;
+              }
+            }
+
+            if (toRemove != null) {
+              pendingObjects.remove(toRemove);
+              stableObjects.add(currentMatchedObject);
+            }
+          } else if (!history.isStable() && wasStable) {
+            // Object lost stability
+            ObjectDetectionIO.DetectedObjectFieldRelative toRemove = null;
+            for (ObjectDetectionIO.DetectedObjectFieldRelative stable : stableObjects) {
+              if (objectsMatch(stable, trackedObject)) {
+                toRemove = stable;
+                break;
+              }
+            }
+
+            if (toRemove != null) {
+              stableObjects.remove(toRemove);
+              pendingObjects.add(currentMatchedObject);
+            }
+          }
+        }
+
+        // Remove if missing too long
+        if (history.getMissedFramesInARow() > MISSING_FRAMES_THRESHOLD) {
+          // Remove from histories
+          it.remove();
+
+          // Find and remove from stable objects if present
+          ObjectDetectionIO.DetectedObjectFieldRelative toRemoveStable = null;
+          for (ObjectDetectionIO.DetectedObjectFieldRelative stable : stableObjects) {
+            if (objectsMatch(stable, trackedObject)) {
+              toRemoveStable = stable;
+              break;
+            }
+          }
+          if (toRemoveStable != null) {
+            stableObjects.remove(toRemoveStable);
+          }
+
+          // Find and remove from pending objects if present
+          ObjectDetectionIO.DetectedObjectFieldRelative toRemovePending = null;
+          for (ObjectDetectionIO.DetectedObjectFieldRelative pending : pendingObjects) {
+            if (objectsMatch(pending, trackedObject)) {
+              toRemovePending = pending;
+              break;
+            }
+          }
+          if (toRemovePending != null) {
+            pendingObjects.remove(toRemovePending);
+          }
+        }
+      }
+
+      // Add new objects to tracking
+      for (ObjectDetectionIO.DetectedObjectFieldRelative detectedObject : currentFrameObjects) {
+        if (!trackedObjectsSeen.contains(detectedObject) && !objectExistsInLists(detectedObject)) {
+          DetectionHistory history = new DetectionHistory();
+          history.addDetection(true, detectedObject);
+          detectionHistories.put(detectedObject, history);
+          pendingObjects.add(detectedObject);
+        }
+      }
+
+      // Update logging for this camera
+      // Field/Robot Relative (Objects)
+      Logger.recordOutput(
+          "Vision/ObjectDetection/Camera"
+              + CAMERA_CONFIGS[cameraIndex].name()
+              + "/Objects/PendingObjects",
+          pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+      Logger.recordOutput(
+          "Vision/ObjectDetection/Camera"
+              + CAMERA_CONFIGS[cameraIndex].name()
+              + "/Objects/StableObjects",
+          stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+      // Field Relative (Pose3d)
+      Logger.recordOutput(
+          "Vision/ObjectDetection/Camera"
+              + CAMERA_CONFIGS[cameraIndex].name()
+              + "/Poses/PendingObjects",
+          toPoseArray(
+              pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
+      Logger.recordOutput(
+          "Vision/ObjectDetection/Camera"
+              + CAMERA_CONFIGS[cameraIndex].name()
+              + "/Poses/StableObjects",
+          toPoseArray(stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
+    }
+
+    // Log summary
+    // Field/Robot Relative (Objects)
+    Logger.recordOutput(
+        "Vision/ObjectDetection/Summary/Objects/PendingObjects",
+        pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+    Logger.recordOutput(
+        "Vision/ObjectDetection/Summary/Objects/StableObjects",
+        stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0]));
+    // Field Relative (Pose3d)
+    Logger.recordOutput(
+        "Vision/ObjectDetection/Summary/Poses/PendingObjects",
+        toPoseArray(pendingObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
+    Logger.recordOutput(
+        "Vision/ObjectDetection/Summary/Poses/StableObjects",
+        toPoseArray(stableObjects.toArray(new ObjectDetectionIO.DetectedObjectFieldRelative[0])));
   }
 
   /**

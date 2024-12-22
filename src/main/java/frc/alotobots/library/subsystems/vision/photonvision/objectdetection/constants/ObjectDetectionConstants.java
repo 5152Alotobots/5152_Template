@@ -27,7 +27,7 @@ public class ObjectDetectionConstants {
       new Transform3d[] {
         // Front Middle
         new Transform3d(
-            new Translation3d(0.275, 0.0, 0.23),
+            new Translation3d(0.25, 0.0, 0.23),
             new Rotation3d(0, Math.toRadians(0), Math.toRadians(0)))
       };
 

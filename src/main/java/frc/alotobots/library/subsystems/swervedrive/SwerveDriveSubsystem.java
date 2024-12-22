@@ -323,8 +323,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     return states;
   }
 
-  // Previous code remains the same until getChassisSpeeds()...
-
   /**
    * Gets measured chassis speeds.
    *
