@@ -341,33 +341,55 @@ After setting up slip current limits, configure the robot's mass for PathPlanner
     ```
 
 ### 1.10 Robot Moment of Inertia Measurement
-After configuring robot mass, measure the robot's rotational inertia for better path following:
+After configuring robot mass, measure the robot's rotational inertia (MOI) for better path following:
 
 1. Setup:
     - Clear a large, flat area
     - Place robot on smooth surface
-    - Open AdvantageScope or Tuner X for data logging
-    - Create plots for:
-        - Robot angular velocity (rad/s)
-        - Applied rotational voltage
+    - Connect to robot via Driver Station
+    - Open AdvantageScope for data logging
 
-2. Measurement Process:
-    - Run the "MOI Characterization" autonomous routine
-    - Command will:
-        - Gradually increase rotational voltage
-        - Record angular acceleration response
-        - Calculate MOI automatically
-    - Let test complete (about 10-15 seconds)
-    - Values will print to Driver Station console
+2. SysId Characterization:
+    - Run each SysId routine through dashboard autos:
+        - Drive SysId (Quasistatic Forward)
+        - Drive SysId (Quasistatic Reverse)
+        - Drive SysId (Dynamic Forward)
+        - Drive SysId (Dynamic Reverse)
+    
+3. Data Export:
+    - Connect robot's USB to computer
+    - Open log file in AdvantageScope
+    - Go to "File" > "Export Data..."
+    - Set format to "WPILOG"
+    - Set timestamps to "AdvantageKit Cycles"
+    - Save the exported log file
 
-3. Update Configuration:
+4. Analysis:
+    - Open SysId tool in VSCode
+    - Load the exported log file
+    - Record the following values:
+        - kA_angular (angular acceleration constant)
+        - kA_linear (linear acceleration constant)
+
+5. Calculate MOI:
+    Use the formula:
+    ```
+    MOI = mass * (trackwidth/2) * (kA_angular/kA_linear)
+    ```
+    Where:
+    - mass = robot mass in kg
+    - trackwidth = largest distance between wheel centers
+    - kA_angular = angular acceleration feedforward (V/(rad/s²))
+    - kA_linear = linear acceleration feedforward (V/(m/s²))
+
+6. Update Configuration:
     - In your TunerConstants file, update the MOI constant:
     ```java
-    public static final double ROBOT_MOI = 4.24; // Update with your measured value
+    public static final double ROBOT_MOI_KGM2 = 4.24; // Update with calculated value
     ```
     This value represents the robot's resistance to rotational acceleration
 
-4. Verification:
+7. Verification:
     - Deploy updated code
     - Test rotational movements
     - Verify smooth acceleration in turns
