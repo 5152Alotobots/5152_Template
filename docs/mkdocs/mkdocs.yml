@@ -24,6 +24,7 @@ nav:
           - Swerve: library/subsystems/swerve.md
           - Vision:
               - Object Detection: library/subsystems/vision/objectdetection.md
+  - Quickstart: quickstart.md
   - API Documentation: javadoc/index.html # Point directly to index.html
 
 repo_url: https://github.com/5152alotobots/5152_Template
