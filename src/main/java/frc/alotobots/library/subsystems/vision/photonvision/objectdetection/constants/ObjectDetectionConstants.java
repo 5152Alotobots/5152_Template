@@ -64,6 +64,6 @@ public class ObjectDetectionConstants {
    */
   public static final int MISSING_FRAMES_THRESHOLD = 15;
 
-  /*** Distance between objects considered as the same */
-  public static final double POSITION_MATCH_TOLERANCE = 0.2; // meters
+  /*** Scale Factor. Tune this if the ObjectDetection is consistently under/over reporting */
+  public static final double SCALE_FACTOR = 1.15;
 }

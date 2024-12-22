@@ -17,6 +17,7 @@ import static frc.alotobots.library.subsystems.vision.photonvision.objectdetecti
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
@@ -345,12 +346,22 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
   private boolean objectsMatch(
       ObjectDetectionIO.DetectedObjectFieldRelative obj1,
       ObjectDetectionIO.DetectedObjectFieldRelative obj2) {
+
     double positionDiff =
         Math.sqrt(
             Math.pow(obj1.pose().getX() - obj2.pose().getX(), 2)
                 + Math.pow(obj1.pose().getY() - obj2.pose().getY(), 2));
 
-    return positionDiff <= POSITION_MATCH_TOLERANCE && obj1.classId() == obj2.classId();
+    // Calculate distance from robot to object
+    double distanceToObject =
+        Math.sqrt(
+            Math.pow(obj1.pose().getX() - robotPose.get().getX(), 2)
+                + Math.pow(obj1.pose().getY() - robotPose.get().getY(), 2));
+
+    // Scale tolerance based on distance using quadratic scaling
+    double scaledTolerance = 0.1 * (1 + 0.04 * Math.pow(distanceToObject, 2));
+
+    return positionDiff <= scaledTolerance && obj1.classId() == obj2.classId();
   }
 
   /**
@@ -386,7 +397,14 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
         new ObjectDetectionIO.DetectedObjectFieldRelative[robotRelative.length];
 
     for (int index = 0; index < robotRelative.length; index++) {
-      Pose3d fieldSpaceObjectPose = robotPose3d.transformBy(robotRelative[index].targetToRobot());
+      Transform3d robotSpaceTransform = robotRelative[index].targetToRobot();
+      double measuredDistance = robotSpaceTransform.getTranslation().getNorm();
+
+      Transform3d correctedTransform =
+          new Transform3d(
+              robotSpaceTransform.getTranslation().times(SCALE_FACTOR), robotSpaceTransform.getRotation());
+
+      Pose3d fieldSpaceObjectPose = robotPose3d.transformBy(correctedTransform);
 
       fieldRelative[index] =
           new DetectedObjectFieldRelative(
