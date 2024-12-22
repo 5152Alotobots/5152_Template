@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://5152alotobots.github.io/5152_Template/library/subsystems/swerve/">
+        <link rel="canonical" href="https://5152alotobots.github.io/5152_Template/library/commands/vision/objectdetection/pathfindtobestobject/">
       
       
-        <link rel="prev" href="../../commands/vision/objectdetection/pathfindtobestobject/">
+        <link rel="prev" href="../drivefacingbestobject/">
       
       
-        <link rel="next" href="../vision/objectdetection/">
+        <link rel="next" href="../../../../subsystems/swerve/">
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
-        <title>Swerve - Team 5152 Robot Documentation</title>
+        <title>Pathfind to Best Object - Team 5152 Robot Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#swervedrive-subsystem" class="md-skip">
+        <a href="#pathfindtobestobject-command" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +88,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../../.." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Swerve
+              Pathfind to Best Object
             
           </span>
         </div>
@@ -195,7 +195,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../../.." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -225,7 +225,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -245,7 +245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -299,17 +299,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
         
           
           <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
@@ -323,7 +325,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             Commands
@@ -372,7 +374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/defaultdrive/" class="md-nav__link">
+      <a href="../../../swerve/defaultdrive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -393,7 +395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/drivefacingangle/" class="md-nav__link">
+      <a href="../../../swerve/drivefacingangle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -414,7 +416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/drivefacingpose/" class="md-nav__link">
+      <a href="../../../swerve/drivefacingpose/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -435,7 +437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/characterization/" class="md-nav__link">
+      <a href="../../../swerve/characterization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -444,142 +446,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_1_2" id="__nav_3_1_2_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Vision
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_1_2">
-            <span class="md-nav__icon md-icon"></span>
-            Vision
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_1_2_1" id="__nav_3_1_2_1_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Object Detection
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_1_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            Object Detection
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/vision/objectdetection/drivefacingbestobject/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Drive Facing Best Object
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/vision/objectdetection/pathfindtobestobject/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Pathfind to Best Object
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -609,26 +475,84 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_1_2" id="__nav_3_1_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
-    Subsystems
+    Vision
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1_2">
             <span class="md-nav__icon md-icon"></span>
-            Subsystems
+            Vision
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_2_1" id="__nav_3_1_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Object Detection
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Object Detection
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drivefacingbestobject/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Drive Facing Best Object
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -650,7 +574,7 @@
           
   
   <span class="md-ellipsis">
-    Swerve
+    Pathfind to Best Object
   </span>
   
 
@@ -661,7 +585,7 @@
         
   
   <span class="md-ellipsis">
-    Swerve
+    Pathfind to Best Object
   </span>
   
 
@@ -683,18 +607,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#required-subsystems" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Required Subsystems
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-that-use-the-subsystem" class="md-nav__link">
+  <a href="#constructor-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands that use the subsystem
+      Constructor Parameters
     </span>
   </a>
   
@@ -707,38 +631,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hardware-requirements" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behavior-details" class="md-nav__link">
     <span class="md-ellipsis">
-      Hardware Requirements
+      Behavior Details
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-in-tunerconstants" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration in TunerConstants
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Additional Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -746,6 +646,86 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Subsystems
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Subsystems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../subsystems/swerve/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Swerve
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -793,7 +773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../vision/objectdetection/" class="md-nav__link">
+      <a href="../../../../subsystems/vision/objectdetection/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -837,7 +817,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../javadoc/" class="md-nav__link">
+      <a href="../../../../../javadoc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -877,18 +857,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#required-subsystems" class="md-nav__link">
     <span class="md-ellipsis">
-      Overview
+      Required Subsystems
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-that-use-the-subsystem" class="md-nav__link">
+  <a href="#constructor-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands that use the subsystem
+      Constructor Parameters
     </span>
   </a>
   
@@ -901,38 +881,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hardware-requirements" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behavior-details" class="md-nav__link">
     <span class="md-ellipsis">
-      Hardware Requirements
+      Behavior Details
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-in-tunerconstants" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration in TunerConstants
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Additional Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -954,48 +910,48 @@
   
 
 
-<h1 id="swervedrive-subsystem">SwerveDrive Subsystem</h1>
-<h2 id="overview">Overview</h2>
-<p>The SwerveDrive subsystem is a sophisticated drive system that enables omnidirectional movement of the robot. It manages four swerve modules (each containing drive and turn motors), handles odometry calculations, and provides autonomous path-following capabilities.</p>
-<h2 id="commands-that-use-the-subsystem">Commands that use the subsystem</h2>
+<h1 id="pathfindtobestobject-command">PathfindToBestObject Command</h1>
+<p>A command that automatically navigates the robot to approach detected game objects. This command handles full autonomous navigation to game elements, calculating appropriate approach positions while accounting for robot dimensions.</p>
+<h2 id="required-subsystems">Required Subsystems</h2>
 <ul>
-<li><a href="/5152_Template/library/commands/swerve/defaultdrive">DefaultDrive Command</a>: Provides standard teleoperated control</li>
-<li><a href="/5152_Template/library/commands/swerve/drivefacingangle">DriveFacingAngle Command</a>: Maintains a specific robot heading while driving</li>
-<li><a href="/5152_Template/library/commands/swerve/drivefacingpose">DriveFacingPose Command</a>: Orients the robot to face a target position while driving</li>
-<li><a href="/5152_Template/library/commands/swerve/characterization">Characterization Commands</a>: Used for system identification and calibration</li>
+<li><a href="/5152_Template/library/subsystems/vision/objectdetection">Object Detection Subsystem</a></li>
+<li><a href="/5152_Template/library/subsystems/swerve">Swerve Drive Subsystem</a></li>
 </ul>
+<h2 id="constructor-parameters">Constructor Parameters</h2>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="nf">PathfindToBestObject</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ObjectDetectionSubsystem</span><span class="w"> </span><span class="n">objectDetectionSubsystem</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SwerveDriveSubsystem</span><span class="w"> </span><span class="n">swerveDriveSubsystem</span><span class="p">,</span>
+<span class="w">    </span><span class="n">GameElement</span><span class="p">...</span><span class="w"> </span><span class="n">targetGameElementNames</span><span class="p">)</span>
+</code></pre></div>
+<p>Parameters:
+- <code>objectDetectionSubsystem</code>: The subsystem handling object detection
+- <code>swerveDriveSubsystem</code>: The subsystem controlling robot movement
+- <code>targetGameElementNames</code>: Array of game elements to target, in priority order. The robot will navigate to the highest-priority detected element.</p>
 <h2 id="configuration-requirements">Configuration Requirements</h2>
-<h3 id="hardware-requirements">Hardware Requirements</h3>
+<p>The command requires proper configuration of:
+1. Robot Physical Dimensions
+    - Bumper length and width in Constants.tunerConstants
+    - These dimensions are used to calculate safe approach distances</p>
 <ol>
-<li>Four Swerve Drive Modules (Front Left, Front Right, Back Left, Back Right)<ul>
-<li>Each module requires:<ul>
-<li>Drive motor with encoder</li>
-<li>Turn motor with absolute encoder</li>
+<li>Path Planning Parameters<ul>
+<li>Any PathPlanner constraints required by the swerve drive subsystem</li>
+<li>These affect how the robot navigates to the target position</li>
 </ul>
 </li>
-</ul>
-</li>
-<li>Gyroscope (NavX, Pigeon, or similar IMU)</li>
 </ol>
-<h3 id="configuration-in-tunerconstants">Configuration in TunerConstants</h3>
-<p>All configuration is handled through TunerConstants, including:
-- Module configurations (gear ratios, conversions, PID values)
-- PathPlanner settings
-- Holonomic drive controller settings
-- Module positions and dimensions
-- Maximum velocity and acceleration limits
-- Drive characterization values (kS, kV, kA)
-- Wheel radius parameters
-- Absolute encoder offsets</p>
-<p>See the <a href="/5152_Template/javadoc/frc/alotobots/library/subsystems/swervedrive/package-summary.html">JavaDoc Reference</a> for detailed configuration options.</p>
-<h3 id="additional-notes">Additional Notes</h3>
+<h2 id="behavior-details">Behavior Details</h2>
 <ul>
-<li>Odometry updates run on a separate high-frequency thread</li>
-<li>Vision measurements can be incorporated for pose estimation</li>
-<li>Supports both teleop and autonomous operation</li>
-<li>PathPlanner integration for autonomous path following</li>
-<li>Built-in system identification capabilities for tuning</li>
+<li>Identifies highest-priority detected game element</li>
+<li>Calculates optimal approach position based on:<ul>
+<li>Robot bumper dimensions</li>
+<li>Approach angle to target</li>
+<li>Game element position and orientation</li>
 </ul>
+</li>
+<li>Generates and executes path to approach position</li>
+<li>Command times out after 0.1 seconds but generated path continues executing</li>
+</ul>
+<p>For detailed method documentation, refer to the <a href="PROJECT_ROOT/javadoc/frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/package-summary.html">JavaDoc reference</a>.</p>
 
 
 
@@ -1042,10 +998,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../../..", "features": [], "search": "../../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>

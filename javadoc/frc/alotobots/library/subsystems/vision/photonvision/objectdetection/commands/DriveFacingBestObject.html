@@ -83,14 +83,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DriveFacingBestObject</span>
 <span class="extends-implements">extends <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Command.html" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">Command</a></span></div>
-<div class="block">Command that drives the robot while automatically facing the best detected object. Uses
- PhotonVision object detection to identify targets and adjusts robot orientation accordingly.
-
- <p>This command: - Takes manual drive inputs for X/Y translation - Automatically rotates to face
- the highest-confidence detected object - Falls back to manual rotation control when no objects
- are detected - Allows temporary manual rotation override with a timeout
-
- <p>The command requires both the vision and drive subsystems to operate.</div>
+<div class="block">A command that automatically rotates the robot to face detected game objects while allowing
+ manual translation control. The robot will face the highest priority detected game element while
+ driving. If no objects are detected, or if manual rotation override is active, falls back to
+ standard manual control.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -134,12 +130,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#execute()" class="member-name-link">execute</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Called repeatedly when this Command is scheduled to run.</div>
+<div class="block">Executes the command logic.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isFinished()" class="member-name-link">isFinished</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true when the command should end.</div>
+<div class="block">Determines if the command should end.</div>
 </div>
 </div>
 </div>
@@ -170,8 +166,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new DriveFacingBestObject command.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>objectDetectionSubsystem</code> - The subsystem for detecting objects</dd>
-<dd><code>swerveDriveSubsystem</code> - The subsystem for controlling robot movement</dd>
+<dd><code>objectDetectionSubsystem</code> - Subsystem used for detecting game objects</dd>
+<dd><code>swerveDriveSubsystem</code> - Subsystem used for robot movement</dd>
+<dd><code>targetGameElementNames</code> - Array of game elements to target, in priority order</dd>
 </dl>
 </section>
 </li>
@@ -187,13 +184,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="execute()">
 <h3>execute</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">execute</span>()</div>
-<div class="block">Called repeatedly when this Command is scheduled to run. Controls robot movement while facing
- detected objects.
-
- <p>The control flow: 1. If objects are detected: - Uses field-centric drive with automatic
- rotation to face best object 2. If no objects detected: - Falls back to standard field-centric
- drive with manual rotation 3. If manual rotation override is active: - Starts timeout timer for
- returning to automatic facing</div>
+<div class="block">Executes the command logic. Gets the latest object detections and controls robot movement: - If
+ objects are detected, rotates to face highest priority object while allowing manual translation
+ - If no objects detected, allows full manual control - If manual rotation override active,
+ starts timeout timer</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Command.html#execute()" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">execute</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Command.html" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">Command</a></code></dd>
@@ -204,12 +198,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="isFinished()">
 <h3>isFinished</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isFinished</span>()</div>
-<div class="block">Returns true when the command should end. Ends when rotation override timeout has elapsed.</div>
+<div class="block">Determines if the command should end.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Command.html#isFinished()" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">isFinished</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/Command.html" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">Command</a></code></dd>
 <dt>Returns:</dt>
-<dd>true if the command should end</dd>
+<dd>true if manual rotation override timeout has elapsed</dd>
 </dl>
 </section>
 </li>

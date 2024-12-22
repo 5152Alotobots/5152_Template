@@ -53,7 +53,9 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.AprilTagConsumer.html#accept(edu.wpi.first.math.geometry.Pose2d,double,edu.wpi.first.math.Matrix)" class="member-name-link">accept(Pose2d, double, Matrix&lt;N3, N1&gt;)</a> - Method in interface frc.alotobots.library.subsystems.vision.photonvision.apriltag.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.AprilTagConsumer.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem.AprilTagConsumer</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Accepts AprilTag pose data with statistical confidence measures.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/SwerveDriveSubsystem.html#addVisionMeasurement(edu.wpi.first.math.geometry.Pose2d,double,edu.wpi.first.math.Matrix)" class="member-name-link">addVisionMeasurement(Pose2d, double, Matrix&lt;N3, N1&gt;)</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/SwerveDriveSubsystem.html" title="class in frc.alotobots.library.subsystems.swervedrive">SwerveDriveSubsystem</a></dt>
 <dd>
 <div class="block">Adds vision measurement for pose estimation.</div>
@@ -105,11 +107,17 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIOPhotonVisionSim.html#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.CameraConfig,java.util.function.Supplier)" class="member-name-link">AprilTagIOPhotonVisionSim(CameraConfig, Supplier&lt;Pose2d&gt;)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIOPhotonVisionSim.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag.io">AprilTagIOPhotonVisionSim</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem</a> - Class in <a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/package-summary.html">frc.alotobots.library.subsystems.vision.photonvision.apriltag</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A subsystem that handles AprilTag detection and processing using PhotonVision.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem.AprilTagConsumer,frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO...)" class="member-name-link">AprilTagSubsystem(AprilTagSubsystem.AprilTagConsumer, AprilTagIO...)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.apriltag.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Constructs a new AprilTagSubsystem.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.AprilTagConsumer.html" class="type-name-link" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem.AprilTagConsumer</a> - Interface in <a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/package-summary.html">frc.alotobots.library.subsystems.vision.photonvision.apriltag</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Functional interface for consuming AprilTag pose data with statistical confidence measures.</div>
+</dd>
 <dt><a href="frc/alotobots/Robot.html#autonomousInit()" class="member-name-link">autonomousInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
 <div class="block">This autonomous runs the autonomous command selected by your <a href="frc/alotobots/RobotContainer.html" title="class in frc.alotobots"><code>RobotContainer</code></a> class.</div>
@@ -299,7 +307,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">DriveFacingBestObject</a> - Class in <a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/package-summary.html">frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands</a></dt>
 <dd>
-<div class="block">Command that drives the robot while automatically facing the best detected object.</div>
+<div class="block">A command that automatically rotates the robot to face detected game objects while allowing
+ manual translation control.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem,frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem,frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement...)" class="member-name-link">DriveFacingBestObject(ObjectDetectionSubsystem, SwerveDriveSubsystem, GameElement...)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">DriveFacingBestObject</a></dt>
 <dd>
@@ -400,10 +409,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html#execute()" class="member-name-link">execute()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">DriveFacingBestObject</a></dt>
 <dd>
-<div class="block">Called repeatedly when this Command is scheduled to run.</div>
+<div class="block">Executes the command logic.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html#execute()" class="member-name-link">execute()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">PathfindToBestObject</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Executes the command logic.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
@@ -503,7 +514,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.GeneratedConstants.html#%3Cinit%3E()" class="member-name-link">GeneratedConstants()</a> - Constructor for class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.GeneratedConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.GeneratedConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#getAllDetectedObjects()" class="member-name-link">getAllDetectedObjects()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets a list of all detected objects, both stable and unstable.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/Module.html#getAngle()" class="member-name-link">getAngle()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/Module.html" title="class in frc.alotobots.library.subsystems.swervedrive">Module</a></dt>
 <dd>
 <div class="block">Returns the current turn angle of the module.</div>
@@ -562,7 +575,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/util/Elastic.ElasticNotification.html#getDescription()" class="member-name-link">getDescription()</a> - Method in class frc.alotobots.util.<a href="frc/alotobots/util/Elastic.ElasticNotification.html" title="class in frc.alotobots.util">Elastic.ElasticNotification</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#getDetectedObjects(boolean,boolean)" class="member-name-link">getDetectedObjects(boolean, boolean)</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets a list of detected objects based on stability criteria.</div>
+</dd>
 <dt><a href="frc/alotobots/util/Elastic.ElasticNotification.html#getDisplayTimeMillis()" class="member-name-link">getDisplayTimeMillis()</a> - Method in class frc.alotobots.util.<a href="frc/alotobots/util/Elastic.ElasticNotification.html" title="class in frc.alotobots.util">Elastic.ElasticNotification</a></dt>
 <dd>
 <div class="block">Gets the display time of the notification in milliseconds</div>
@@ -686,7 +701,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html#getSpeedAt12Volts()" class="member-name-link">getSpeedAt12Volts()</a> - Method in interface frc.alotobots.library.subsystems.swervedrive.constants.<a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#getStableDetectedObjects()" class="member-name-link">getStableDetectedObjects()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets a list of only stable detected objects.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/Module.html#getState()" class="member-name-link">getState()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/Module.html" title="class in frc.alotobots.library.subsystems.swervedrive">Module</a></dt>
 <dd>
 <div class="block">Returns the module state (turn angle and drive velocity).</div>
@@ -697,7 +714,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html#getTargetX(int)" class="member-name-link">getTargetX(int)</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.apriltag.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem</a></dt>
 <dd>
-<div class="block">Returns the X angle to the best target, which can be used for simple servoing with vision.</div>
+<div class="block">Returns the X angle to the best target for simple vision-based servoing.</div>
 </dd>
 <dt><a href="frc/alotobots/util/Elastic.ElasticNotification.html#getTitle()" class="member-name-link">getTitle()</a> - Method in class frc.alotobots.util.<a href="frc/alotobots/util/Elastic.ElasticNotification.html" title="class in frc.alotobots.util">Elastic.ElasticNotification</a></dt>
 <dd>
@@ -720,7 +737,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/OI.html#getTurtleSpeedTrigger()" class="member-name-link">getTurtleSpeedTrigger()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#getUnstableDetectedObjects()" class="member-name-link">getUnstableDetectedObjects()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets a list of only unstable/pending detected objects.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/Module.html#getVelocityMetersPerSec()" class="member-name-link">getVelocityMetersPerSec()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/Module.html" title="class in frc.alotobots.library.subsystems.swervedrive">Module</a></dt>
 <dd>
 <div class="block">Returns the current drive velocity of the module in meters per second.</div>
@@ -822,11 +841,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html#isFinished()" class="member-name-link">isFinished()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/DriveFacingBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">DriveFacingBestObject</a></dt>
 <dd>
-<div class="block">Returns true when the command should end.</div>
+<div class="block">Determines if the command should end.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html#isFinished()" class="member-name-link">isFinished()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">PathfindToBestObject</a></dt>
 <dd>
-<div class="block">Returns true when the command should end.</div>
+<div class="block">Determines if the command should end.</div>
 </dd>
 <dt><a href="frc/alotobots/util/LocalADStarAK.html#isNewPathAvailable()" class="member-name-link">isNewPathAvailable()</a> - Method in class frc.alotobots.util.<a href="frc/alotobots/util/LocalADStarAK.html" title="class in frc.alotobots.util">LocalADStarAK</a></dt>
 <dd>
@@ -1037,9 +1056,13 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/io/ObjectDetectionIOPhotonVision.html#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.CameraConfig)" class="member-name-link">ObjectDetectionIOPhotonVision(CameraConfig)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/io/ObjectDetectionIOPhotonVision.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIOPhotonVision</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a> - Class in <a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/package-summary.html">frc.alotobots.library.subsystems.vision.photonvision.objectdetection</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Subsystem that handles object detection using PhotonVision cameras.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#%3Cinit%3E(java.util.function.Supplier,frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO...)" class="member-name-link">ObjectDetectionSubsystem(Supplier&lt;Pose2d&gt;, ObjectDetectionIO...)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Creates a new ObjectDetectionSubsystem.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.GeneratedConstants.html#ODOMETRY_FREQUENCY" class="member-name-link">ODOMETRY_FREQUENCY</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.GeneratedConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.GeneratedConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/io/ModuleIO.ModuleIOInputs.html#odometryDrivePositionsRad" class="member-name-link">odometryDrivePositionsRad</a> - Variable in class frc.alotobots.library.subsystems.swervedrive.io.<a href="frc/alotobots/library/subsystems/swervedrive/io/ModuleIO.ModuleIOInputs.html" title="class in frc.alotobots.library.subsystems.swervedrive.io">ModuleIO.ModuleIOInputs</a></dt>
@@ -1062,7 +1085,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html#PATHFINDING_CONSTRAINTS" class="member-name-link">PATHFINDING_CONSTRAINTS</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.CustomConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">PathfindToBestObject</a> - Class in <a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/package-summary.html">frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A command that automatically navigates the robot to the best detected game object.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem,frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem,frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement...)" class="member-name-link">PathfindToBestObject(ObjectDetectionSubsystem, SwerveDriveSubsystem, GameElement...)</a> - Constructor for class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/commands/PathfindToBestObject.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands">PathfindToBestObject</a></dt>
 <dd>
 <div class="block">Creates a new PathfindToBestObject command.</div>
@@ -1086,9 +1111,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Periodic update function handling odometry updates and module states.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html#periodic()" class="member-name-link">periodic()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.apriltag.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/AprilTagSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Periodic function that processes AprilTag data from all cameras.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#periodic()" class="member-name-link">periodic()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Periodic function that updates camera inputs and processes detections.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/PhoenixOdometryThread.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.swervedrive">PhoenixOdometryThread</a> - Class in <a href="frc/alotobots/library/subsystems/swervedrive/package-summary.html">frc.alotobots.library.subsystems.swervedrive</a></dt>
 <dd>
 <div class="block">Provides an interface for asynchronously reading high-frequency measurements to a set of queues.</div>
@@ -1394,7 +1423,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the value of the <code>timestamp</code> record component.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#toFieldRelative(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectRobotRelative%5B%5D)" class="member-name-link">toFieldRelative(ObjectDetectionIO.DetectedObjectRobotRelative[])</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Converts robot-relative object detections to field-relative coordinates.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/io/GyroIOInputsAutoLogged.html#toLog(org.littletonrobotics.junction.LogTable)" class="member-name-link">toLog(LogTable)</a> - Method in class frc.alotobots.library.subsystems.swervedrive.io.<a href="frc/alotobots/library/subsystems/swervedrive/io/GyroIOInputsAutoLogged.html" title="class in frc.alotobots.library.subsystems.swervedrive.io">GyroIOInputsAutoLogged</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/io/ModuleIOInputsAutoLogged.html#toLog(org.littletonrobotics.junction.LogTable)" class="member-name-link">toLog(LogTable)</a> - Method in class frc.alotobots.library.subsystems.swervedrive.io.<a href="frc/alotobots/library/subsystems/swervedrive/io/ModuleIOInputsAutoLogged.html" title="class in frc.alotobots.library.subsystems.swervedrive.io">ModuleIOInputsAutoLogged</a></dt>
@@ -1404,7 +1435,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/io/ObjectDetectionIOInputsAutoLogged.html#toLog(org.littletonrobotics.junction.LogTable)" class="member-name-link">toLog(LogTable)</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/io/ObjectDetectionIOInputsAutoLogged.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIOInputsAutoLogged</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#toPoseArray(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectFieldRelative%5B%5D)" class="member-name-link">toPoseArray(ObjectDetectionIO.DetectedObjectFieldRelative[])</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Converts an array of detected objects to an array of their poses.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/constants/CameraConfig.html#toString()" class="member-name-link">toString()</a> - Method in record class frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/constants/CameraConfig.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants">CameraConfig</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>

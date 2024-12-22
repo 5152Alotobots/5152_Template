@@ -82,6 +82,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
 </span><span class="modifiers">public static interface </span><span class="element-name type-name-label">AprilTagSubsystem.AprilTagConsumer</span></div>
+<div class="block">Functional interface for consuming AprilTag pose data with statistical confidence measures.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -100,7 +101,9 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#accept(edu.wpi.first.math.geometry.Pose2d,double,edu.wpi.first.math.Matrix)" class="member-name-link">accept</a><wbr>(<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose2d</a>&nbsp;visionRobotPoseMeters,
  double&nbsp;timestampSeconds,
  <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/Matrix.html" title="class or interface in edu.wpi.first.math" class="external-link">Matrix</a>&lt;<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/numbers/N3.html" title="class or interface in edu.wpi.first.math.numbers" class="external-link">N3</a>,<wbr><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/numbers/N1.html" title="class or interface in edu.wpi.first.math.numbers" class="external-link">N1</a>&gt;&nbsp;visionMeasurementStdDevs)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Accepts AprilTag pose data with statistical confidence measures.</div>
+</div>
 </div>
 </div>
 </div>
@@ -121,6 +124,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose2d</a>&nbsp;visionRobotPoseMeters,
  double&nbsp;timestampSeconds,
  <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/Matrix.html" title="class or interface in edu.wpi.first.math" class="external-link">Matrix</a>&lt;<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/numbers/N3.html" title="class or interface in edu.wpi.first.math.numbers" class="external-link">N3</a>,<wbr><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/numbers/N1.html" title="class or interface in edu.wpi.first.math.numbers" class="external-link">N1</a>&gt;&nbsp;visionMeasurementStdDevs)</span></div>
+<div class="block">Accepts AprilTag pose data with statistical confidence measures.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>visionRobotPoseMeters</code> - The estimated robot pose in field coordinates</dd>
+<dd><code>timestampSeconds</code> - The timestamp of the measurement in seconds</dd>
+<dd><code>visionMeasurementStdDevs</code> - Standard deviations for the measurement [x, y, theta]</dd>
+</dl>
 </section>
 </li>
 </ul>

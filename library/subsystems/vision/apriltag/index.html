@@ -8,28 +8,24 @@
       
       
       
-        <link rel="canonical" href="https://5152alotobots.github.io/5152_Template/library/subsystems/swerve/">
+        <link rel="canonical" href="https://5152alotobots.github.io/5152_Template/library/subsystems/vision/apriltag/">
       
       
-        <link rel="prev" href="../../commands/vision/objectdetection/pathfindtobestobject/">
       
       
-        <link rel="next" href="../vision/objectdetection/">
-      
-      
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
-        <title>Swerve - Team 5152 Robot Documentation</title>
+        <title>AprilTag Subsystem - Team 5152 Robot Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,7 +44,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -72,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#swervedrive-subsystem" class="md-skip">
+        <a href="#apriltag-subsystem" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +84,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../.." title="Team 5152 Robot Documentation" class="md-header__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Swerve
+              AprilTag Subsystem
             
           </span>
         </div>
@@ -195,7 +191,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
+    <a href="../../../.." title="Team 5152 Robot Documentation" class="md-nav__button md-logo" aria-label="Team 5152 Robot Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -225,7 +221,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -245,7 +241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -262,19 +258,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -288,7 +282,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Library
@@ -372,7 +366,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/defaultdrive/" class="md-nav__link">
+      <a href="../../../commands/swerve/defaultdrive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -393,7 +387,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/drivefacingangle/" class="md-nav__link">
+      <a href="../../../commands/swerve/drivefacingangle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -414,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/drivefacingpose/" class="md-nav__link">
+      <a href="../../../commands/swerve/drivefacingpose/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -435,7 +429,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/swerve/characterization/" class="md-nav__link">
+      <a href="../../../commands/swerve/characterization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -534,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/vision/objectdetection/drivefacingbestobject/" class="md-nav__link">
+      <a href="../../../commands/vision/objectdetection/drivefacingbestobject/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -555,7 +549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/vision/objectdetection/pathfindtobestobject/" class="md-nav__link">
+      <a href="../../../commands/vision/objectdetection/pathfindtobestobject/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -597,19 +591,17 @@
                 
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
         
           
           <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
@@ -623,7 +615,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
             Subsystems
@@ -634,30 +626,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Swerve
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../swerve/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -666,86 +638,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      Overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands-that-use-the-subsystem" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands that use the subsystem
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration Requirements
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hardware-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hardware Requirements
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-in-tunerconstants" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration in TunerConstants
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Additional Notes
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -793,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../vision/objectdetection/" class="md-nav__link">
+      <a href="../objectdetection/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -837,7 +729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../javadoc/" class="md-nav__link">
+      <a href="../../../../javadoc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -886,53 +778,56 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands-that-use-the-subsystem" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands that use the subsystem
+      Features
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-requirements" class="md-nav__link">
+  <a href="#constructor-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration Requirements
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hardware-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Hardware Requirements
+      Constructor Parameters
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-in-tunerconstants" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#commands-that-use-this-subsystem" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration in TunerConstants
+      Commands That Use This Subsystem
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-notes" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#required-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Additional Notes
+      Required Configuration
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#additional-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Links
+    </span>
+  </a>
   
 </li>
       
@@ -954,47 +849,76 @@
   
 
 
-<h1 id="swervedrive-subsystem">SwerveDrive Subsystem</h1>
+<h1 id="apriltag-subsystem">AprilTag Subsystem</h1>
 <h2 id="overview">Overview</h2>
-<p>The SwerveDrive subsystem is a sophisticated drive system that enables omnidirectional movement of the robot. It manages four swerve modules (each containing drive and turn motors), handles odometry calculations, and provides autonomous path-following capabilities.</p>
-<h2 id="commands-that-use-the-subsystem">Commands that use the subsystem</h2>
+<p>The AprilTag subsystem is responsible for detecting and processing AprilTag fiducial markers using PhotonVision cameras. It provides robust pose estimation with statistical confidence measures by processing data from multiple cameras simultaneously.</p>
+<h2 id="features">Features</h2>
 <ul>
-<li><a href="/5152_Template/library/commands/swerve/defaultdrive">DefaultDrive Command</a>: Provides standard teleoperated control</li>
-<li><a href="/5152_Template/library/commands/swerve/drivefacingangle">DriveFacingAngle Command</a>: Maintains a specific robot heading while driving</li>
-<li><a href="/5152_Template/library/commands/swerve/drivefacingpose">DriveFacingPose Command</a>: Orients the robot to face a target position while driving</li>
-<li><a href="/5152_Template/library/commands/swerve/characterization">Characterization Commands</a>: Used for system identification and calibration</li>
+<li>Multi-camera AprilTag detection and processing</li>
+<li>Statistical confidence calculations for pose estimates</li>
+<li>Automatic rejection of unreliable measurements</li>
+<li>Comprehensive logging of accepted and rejected poses</li>
+<li>Camera connection monitoring with alerts</li>
 </ul>
-<h2 id="configuration-requirements">Configuration Requirements</h2>
-<h3 id="hardware-requirements">Hardware Requirements</h3>
+<h2 id="constructor-parameters">Constructor Parameters</h2>
+<p>The AprilTag subsystem requires two main parameters:</p>
 <ol>
-<li>Four Swerve Drive Modules (Front Left, Front Right, Back Left, Back Right)<ul>
-<li>Each module requires:<ul>
-<li>Drive motor with encoder</li>
-<li>Turn motor with absolute encoder</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>Gyroscope (NavX, Pigeon, or similar IMU)</li>
-</ol>
-<h3 id="configuration-in-tunerconstants">Configuration in TunerConstants</h3>
-<p>All configuration is handled through TunerConstants, including:
-- Module configurations (gear ratios, conversions, PID values)
-- PathPlanner settings
-- Holonomic drive controller settings
-- Module positions and dimensions
-- Maximum velocity and acceleration limits
-- Drive characterization values (kS, kV, kA)
-- Wheel radius parameters
-- Absolute encoder offsets</p>
-<p>See the <a href="/5152_Template/javadoc/frc/alotobots/library/subsystems/swervedrive/package-summary.html">JavaDoc Reference</a> for detailed configuration options.</p>
-<h3 id="additional-notes">Additional Notes</h3>
+<li>
+<p><code>AprilTagConsumer consumer</code>: A functional interface that receives processed AprilTag data, including:</p>
 <ul>
-<li>Odometry updates run on a separate high-frequency thread</li>
-<li>Vision measurements can be incorporated for pose estimation</li>
-<li>Supports both teleop and autonomous operation</li>
-<li>PathPlanner integration for autonomous path following</li>
-<li>Built-in system identification capabilities for tuning</li>
+<li>Robot pose in field coordinates</li>
+<li>Timestamp of the measurement</li>
+<li>Statistical confidence measures (standard deviations)</li>
+</ul>
+</li>
+<li>
+<p><code>AprilTagIO... io</code>: Variable number of AprilTagIO interfaces, one for each camera</p>
+</li>
+</ol>
+<h2 id="commands-that-use-this-subsystem">Commands That Use This Subsystem</h2>
+<p>Currently there are no direct commands using this subsystem. The subsystem primarily acts as a data provider for other systems through its consumer interface.</p>
+<h2 id="required-configuration">Required Configuration</h2>
+<ol>
+<li>
+<p>Camera Configuration:</p>
+<ul>
+<li><code>CAMERA_CONFIGS</code> array must be defined in AprilTagConstants</li>
+<li>Each camera must have proper configuration settings</li>
+</ul>
+</li>
+<li>
+<p>Statistical Parameters:</p>
+<ul>
+<li><code>CAMERA_STD_DEV_FACTORS</code>: Must be &gt;= 1.0 for each camera</li>
+<li><code>LINEAR_STD_DEV_BASE</code>: Base value for linear measurement standard deviation</li>
+<li><code>ANGULAR_STD_DEV_BASE</code>: Base value for angular measurement standard deviation</li>
+</ul>
+</li>
+<li>
+<p>Field Layout:</p>
+<ul>
+<li><code>APRIL_TAG_LAYOUT</code>: Must contain the field's AprilTag layout configuration</li>
+<li>Field dimensions must be properly configured</li>
+</ul>
+</li>
+<li>
+<p>Processing Parameters:</p>
+<ul>
+<li><code>MAX_AMBIGUITY</code>: Maximum allowed pose ambiguity for single-tag detections</li>
+<li><code>MAX_Z_ERROR</code>: Maximum allowed Z-coordinate error</li>
+</ul>
+</li>
+</ol>
+<h2 id="additional-information">Additional Information</h2>
+<p>The subsystem includes several safeguards for reliable operation:
+- Automatic rejection of poses outside field boundaries
+- Filtering of high-ambiguity single-tag detections
+- Distance-based confidence scaling
+- Camera disconnect detection and alerts</p>
+<h2 id="related-links">Related Links</h2>
+<ul>
+<li><a href="/5152_Template/javadoc/frc/alotobots/library/subsystems/vision/photonvision/apriltag/package-summary.html">JavaDoc Reference</a></li>
+<li><a href="https://docs.photonvision.org/en/latest/">PhotonVision Documentation</a></li>
 </ul>
 
 
@@ -1042,10 +966,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>

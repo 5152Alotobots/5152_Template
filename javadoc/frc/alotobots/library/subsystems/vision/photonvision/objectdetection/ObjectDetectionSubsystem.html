@@ -83,6 +83,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ObjectDetectionSubsystem</span>
 <span class="extends-implements">extends <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/SubsystemBase.html" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">SubsystemBase</a></span></div>
+<div class="block">Subsystem that handles object detection using PhotonVision cameras. This subsystem processes
+ camera inputs to track and identify objects in the field, maintaining lists of both stable and
+ pending object detections.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -96,7 +99,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Supplier,frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO...)" class="member-name-link">ObjectDetectionSubsystem</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose2d</a>&gt;&nbsp;robotPose,
  <a href="io/ObjectDetectionIO.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO</a>...&nbsp;io)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new ObjectDetectionSubsystem.</div>
+</div>
 </div>
 </section>
 </li>
@@ -113,26 +118,40 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllDetectedObjects()" class="member-name-link">getAllDetectedObjects</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a list of all detected objects, both stable and unstable.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDetectedObjects(boolean,boolean)" class="member-name-link">getDetectedObjects</a><wbr>(boolean&nbsp;includeUnstable,
  boolean&nbsp;includeStable)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a list of detected objects based on stability criteria.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStableDetectedObjects()" class="member-name-link">getStableDetectedObjects</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a list of only stable detected objects.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUnstableDetectedObjects()" class="member-name-link">getUnstableDetectedObjects</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a list of only unstable/pending detected objects.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#periodic()" class="member-name-link">periodic</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Periodic function that updates camera inputs and processes detections.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>[]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toFieldRelative(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectRobotRelative%5B%5D)" class="member-name-link">toFieldRelative</a><wbr>(<a href="io/ObjectDetectionIO.DetectedObjectRobotRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectRobotRelative</a>[]&nbsp;robotRelative)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Converts robot-relative object detections to field-relative coordinates.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose3d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose3d</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toPoseArray(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectFieldRelative%5B%5D)" class="member-name-link">toPoseArray</a><wbr>(<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>[]&nbsp;detectedObjects)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Converts an array of detected objects to an array of their poses.</div>
+</div>
 </div>
 </div>
 </div>
@@ -161,6 +180,12 @@ loadScripts(document, 'script');</script>
 <h3>ObjectDetectionSubsystem</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ObjectDetectionSubsystem</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose2d</a>&gt;&nbsp;robotPose,
  <a href="io/ObjectDetectionIO.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO</a>...&nbsp;io)</span></div>
+<div class="block">Creates a new ObjectDetectionSubsystem.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>robotPose</code> - Supplier for the current robot pose</dd>
+<dd><code>io</code> - Array of ObjectDetectionIO interfaces for cameras</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -175,18 +200,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="periodic()">
 <h3>periodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">periodic</span>()</div>
+<div class="block">Periodic function that updates camera inputs and processes detections.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="toPoseArray(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectFieldRelative[])">
 <h3>toPoseArray</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Pose3d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Pose3d</a>[]</span>&nbsp;<span class="element-name">toPoseArray</span><wbr><span class="parameters">(<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>[]&nbsp;detectedObjects)</span></div>
+<div class="block">Converts an array of detected objects to an array of their poses.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>detectedObjects</code> - Array of detected objects</dd>
+<dt>Returns:</dt>
+<dd>Array of object poses</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="toFieldRelative(frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO.DetectedObjectRobotRelative[])">
 <h3>toFieldRelative</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>[]</span>&nbsp;<span class="element-name">toFieldRelative</span><wbr><span class="parameters">(<a href="io/ObjectDetectionIO.DetectedObjectRobotRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectRobotRelative</a>[]&nbsp;robotRelative)</span></div>
+<div class="block">Converts robot-relative object detections to field-relative coordinates.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>robotRelative</code> - Array of robot-relative object detections</dd>
+<dt>Returns:</dt>
+<dd>Array of field-relative object detections</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -194,24 +234,47 @@ loadScripts(document, 'script');</script>
 <h3>getDetectedObjects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</span>&nbsp;<span class="element-name">getDetectedObjects</span><wbr><span class="parameters">(boolean&nbsp;includeUnstable,
  boolean&nbsp;includeStable)</span></div>
+<div class="block">Gets a list of detected objects based on stability criteria.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>includeUnstable</code> - Whether to include unstable/pending objects</dd>
+<dd><code>includeStable</code> - Whether to include stable objects</dd>
+<dt>Returns:</dt>
+<dd>List of detected objects matching the criteria</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getStableDetectedObjects()">
 <h3>getStableDetectedObjects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</span>&nbsp;<span class="element-name">getStableDetectedObjects</span>()</div>
+<div class="block">Gets a list of only stable detected objects.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of stable detected objects</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getUnstableDetectedObjects()">
 <h3>getUnstableDetectedObjects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</span>&nbsp;<span class="element-name">getUnstableDetectedObjects</span>()</div>
+<div class="block">Gets a list of only unstable/pending detected objects.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of unstable detected objects</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getAllDetectedObjects()">
 <h3>getAllDetectedObjects</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="io/ObjectDetectionIO.DetectedObjectFieldRelative.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io">ObjectDetectionIO.DetectedObjectFieldRelative</a>&gt;</span>&nbsp;<span class="element-name">getAllDetectedObjects</span>()</div>
+<div class="block">Gets a list of all detected objects, both stable and unstable.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of all detected objects</dd>
+</dl>
 </section>
 </li>
 </ul>

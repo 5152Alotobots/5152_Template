@@ -83,6 +83,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AprilTagSubsystem</span>
 <span class="extends-implements">extends <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/SubsystemBase.html" title="class or interface in edu.wpi.first.wpilibj2.command" class="external-link">SubsystemBase</a></span></div>
+<div class="block">A subsystem that handles AprilTag detection and processing using PhotonVision. This subsystem
+ processes AprilTag data from multiple cameras and provides pose estimation with statistical
+ confidence measures.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -97,7 +100,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="AprilTagSubsystem.AprilTagConsumer.html" class="type-name-link" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem.AprilTagConsumer</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Functional interface for consuming AprilTag pose data with statistical confidence measures.</div>
+</div>
 </div>
 </section>
 </li>
@@ -111,7 +116,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem.AprilTagConsumer,frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO...)" class="member-name-link">AprilTagSubsystem</a><wbr>(<a href="AprilTagSubsystem.AprilTagConsumer.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem.AprilTagConsumer</a>&nbsp;consumer,
  <a href="io/AprilTagIO.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag.io">AprilTagIO</a>...&nbsp;io)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new AprilTagSubsystem.</div>
+</div>
 </div>
 </section>
 </li>
@@ -129,11 +136,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Rotation2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Rotation2d</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTargetX(int)" class="member-name-link">getTargetX</a><wbr>(int&nbsp;cameraIndex)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the X angle to the best target, which can be used for simple servoing with vision.</div>
+<div class="block">Returns the X angle to the best target for simple vision-based servoing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#periodic()" class="member-name-link">periodic</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Periodic function that processes AprilTag data from all cameras.</div>
+</div>
 </div>
 </div>
 </div>
@@ -162,6 +171,14 @@ loadScripts(document, 'script');</script>
 <h3>AprilTagSubsystem</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AprilTagSubsystem</span><wbr><span class="parameters">(<a href="AprilTagSubsystem.AprilTagConsumer.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag">AprilTagSubsystem.AprilTagConsumer</a>&nbsp;consumer,
  <a href="io/AprilTagIO.html" title="interface in frc.alotobots.library.subsystems.vision.photonvision.apriltag.io">AprilTagIO</a>...&nbsp;io)</span></div>
+<div class="block">Constructs a new AprilTagSubsystem.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>consumer</code> - The consumer that will receive processed AprilTag data</dd>
+<dd><code>io</code> - Array of AprilTagIO interfaces for each camera</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if camera standard deviation factors are invalid</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -176,10 +193,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTargetX(int)">
 <h3>getTargetX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/math/geometry/Rotation2d.html" title="class or interface in edu.wpi.first.math.geometry" class="external-link">Rotation2d</a></span>&nbsp;<span class="element-name">getTargetX</span><wbr><span class="parameters">(int&nbsp;cameraIndex)</span></div>
-<div class="block">Returns the X angle to the best target, which can be used for simple servoing with vision.</div>
+<div class="block">Returns the X angle to the best target for simple vision-based servoing.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>cameraIndex</code> - The index of the camera to use.</dd>
+<dd><code>cameraIndex</code> - The index of the camera to use</dd>
+<dt>Returns:</dt>
+<dd>The rotation angle to the best target</dd>
 </dl>
 </section>
 </li>
@@ -187,6 +206,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="periodic()">
 <h3>periodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">periodic</span>()</div>
+<div class="block">Periodic function that processes AprilTag data from all cameras. This method: - Updates camera
+ inputs - Processes pose observations - Applies statistical confidence calculations - Logs
+ vision data - Sends accepted pose estimates to the consumer</div>
 </section>
 </li>
 </ul>
