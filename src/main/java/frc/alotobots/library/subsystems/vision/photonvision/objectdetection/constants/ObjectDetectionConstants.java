@@ -38,33 +38,7 @@ public class ObjectDetectionConstants {
     new CameraConfig(
         "FM_ObjectDetection",
         CAMERA_OFFSETS[0],
-        new SimCameraProperties() {
-          {
-            setCalibration(
-                1280,
-                720,
-                new Matrix<>(
-                    SimpleMatrix.diag(
-                        1060.9825799706975,
-                        0.0,
-                        668.9976907781046,
-                        0.0,
-                        1090.6999107806894,
-                        342.8851810520121,
-                        0.0,
-                        0.0,
-                        1.0)),
-                new Matrix<>(
-                    SimpleMatrix.diag(
-                        -0.2710123040969841,
-                        2.0468938859882737,
-                        0.010769883028548232,
-                        0.013494108245786498,
-                        -3.0046783149407132)));
-            setFPS(30);
-            setAvgLatencyMs(25);
-          }
-        })
+        new SimCameraProperties())
   };
 
   // Game elements
