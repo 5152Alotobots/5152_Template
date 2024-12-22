@@ -497,5 +497,36 @@ public static final Slot0Configs steerGains = new Slot0Configs()
     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 ```
 
+### 1.13 PathPlanner PID Tuning
+The final step in swerve drive configuration is tuning the PathPlanner translation and rotation PIDs:
+
+1. Initial Values:
+   These PIDs are defined in your TunerConstants file:
+   ```java
+   public static final PIDConstants translationPid = new PIDConstants(2.4, 0, 0.015);
+   public static final PIDConstants rotationPid = new PIDConstants(7.8, 0, 0.015);
+   ```
+
+2. Tuning Process:
+    - Open PathPlanner Desktop application
+    - Select the Telemetry tab
+    - Follow this sequence:
+        1. Run "PP_StraightTest"
+           - Adjust translationPid until actual path matches commanded path
+           - Focus on matching the translation slopes as closely as possible
+        2. Run "PP_RotationTest"
+           - Tune rotationPid until rotation behavior is smooth and accurate
+        3. Run "PP_HoloTest"
+           - Final verification of both PIDs working together
+           - Make minor adjustments if needed
+
+3. Tips:
+    - Start with P term only
+    - Add D term to reduce oscillation
+    - I term usually not needed
+    - Test multiple times for consistency
+    - Save values after successful tuning
+
+Congratulations! Your swerve drive should now be fully configured and tuned for optimal performance.
 
 
