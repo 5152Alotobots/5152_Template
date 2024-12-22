@@ -785,8 +785,8 @@ After configuring camera offsets:
     - Open PhotonVision web interface
     - For each camera:
         1. Select camera in UI
-        2. Create new pipeline named "Object"
-        3. Set pipeline type to "Object Detection"
+        2. Create new pipeline named "ObjectDetection"
+        3. Set pipeline type to "ObjectDetection"
         4. Configure processing:
             - Auto White Balance: ON
         5. Set camera settings:
