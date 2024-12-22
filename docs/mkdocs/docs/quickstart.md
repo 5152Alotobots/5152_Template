@@ -343,57 +343,83 @@ After setting up slip current limits, configure the robot's mass for PathPlanner
 ### 1.10 Robot Moment of Inertia Measurement
 After configuring robot mass, measure the robot's rotational inertia (MOI) for better path following:
 
-1. Setup:
+1. Code Preparation:
+    - Locate Module.java in your project
+    - Find the runCharacterization method (around line 89)
+    - Replace the existing method with:
+    ```java
+    public void runCharacterization(double output) {
+        io.setDriveOpenLoop(output);
+        io.setTurnPosition(new Rotation2d(constants.LocationX, constants.LocationY).plus(Rotation2d.kCCW_Pi_2));
+    }
+    ```
+    - Deploy the updated code to the robot
+
+2. Setup:
     - Clear a large, flat area
     - Place robot on smooth surface
     - Connect to robot via Driver Station
     - Open AdvantageScope for data logging
 
-2. SysId Characterization:
-    - Run each SysId routine through dashboard autos:
+3. Data Collection:
+    - Through dashboard autos, run each SysId routine:
         - Drive SysId (Quasistatic Forward)
         - Drive SysId (Quasistatic Reverse)
         - Drive SysId (Dynamic Forward)
         - Drive SysId (Dynamic Reverse)
-    
-3. Data Export:
-    - Connect robot's USB to computer
-    - Open log file in AdvantageScope
+    - Let each routine complete fully
+    - Save logs after each run
+
+4. Data Export:
+    - Remove USB drive from robot
+    - Connect to computer
+    - Open AdvantageScope (v3.0.2 or later)
+    - Load the log file
     - Go to "File" > "Export Data..."
-    - Set format to "WPILOG"
-    - Set timestamps to "AdvantageKit Cycles"
-    - Save the exported log file
+    - Configure export settings:
+        - Format: "WPILOG"
+        - Timestamps: "AdvantageKit Cycles"
+        - Select necessary fields for SysId
+    - Save the converted log file
 
-4. Analysis:
-    - Open SysId tool in VSCode
+5. SysId Analysis:
+    - Open VSCode
+    - Launch SysId tool:
+        - Command Palette (Ctrl+Shift+P)
+        - Search "WPILib: Start Tool"
+        - Select "SysId"
     - Load the exported log file
-    - Record the following values:
-        - kA_angular (angular acceleration constant)
-        - kA_linear (linear acceleration constant)
+    - Record these values:
+        - kA_angular (V/(rad/s²))
+        - kA_linear (V/(m/s²))
 
-5. Calculate MOI:
-    Use the formula:
+6. Calculate MOI:
+    Use this formula:
     ```
     MOI = mass * (trackwidth/2) * (kA_angular/kA_linear)
     ```
     Where:
     - mass = robot mass in kg
     - trackwidth = largest distance between wheel centers
-    - kA_angular = angular acceleration feedforward (V/(rad/s²))
-    - kA_linear = linear acceleration feedforward (V/(m/s²))
+    - kA_angular = angular acceleration feedforward
+    - kA_linear = linear acceleration feedforward
 
-6. Update Configuration:
+7. Update Configuration:
     - In your TunerConstants file, update the MOI constant:
     ```java
     public static final double ROBOT_MOI_KGM2 = 4.24; // Update with calculated value
     ```
     This value represents the robot's resistance to rotational acceleration
 
-7. Verification:
+8. Verification:
     - Deploy updated code
     - Test rotational movements
     - Verify smooth acceleration in turns
     - Check path following accuracy with rotation
+    - Pay special attention to:
+        - Turn initiation smoothness
+        - Stopping accuracy
+        - Multi-axis movement stability
 
 ### 1.11 Wheel Coefficient of Friction Measurement
 After configuring mass and MOI, measure the wheel coefficient of friction for accurate path following:
