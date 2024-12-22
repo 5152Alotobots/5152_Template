@@ -655,6 +655,6 @@ After configuring camera offsets:
     - Incorrect poses: Double-check offset measurements
     - Network lag: Monitor bandwidth usage
 
-Congratulations! Your swerve drive should now be fully configured and tuned for optimal performance.
+Congratulations! Your project should now be fully configured and tuned for optimal performance.
 
 
