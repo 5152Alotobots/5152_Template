@@ -879,9 +879,43 @@ Accurate camera position measurements are critical for object detection:
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
     ```
 
-### 3.4 Camera Verification
+### 3.4 Game Element Configuration
 
-After configuring camera offsets:
+Before testing object detection, configure the game elements that need to be detected:
+
+1. Define Game Elements:
+    ```java
+    // In GameElementConstants.java
+    // All measurements in meters
+    public static final GameElement NOTE = new GameElement("Note", 0.36, 0.36, 0.05);
+    public static final GameElement AMP = new GameElement("Amp", 0.51, 0.51, 0.58);
+    public static final GameElement SPEAKER = new GameElement("Speaker", 1.07, 1.07, 2.11);
+    public static final GameElement SOURCE = new GameElement("Source", 1.37, 1.37, 2.03);
+    public static final GameElement STAGE = new GameElement("Stage", 4.11, 4.11, 0.55);
+    ```
+
+2. Create Class ID Array:
+    ```java
+    // Game elements array indexed by class ID
+    // IMPORTANT: Order must match neural network model's class IDs
+    public static final GameElement[] GAME_ELEMENTS = new GameElement[] {
+        NOTE,      // Class ID 0
+        AMP,       // Class ID 1
+        SPEAKER,   // Class ID 2
+        SOURCE,    // Class ID 3
+        STAGE      // Class ID 4
+    };
+    ```
+
+3. Important Considerations:
+    - Array indices must match model's class IDs exactly
+    - Measurements must be in meters
+    - Dimensions are width, length, height
+    - Names should match what's shown in PhotonVision
+
+### 3.5 Camera Verification
+
+After configuring cameras and game elements:
 
 1. Physical Checks:
     - Verify camera mounts are secure
