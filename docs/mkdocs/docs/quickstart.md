@@ -692,19 +692,21 @@ Accurate camera position measurements are critical for AprilTag vision:
 4. IO Configuration:
     ```java
     // In RobotContainer.java constructor:
-    AprilTagIO[] aprilTagIOs = new AprilTagIO[] {
-        new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
-        new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1])
-    };
+    aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
     ```
 
 5. Replay Support:
     ```java
     // For replay mode, match array size to physical cameras
-    AprilTagIO[] aprilTagIOs = new AprilTagIO[] {
-        new AprilTagIOReplay(),
-        new AprilTagIOReplay()
-    };
+    aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIO() {},
+                new AprilTagIO() {});
     ```
 
 ### 2.2 Camera Verification
@@ -791,7 +793,7 @@ After configuring camera offsets:
             - Auto White Balance: ON
         5. Set camera settings:
             - Resolution: 1280x720
-            - FPS: 100 (or similar)
+            - FPS: 30 (or similar)
             - Stream Resolution: Lowest available
         6. Navigate to Cameras tab
         7. Select camera
@@ -816,12 +818,7 @@ After configuring camera offsets:
             - Add more varied angles
             - Recalibrate
 
-3. Final Configuration:
-    - For each pipeline:
-        1. Enable 3D mode
-        2. Save settings
-
-4. Field Tuning:
+3. Field Tuning:
     - At competition field:
         - Adjust exposure
         - Tune brightness
@@ -846,44 +843,40 @@ Accurate camera position measurements are critical for object detection:
 
 2. Update Constants:
     ```java
-    private static final Transform3d[] CAMERA_OFFSETS = new Transform3d[] {
-        // Front Left Camera
+    private static final Transform3d[] CAMERA_OFFSETS =
+      new Transform3d[] {
+        // Front Middle
         new Transform3d(
-            new Translation3d(0.245, 0.21, 0.17),  // X, Y, Z in meters
-            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))),  // Roll, Pitch, Yaw
-        
-        // Front Middle Camera
-        new Transform3d(
-            new Translation3d(0.275, 0.0, 0.189),
-            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(0)))
-    };
+            new Translation3d(0.275, 0.0, 0.23),
+            new Rotation3d(0, Math.toRadians(0), Math.toRadians(0)))
+      };
     ```
 
 3. Camera Configuration:
     ```java
     // Add configuration for each physical camera
-    private static final CameraConfig[] CAMERA_CONFIGS = new CameraConfig[] {
-        new CameraConfig("FL_Object", CAMERA_OFFSETS[0], new SimCameraProperties()),
-        new CameraConfig("FM_Object", CAMERA_OFFSETS[1], new SimCameraProperties())
-    };
+    public static final CameraConfig[] CAMERA_CONFIGS = {
+    new CameraConfig(
+        "FM_ObjectDetection",
+        CAMERA_OFFSETS[0],
+        new SimCameraProperties())
+   };
     ```
 
 4. IO Configuration:
     ```java
     // In RobotContainer.java constructor:
-    ObjectDetectionIO[] objectDetectionIOs = new ObjectDetectionIO[] {
-        new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]),
-        new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[1])
-    };
+    objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(
+                swerveDriveSubsystem::getPose,
+                new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
     ```
 
 5. Replay Support:
     ```java
     // For replay mode, match array size to physical cameras
-    ObjectDetectionIO[] objectDetectionIOs = new ObjectDetectionIO[] {
-        new ObjectDetectionIOReplay(),
-        new ObjectDetectionIOReplay()
-    };
+    objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
     ```
 
 ### 3.4 Camera Verification
