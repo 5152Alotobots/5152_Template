@@ -221,6 +221,14 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
         history.addDetection(stillDetected, currentMatchedObject);
 
         if (stillDetected && currentMatchedObject != null) {
+          // Create updated object with new properties but keep original pose
+          ObjectDetectionIO.DetectedObjectFieldRelative updatedObject =
+              new DetectedObjectFieldRelative(
+                  currentMatchedObject.timestamp(),
+                  trackedObject.pose(), // Always keep the original pose
+                  currentMatchedObject.confidence(),
+                  currentMatchedObject.classId());
+
           if (history.isStable() && !wasStable) {
             // Object became stable
             ObjectDetectionIO.DetectedObjectFieldRelative toRemove = null;
@@ -233,7 +241,7 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
             if (toRemove != null) {
               pendingObjects.remove(toRemove);
-              stableObjects.add(currentMatchedObject);
+              stableObjects.add(updatedObject);
             }
           } else if (!history.isStable() && wasStable) {
             // Object lost stability
@@ -247,7 +255,35 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
             if (toRemove != null) {
               stableObjects.remove(toRemove);
-              pendingObjects.add(currentMatchedObject);
+              pendingObjects.add(updatedObject);
+            }
+          } else if (history.isStable()) {
+            // Update existing stable object
+            ObjectDetectionIO.DetectedObjectFieldRelative toUpdate = null;
+            for (ObjectDetectionIO.DetectedObjectFieldRelative stable : stableObjects) {
+              if (objectsMatch(stable, trackedObject)) {
+                toUpdate = stable;
+                break;
+              }
+            }
+
+            if (toUpdate != null) {
+              stableObjects.remove(toUpdate);
+              stableObjects.add(updatedObject);
+            }
+          } else {
+            // Update existing pending object
+            ObjectDetectionIO.DetectedObjectFieldRelative toUpdate = null;
+            for (ObjectDetectionIO.DetectedObjectFieldRelative pending : pendingObjects) {
+              if (objectsMatch(pending, trackedObject)) {
+                toUpdate = pending;
+                break;
+              }
+            }
+
+            if (toUpdate != null) {
+              pendingObjects.remove(toUpdate);
+              pendingObjects.add(updatedObject);
             }
           }
         }
@@ -402,7 +438,8 @@ public class ObjectDetectionSubsystem extends SubsystemBase {
 
       Transform3d correctedTransform =
           new Transform3d(
-              robotSpaceTransform.getTranslation().times(SCALE_FACTOR), robotSpaceTransform.getRotation());
+              robotSpaceTransform.getTranslation().times(SCALE_FACTOR),
+              robotSpaceTransform.getRotation());
 
       Pose3d fieldSpaceObjectPose = robotPose3d.transformBy(correctedTransform);
 
