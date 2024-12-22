@@ -47,9 +47,9 @@ When starting a new season:
    // In Constants.java
    public static final TunerConstants tunerConstants = new TunerConstants2024();
    // or if using different configurations for simulation:
-   public static final TunerConstants tunerConstants = 
-       Constants.currentMode == Mode.SIM ? 
-           new TunerConstantsSim() : 
+   public static final TunerConstants tunerConstants =
+       Constants.currentMode == Mode.SIM ?
+           new TunerConstantsSim() :
            new TunerConstants2024();
    ```
    This static field is used throughout the codebase to access swerve configurations.
@@ -104,7 +104,7 @@ The swerve drive configuration is generated using Phoenix Tuner X's Swerve Gener
       ```java
       // Replace generated values like:
       public static final int kFrontLeftDriveMotorId = 1;
-      
+
       // With references to Constants:
       public static final int kFrontLeftDriveMotorId = Constants.CanId.FRONT_LEFT_DRIVE_MTR_CAN_ID;
       ```
@@ -129,7 +129,7 @@ After configuring modules and before PID tuning, verify basic functionality:
           .withKV(1.59)
           .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
- 
+
       // Default drive gains
       private static final Slot0Configs driveGains = new Slot0Configs()
           .withKP(0.1)
@@ -672,7 +672,7 @@ Accurate camera position measurements are critical for AprilTag vision:
         new Transform3d(
             new Translation3d(0.245, 0.21, 0.17),  // X, Y, Z in meters
             new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))),  // Roll, Pitch, Yaw
-        
+
         // Front Middle Camera
         new Transform3d(
             new Translation3d(0.275, 0.0, 0.189),
@@ -948,5 +948,3 @@ After configuring cameras and game elements:
     - Position jumps: Try decreasing POSITION_MATCH_TOLERANCE
 
 Congratulations! Your project should now be fully configured and tuned for optimal performance.
-
-

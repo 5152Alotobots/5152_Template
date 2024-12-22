@@ -26,9 +26,10 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.O
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
 
 /**
- * A command that automatically rotates the robot to face detected game objects while allowing manual translation control.
- * The robot will face the highest priority detected game element while driving. If no objects are detected,
- * or if manual rotation override is active, falls back to standard manual control.
+ * A command that automatically rotates the robot to face detected game objects while allowing
+ * manual translation control. The robot will face the highest priority detected game element while
+ * driving. If no objects are detected, or if manual rotation override is active, falls back to
+ * standard manual control.
  */
 public class DriveFacingBestObject extends Command {
 
@@ -58,9 +59,9 @@ public class DriveFacingBestObject extends Command {
    * @param targetGameElementNames Array of game elements to target, in priority order
    */
   public DriveFacingBestObject(
-          ObjectDetectionSubsystem objectDetectionSubsystem,
-          SwerveDriveSubsystem swerveDriveSubsystem,
-          GameElement... targetGameElementNames) {
+      ObjectDetectionSubsystem objectDetectionSubsystem,
+      SwerveDriveSubsystem swerveDriveSubsystem,
+      GameElement... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
     this.targetGameElementNames = targetGameElementNames;
@@ -71,10 +72,10 @@ public class DriveFacingBestObject extends Command {
   }
 
   /**
-   * Executes the command logic. Gets the latest object detections and controls robot movement:
-   * - If objects are detected, rotates to face highest priority object while allowing manual translation
-   * - If no objects detected, allows full manual control
-   * - If manual rotation override active, starts timeout timer
+   * Executes the command logic. Gets the latest object detections and controls robot movement: - If
+   * objects are detected, rotates to face highest priority object while allowing manual translation
+   * - If no objects detected, allows full manual control - If manual rotation override active,
+   * starts timeout timer
    */
   @Override
   public void execute() {
@@ -84,9 +85,9 @@ public class DriveFacingBestObject extends Command {
     var matchingObject = java.util.Optional.<ObjectDetectionIO.DetectedObjectFieldRelative>empty();
     for (GameElement element : targetGameElementNames) {
       matchingObject =
-              detectedObjects.stream()
-                      .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
-                      .findFirst();
+          detectedObjects.stream()
+              .filter(obj -> GAME_ELEMENTS[obj.classId()].equals(element))
+              .findFirst();
       if (matchingObject.isPresent()) {
         break;
       }

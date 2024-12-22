@@ -12,13 +12,11 @@
 */
 package frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
 import lombok.experimental.UtilityClass;
-import org.ejml.simple.SimpleMatrix;
 import org.photonvision.simulation.SimCameraProperties;
 
 @SuppressWarnings("resource")
@@ -35,10 +33,7 @@ public class ObjectDetectionConstants {
 
   // Camera configurations
   public static final CameraConfig[] CAMERA_CONFIGS = {
-    new CameraConfig(
-        "FM_ObjectDetection",
-        CAMERA_OFFSETS[0],
-        new SimCameraProperties())
+    new CameraConfig("FM_ObjectDetection", CAMERA_OFFSETS[0], new SimCameraProperties())
   };
 
   // Game elements
