@@ -1,22 +1,42 @@
+/*
+* ALOTOBOTS - FRC Team 5152
+  https://github.com/5152Alotobots
+* Copyright (C) 2024 ALOTOBOTS
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Source code must be publicly available on GitHub or an alternative web accessible site
+*/
 package frc.alotobots;
 
-import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.swerve.SwerveModule;
-import com.ctre.phoenix6.swerve.SwerveRequest;
+import static frc.alotobots.OI.driveFacingBestObjectButton;
+import static frc.alotobots.OI.pathfindToBestObjectButton;
+import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.NOTE;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.alotobots.game.HMIStation;
-import frc.alotobots.library.bling.BlingSubsystem;
-import frc.alotobots.library.bling.commands.DefaultSetToAllianceColor;
-import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDrivePathPlanner;
-import frc.alotobots.library.drivetrains.swerve.ctre.SwerveDriveSubsystem;
-import frc.alotobots.library.drivetrains.swerve.ctre.mk4il22023.TunerConstants;
-import frc.alotobots.library.pneumatics.PneumaticsSubsystem;
-import frc.alotobots.library.vision.photonvision.apriltag.PhotonvisionAprilTagSubsystem;
-import frc.alotobots.library.vision.photonvision.objectdetection.PhotonVisionObjectDetectionSubsystem;
-import frc.alotobots.library.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
-import frc.alotobots.library.vision.photonvision.objectdetection.commands.PathfindToBestObject;
+import frc.alotobots.library.subsystems.swervedrive.ModulePosition;
+import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
+import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
+import frc.alotobots.library.subsystems.swervedrive.commands.FeedforwardCharacterization;
+import frc.alotobots.library.subsystems.swervedrive.commands.WheelRadiusCharacterization;
+import frc.alotobots.library.subsystems.swervedrive.io.*;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.AprilTagConstants;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVision;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.PathfindToBestObject;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,109 +45,117 @@ import frc.alotobots.library.vision.photonvision.objectdetection.commands.Pathfi
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   // Subsystems
-  private final SwerveDriveSubsystem drivetrainSubsystem;
-  private final BlingSubsystem blingSubsystem;
-  private final PhotonvisionAprilTagSubsystem photonvisionAprilTagSubsystem;
-  private final PhotonVisionObjectDetectionSubsystem photonvisionObjectDetectionSubsystem;
-  private final PneumaticsSubsystem pneumaticsSubsystem;
+  private final SwerveDriveSubsystem swerveDriveSubsystem;
+  private final AprilTagSubsystem aprilTagSubsystem;
+  private final ObjectDetectionSubsystem objectDetectionSubsystem;
 
-  // Human-Machine Interface
-  private final HMIStation hmiStation;
-
-  // Path Planning and Auto
-  private final SwerveDrivePathPlanner pathPlanner;
-
-  // Swerve drive requests
-  private final SwerveRequest.FieldCentric driveFieldCentric =
-      new SwerveRequest.FieldCentric()
-          .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+  // Dashboard inputs
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Initialize subsystems
-    // ━━━━━━━━━━━━━━━━━━━━ [ Drive ] ━━━━━━━━━━━━━━━━━━━━
-    drivetrainSubsystem = TunerConstants.createDrivetrain(); // Currently using: 2023 L2 Version
+    switch (Constants.currentMode) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        swerveDriveSubsystem =
+            new SwerveDriveSubsystem(
+                new GyroIOPigeon2(),
+                new ModuleIOTalonFX(ModulePosition.FRONT_LEFT.index),
+                new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index),
+                new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index),
+                new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index));
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
+                new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(
+                swerveDriveSubsystem::getPose,
+                new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
+        break;
 
-    // ━━━━━━━━━━━━━━━━━━━━ [ Bling ] ━━━━━━━━━━━━━━━━━━━━
-    blingSubsystem = new BlingSubsystem();
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        swerveDriveSubsystem =
+            new SwerveDriveSubsystem(
+                new GyroIO() {},
+                new ModuleIOSim(ModulePosition.FRONT_LEFT.index),
+                new ModuleIOSim(ModulePosition.FRONT_RIGHT.index),
+                new ModuleIOSim(ModulePosition.BACK_LEFT.index),
+                new ModuleIOSim(ModulePosition.BACK_RIGHT.index));
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIOPhotonVisionSim(
+                    AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
+                new AprilTagIOPhotonVisionSim(
+                    AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
+        // Sim support for object detection doesn't exist yet, so use a no-op
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
+        break;
 
-    // ━━━━━━━━━━━━━━━━━━━━ [ April Tag ] ━━━━━━━━━━━━━━━━━━━━
-    photonvisionAprilTagSubsystem = new PhotonvisionAprilTagSubsystem(drivetrainSubsystem);
+      default:
+        // Replayed robot, disable IO implementations
+        swerveDriveSubsystem =
+            new SwerveDriveSubsystem(
+                new GyroIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
+        // MAKE SURE TO USE THE SAME NUMBER OF CAMERAS AS REAL ROBOT!!
+        aprilTagSubsystem =
+            new AprilTagSubsystem(
+                swerveDriveSubsystem::addVisionMeasurement,
+                new AprilTagIO() {},
+                new AprilTagIO() {});
+        objectDetectionSubsystem =
+            new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
+        break;
+    }
 
-    // ━━━━━━━━━━━━━━━━━━━━ [ Object Detection ] ━━━━━━━━━━━━━━━━━━━━
-    photonvisionObjectDetectionSubsystem =
-        new PhotonVisionObjectDetectionSubsystem(drivetrainSubsystem);
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // ━━━━━━━━━━━━━━━━━━━━ [ Pneumatics ] ━━━━━━━━━━━━━━━━━━━━
-    pneumaticsSubsystem = new PneumaticsSubsystem();
-
-    // Initialize HMI
-    hmiStation = new HMIStation();
-
-    // Initialize Path Planning and Auto
-    pathPlanner = new SwerveDrivePathPlanner(drivetrainSubsystem);
-
-    // Configure commands and bindings
+    // Set up SysId routines
+    autoChooser.addOption(
+        "Drive Wheel Radius Characterization",
+        new WheelRadiusCharacterization(swerveDriveSubsystem));
+    autoChooser.addOption(
+        "Drive Simple FF Characterization", new FeedforwardCharacterization(swerveDriveSubsystem));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Forward)",
+        swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Reverse)",
+        swerveDriveSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Forward)",
+        swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Reverse)",
+        swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // run configure
     configureDefaultCommands();
     configureLogicCommands();
   }
 
   /** Configures default commands for subsystems. */
   private void configureDefaultCommands() {
-    // ━━━━━━━━━━━━━━━━━━━━ [ Drive ] ━━━━━━━━━━━━━━━━━━━━
-    drivetrainSubsystem.setDefaultCommand(
-        Commands.run(
-            () ->
-                drivetrainSubsystem.setControl(
-                    driveFieldCentric
-                        .withVelocityX(hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode())
-                        .withVelocityY(hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode())
-                        .withRotationalRate(
-                            hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode())),
-            drivetrainSubsystem));
 
-    // ━━━━━━━━━━━━━━━━━━━━ [ Bling ] ━━━━━━━━━━━━━━━━━━━━
-    blingSubsystem.setDefaultCommand(new DefaultSetToAllianceColor(blingSubsystem));
-
+    swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
     // Add other subsystem default commands here as needed
   }
 
   /** Configures commands with logic (e.g., button presses). */
   private void configureLogicCommands() {
-    // Gyro re-centering
-    hmiStation.gyroResetButton.onTrue(
-        drivetrainSubsystem.runOnce(drivetrainSubsystem::seedFieldCentric));
-
-    // Enable/Disable Signal Logger for SYSID
-    hmiStation.startCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::start));
-    hmiStation.stopCtrSignalLoggerButton.onTrue(Commands.runOnce(SignalLogger::stop));
-
-    // SYSID
-    hmiStation.driverPOVUp.whileTrue(
-        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    hmiStation.driverPOVDown.whileTrue(
-        drivetrainSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    hmiStation.driverPOVLeft.whileTrue(
-        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    hmiStation.driverPOVRight.whileTrue(
-        drivetrainSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-
-    // Test OTF Pathplanner to best object
-    hmiStation.testOTFPathplannerButton.onTrue(
-        new PathfindToBestObject(
-            photonvisionObjectDetectionSubsystem, drivetrainSubsystem, pathPlanner, "Note"));
-    // Test Object Detection and FieldCentricFacingAngle
-    hmiStation.driveWhileFacingBestObjectTrigger.toggleOnTrue(
-        new DriveFacingBestObject(
-            photonvisionObjectDetectionSubsystem,
-            drivetrainSubsystem,
-            () -> hmiStation.driveFwdAxis() * hmiStation.getDriveXYPerfMode(),
-            () -> hmiStation.driveStrAxis() * hmiStation.getDriveXYPerfMode(),
-            () -> hmiStation.driveRotAxis() * hmiStation.getDriveRotPerfMode(),
-            "Note"));
-
+    driveFacingBestObjectButton.toggleOnTrue(
+        new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
+    pathfindToBestObjectButton.whileTrue(
+        new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     // Add other logic-based commands here
   }
 
@@ -137,6 +165,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return pathPlanner.getSelectedAutoCommand();
+    return autoChooser.get();
   }
 }

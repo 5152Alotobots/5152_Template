@@ -1,4 +1,5 @@
 site_name: Team 5152 Robot Documentation
+site_url: https://5152alotobots.github.io/5152_Template/
 theme:
   name: material
   palette:
@@ -7,22 +8,35 @@ theme:
     accent: grey
 nav:
   - Home: index.md
-  - Game:
-      - Controls: game/subsystems/controls.md
+  - Game: []
   - Library:
       - Commands:
-          - library/commands/drivefacingbestobject.md
-          - library/commands/pathfindtobestobject.md
-          - library/commands/defaultsettoalliancecolor.md
-          - library/commands/drivefacingpose.md
-          - library/commands/pathfindtopose.md
+          - Swerve:
+              - Default Drive: library/commands/swerve/defaultdrive.md
+              - Drive Facing Angle: library/commands/swerve/drivefacingangle.md
+              - Drive Facing Pose: library/commands/swerve/drivefacingpose.md
+              - Characterization: library/commands/swerve/characterization.md
+          - Vision:
+              - Object Detection:
+                  - Drive Facing Best Object: library/commands/vision/objectdetection/drivefacingbestobject.md
+                  - Pathfind to Best Object: library/commands/vision/objectdetection/pathfindtobestobject.md
       - Subsystems:
-          - Bling: library/subsystems/bling.md
-          - Pneumatics: library/subsystems/pneumatics.md
           - Swerve: library/subsystems/swerve.md
           - Vision:
-            - AprilTag: library/subsystems/vision/apriltag.md
-            - Object Detection: library/subsystems/vision/objectdetection.md
-  - API Documentation: ./javadoc
+              - Object Detection: library/subsystems/vision/objectdetection.md
+  - Quickstart: quickstart.md
+  - API Documentation: javadoc/index.html # Point directly to index.html
+
 repo_url: https://github.com/5152alotobots/5152_Template
 repo_name: 5152Alotobots/5152_Template
+
+# Optional but recommended additions:
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+
+plugins:
+  - search

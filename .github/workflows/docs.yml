@@ -28,6 +28,7 @@ jobs:
 
       - name: Generate and Copy Javadoc First
         run: |
+          ./gradlew build
           ./gradlew javadoc
           mkdir -p docs/mkdocs/docs/javadoc
           cp -r build/docs/javadoc/* docs/mkdocs/docs/javadoc/
