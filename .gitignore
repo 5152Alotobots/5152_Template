@@ -185,9 +185,6 @@ compile_commands.json
 .aider*
 .env
 
-# Temp
-2025CTREexample
-
 BuildConstants.java
 
 
