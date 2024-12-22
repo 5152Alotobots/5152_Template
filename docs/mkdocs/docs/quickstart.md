@@ -888,10 +888,6 @@ Before testing object detection, configure the game elements that need to be det
     // In GameElementConstants.java
     // All measurements in meters
     public static final GameElement NOTE = new GameElement("Note", 0.36, 0.36, 0.05);
-    public static final GameElement AMP = new GameElement("Amp", 0.51, 0.51, 0.58);
-    public static final GameElement SPEAKER = new GameElement("Speaker", 1.07, 1.07, 2.11);
-    public static final GameElement SOURCE = new GameElement("Source", 1.37, 1.37, 2.03);
-    public static final GameElement STAGE = new GameElement("Stage", 4.11, 4.11, 0.55);
     ```
 
 2. Create Class ID Array:
@@ -899,11 +895,7 @@ Before testing object detection, configure the game elements that need to be det
     // Game elements array indexed by class ID
     // IMPORTANT: Order must match neural network model's class IDs
     public static final GameElement[] GAME_ELEMENTS = new GameElement[] {
-        NOTE,      // Class ID 0
-        AMP,       // Class ID 1
-        SPEAKER,   // Class ID 2
-        SOURCE,    // Class ID 3
-        STAGE      // Class ID 4
+        NOTE      // Class ID 0
     };
     ```
 
