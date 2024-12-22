@@ -927,11 +927,25 @@ After configuring cameras and game elements:
     - Check pose estimation quality
     - Verify reasonable distance estimates
 
-4. Common Issues:
+4. Filtering Configuration:
+    - Position Match Tolerance:
+        ```java
+        // Tolerance in meters for matching object positions
+        // Default is usually fine, but can be adjusted if needed
+        public static final double POSITION_MATCH_TOLERANCE = 0.5;
+        ```
+        - Larger values: More stable tracking during rotation
+        - Smaller values: More accurate position tracking
+        - Trade-off between stability and accuracy
+        - Start with default and adjust if objects appear unstable
+
+5. Common Issues:
     - Camera disconnections: Check USB connections
     - Poor detection: Adjust exposure/brightness
     - Incorrect poses: Double-check offset measurements
     - Network lag: Monitor bandwidth usage
+    - Unstable tracking: Try increasing POSITION_MATCH_TOLERANCE
+    - Position jumps: Try decreasing POSITION_MATCH_TOLERANCE
 
 Congratulations! Your project should now be fully configured and tuned for optimal performance.
 
