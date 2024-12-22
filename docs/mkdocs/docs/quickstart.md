@@ -568,6 +568,93 @@ Before considering the swerve drive fully configured, perform these comprehensiv
 
 Note: While the robot should now follow paths accurately, some remaining inaccuracies are normal and will be corrected later using vision-based localization systems.
 
+## 2. AprilTag Vision Configuration
+
+### 2.1 Camera Offset Measurement
+
+Accurate camera position measurements are critical for AprilTag vision:
+
+1. Physical Measurements:
+    - Use calipers or precise measuring tools
+    - Measure from robot center (origin) to camera lens center
+    - Record three distances for each camera:
+        - Forward distance (X): positive towards robot front
+        - Left distance (Y): positive towards robot left
+        - Up distance (Z): positive towards robot top
+    - Measure camera angles:
+        - Pitch: downward tilt (usually negative)
+        - Yaw: left/right rotation
+
+2. Update Constants:
+    ```java
+    private static final Transform3d[] CAMERA_OFFSETS = new Transform3d[] {
+        // Front Left Camera
+        new Transform3d(
+            new Translation3d(0.245, 0.21, 0.17),  // X, Y, Z in meters
+            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(45))),  // Roll, Pitch, Yaw
+        
+        // Front Middle Camera
+        new Transform3d(
+            new Translation3d(0.275, 0.0, 0.189),
+            new Rotation3d(0, Math.toRadians(-35), Math.toRadians(0)))
+    };
+    ```
+
+3. Camera Configuration:
+    ```java
+    // Add configuration for each physical camera
+    private static final CameraConfig[] CAMERA_CONFIGS = new CameraConfig[] {
+        new CameraConfig("FL_AprilTag", CAMERA_OFFSETS[0], new SimCameraProperties()),
+        new CameraConfig("FM_AprilTag", CAMERA_OFFSETS[1], new SimCameraProperties())
+    };
+    ```
+
+4. IO Configuration:
+    ```java
+    // In RobotContainer.java constructor:
+    AprilTagIO[] aprilTagIOs = new AprilTagIO[] {
+        new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
+        new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1])
+    };
+    ```
+
+5. Replay Support:
+    ```java
+    // For replay mode, match array size to physical cameras
+    AprilTagIO[] aprilTagIOs = new AprilTagIO[] {
+        new AprilTagIOReplay(),
+        new AprilTagIOReplay()
+    };
+    ```
+
+### 2.2 Camera Verification
+
+After configuring camera offsets:
+
+1. Physical Checks:
+    - Verify camera mounts are secure
+    - Check USB connections
+    - Confirm cameras are powered
+    - LED indicators should be on
+
+2. Network Verification:
+    - Open PhotonVision dashboard
+    - Confirm all cameras are connected
+    - Check video feeds are active
+    - Verify camera names match configs
+
+3. Basic Testing:
+    - Hold AprilTag in camera view
+    - Confirm detection in dashboard
+    - Check pose estimation quality
+    - Verify reasonable distance estimates
+
+4. Common Issues:
+    - Camera disconnections: Check USB connections
+    - Poor detection: Adjust exposure/brightness
+    - Incorrect poses: Double-check offset measurements
+    - Network lag: Monitor bandwidth usage
+
 Congratulations! Your swerve drive should now be fully configured and tuned for optimal performance.
 
 
