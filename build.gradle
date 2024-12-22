@@ -228,6 +228,9 @@ spotless {
             include "**/*.java"
             exclude "**/build/**", "**/build-*/**"
         }
+        targetExclude {
+            '.photonvision/**'
+        }
         toggleOffOn()
 
         licenseHeader '''

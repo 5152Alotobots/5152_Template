@@ -187,4 +187,7 @@ compile_commands.json
 
 BuildConstants.java
 
+# Allow photonvision configs
+!.photonvision/**/*.zip
+
 
