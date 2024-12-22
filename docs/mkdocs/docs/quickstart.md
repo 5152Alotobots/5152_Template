@@ -367,7 +367,7 @@ After configuring robot mass, measure the robot's rotational inertia (MOI) for b
         - Drive SysId (Quasistatic Reverse)
         - Drive SysId (Dynamic Forward)
         - Drive SysId (Dynamic Reverse)
-    - Let each routine complete fully
+    - Let each routine run for atleast 15s
     - Save logs after each run
 
 4. Data Export:
@@ -383,11 +383,7 @@ After configuring robot mass, measure the robot's rotational inertia (MOI) for b
     - Save the converted log file
 
 5. SysId Analysis:
-    - Open VSCode
-    - Launch SysId tool:
-        - Command Palette (Ctrl+Shift+P)
-        - Search "WPILib: Start Tool"
-        - Select "SysId"
+    - Launch SysID
     - Load the exported log file
     - Record these values:
         - kA_angular (V/(rad/s²))
@@ -407,19 +403,9 @@ After configuring robot mass, measure the robot's rotational inertia (MOI) for b
 7. Update Configuration:
     - In your TunerConstants file, update the MOI constant:
     ```java
-    public static final double ROBOT_MOI_KGM2 = 4.24; // Update with calculated value
+    public static final double ROBOT_MOI = 4.24; // Update with calculated value
     ```
     This value represents the robot's resistance to rotational acceleration
-
-8. Verification:
-    - Deploy updated code
-    - Test rotational movements
-    - Verify smooth acceleration in turns
-    - Check path following accuracy with rotation
-    - Pay special attention to:
-        - Turn initiation smoothness
-        - Stopping accuracy
-        - Multi-axis movement stability
 
 ### 1.11 Wheel Coefficient of Friction Measurement
 After configuring mass and MOI, measure the wheel coefficient of friction for accurate path following:
@@ -448,12 +434,6 @@ After configuring mass and MOI, measure the wheel coefficient of friction for ac
     public static final double WHEEL_COF = 1.1;  // Update with measured value
     ```
     This value helps PathPlanner calculate maximum achievable accelerations
-
-4. Verification:
-    - Deploy updated code
-    - Test aggressive path following
-    - Verify wheels maintain traction
-    - Check acceleration limits are respected
 
 ### 1.12 Turn Motor Tuning
 The turn (steering) motors require different tuning approaches than drive motors:
@@ -516,4 +496,6 @@ public static final Slot0Configs steerGains = new Slot0Configs()
     .withKA(0)
     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 ```
+
+
 
