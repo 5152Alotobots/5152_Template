@@ -25,7 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Issue for Updates
+      - name: Handle Update Issues
         if: steps.check.outputs.has_updates == 'true'
         uses: actions/github-script@v6
         env:
@@ -35,7 +35,21 @@ jobs:
             try {
               const updates = JSON.parse(process.env.UPDATES_JSON);
             
+              // Search for existing open issues
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'dependencies'
+              });
+            
+              // Find existing update issue
+              const existingIssue = issues.data.find(issue => 
+                issue.title.includes('Dependency Updates Available')
+              );
+            
               let body = '# Dependency Updates Available\n\n';
+              body += '_Last checked: ' + new Date().toISOString() + '_\n\n';
             
               for (const update of updates) {
                 body += `### ${update.name}\n`;
@@ -59,13 +73,28 @@ jobs:
                 body += '\n';
               }
             
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: '🔄 Dependency Updates Available',
-                body: body,
-                labels: ['dependencies']
-              });
+              if (existingIssue) {
+                // Update existing issue
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: body
+                });
+            
+                console.log(`Updated existing issue #${existingIssue.number}`);
+              } else {
+                // Create new issue
+                const newIssue = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🔄 Dependency Updates Available',
+                  body: body,
+                  labels: ['dependencies']
+                });
+            
+                console.log(`Created new issue #${newIssue.data.number}`);
+              }
             } catch (error) {
               core.setFailed(`Error processing updates: ${error.message}`);
               console.log('Full error:', error);
