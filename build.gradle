@@ -226,7 +226,7 @@ spotless {
     java {
         target fileTree(".") {
             include "**/*.java"
-            exclude "**/build/**", "**/build-*/**", "**/.photonvision/**"
+            exclude "**/build/**", "**/build-*/**"
         }
         toggleOffOn()
 
@@ -262,7 +262,7 @@ spotless {
     json {
         target fileTree(".") {
             include "**/*.json"
-            exclude "**/build/**", "**/build-*/**"
+            exclude "**/build/**", "**/build-*/**", ".photonvision/**"
         }
         gson().indentWithSpaces(2)
     }
