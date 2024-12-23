@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.subsystems.bling.BlingSubsystem;
 
 /**
- * Command that displays an animation while waiting for alliance selection.
- * Automatically terminates once an alliance is selected.
+ * Command that displays an animation while waiting for alliance selection. Automatically terminates
+ * once an alliance is selected.
  */
 public class NoAllianceWaiting extends Command {
   /** The bling subsystem to control */
@@ -28,6 +28,7 @@ public class NoAllianceWaiting extends Command {
 
   /**
    * Creates a new NoAllianceWaiting command.
+   *
    * @param blingSubsystem The bling subsystem to use
    */
   public NoAllianceWaiting(BlingSubsystem blingSubsystem) {

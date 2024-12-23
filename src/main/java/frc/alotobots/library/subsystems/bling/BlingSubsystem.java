@@ -19,17 +19,19 @@ import frc.alotobots.library.subsystems.bling.io.BlingIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Subsystem for controlling robot LED lighting effects.
- * Manages LED animations and solid colors for visual feedback.
+ * Subsystem for controlling robot LED lighting effects. Manages LED animations and solid colors for
+ * visual feedback.
  */
 public class BlingSubsystem extends SubsystemBase {
   /** The IO interface for LED control */
   private final BlingIO io;
+
   /** Logged inputs for monitoring LED state */
   private final BlingIOInputsAutoLogged inputs = new BlingIOInputsAutoLogged();
 
   /**
    * Creates a new BlingSubsystem.
+   *
    * @param io The BlingIO implementation to use for LED control
    */
   public BlingSubsystem(BlingIO io) {
@@ -50,6 +52,7 @@ public class BlingSubsystem extends SubsystemBase {
 
   /**
    * Sets the LEDs to display a solid color.
+   *
    * @param color The color to display
    */
   public void setSolidColor(BlingIO.LoggedColor color) {
@@ -58,15 +61,14 @@ public class BlingSubsystem extends SubsystemBase {
 
   /**
    * Sets the LEDs to display an animation pattern.
+   *
    * @param animation The animation pattern to display
    */
   public void setAnimation(Animation animation) {
     io.setAnimation(animation);
   }
 
-  /**
-   * Clears all LED effects, turning off animations and solid colors.
-   */
+  /** Clears all LED effects, turning off animations and solid colors. */
   public void clear() {
     io.clearAnimation();
     io.clearSolidColor();
