@@ -24,6 +24,7 @@ nav:
           - Swerve: library/subsystems/swerve.md
           - Vision:
               - Object Detection: library/subsystems/vision/objectdetection.md
+              - AprilTag: library/subsystems/vision/apriltag.md
   - Quickstart: quickstart.md
   - API Documentation: javadoc/index.html # Point directly to index.html
 
