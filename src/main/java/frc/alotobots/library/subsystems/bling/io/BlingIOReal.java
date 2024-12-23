@@ -18,11 +18,22 @@ import static frc.alotobots.library.subsystems.bling.constants.BlingConstants.*;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 
+/**
+ * Hardware implementation of the BlingIO interface for controlling physical LED strips.
+ * Uses CTRE's CANdle device for LED control.
+ */
 public class BlingIOReal implements BlingIO {
+  /** CANdle controller for LED management */
   private CANdle candle;
+  /** Current solid color setting */
   private LoggedColor currentColor;
+  /** Current animation setting */
   private Animation currentAnimation;
 
+  /**
+   * Constructs a new BlingIOReal instance.
+   * Initializes the CANdle controller with default settings.
+   */
   public BlingIOReal() {
     this.candle = new CANdle(CANDLE_CAN_ID);
     candle.configBrightnessScalar(MAX_LED_BRIGHTNESS);

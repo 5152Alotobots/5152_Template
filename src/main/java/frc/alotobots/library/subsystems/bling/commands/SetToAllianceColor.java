@@ -19,9 +19,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.subsystems.bling.BlingSubsystem;
 
+/**
+ * Command that sets the LED color based on the current alliance color.
+ * Changes the LEDs to red or blue depending on the alliance selection.
+ */
 public class SetToAllianceColor extends Command {
+  /** The bling subsystem to control */
   private BlingSubsystem blingSubsystem;
 
+  /**
+   * Creates a new SetToAllianceColor command.
+   * @param blingSubsystem The bling subsystem to use
+   */
   public SetToAllianceColor(BlingSubsystem blingSubsystem) {
     this.blingSubsystem = blingSubsystem;
     addRequirements(blingSubsystem);

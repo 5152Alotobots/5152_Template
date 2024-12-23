@@ -16,10 +16,19 @@ import static frc.alotobots.library.subsystems.bling.constants.BlingConstants.*;
 
 import com.ctre.phoenix.led.Animation;
 
+/**
+ * Simulation implementation of the BlingIO interface.
+ * Provides a mock implementation for testing and simulation purposes.
+ */
 public class BlingIOSim implements BlingIO {
+  /** Current simulated solid color */
   private LoggedColor currentColor;
+  /** Current simulated animation */
   private Animation currentAnimation;
 
+  /**
+   * Constructs a new BlingIOSim instance.
+   */
   public BlingIOSim() {}
 
   @Override
