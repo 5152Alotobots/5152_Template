@@ -28,10 +28,12 @@ jobs:
       - name: Create Issue for Updates
         if: steps.check.outputs.has_updates == 'true'
         uses: actions/github-script@v6
+        env:
+          UPDATES_JSON: ${{ steps.check.outputs.updates }}
         with:
           script: |
             try {
-              const updates = JSON.parse('${{ steps.check.outputs.updates }}');
+              const updates = JSON.parse(process.env.UPDATES_JSON);
             
               let body = '# Dependency Updates Available\n\n';
             
@@ -65,6 +67,7 @@ jobs:
                 labels: ['dependencies']
               });
             } catch (error) {
-              console.error('Error processing updates:', error);
-              core.setFailed(error.message);
+              core.setFailed(`Error processing updates: ${error.message}`);
+              console.log('Full error:', error);
+              console.log('Updates JSON:', process.env.UPDATES_JSON);
             }
