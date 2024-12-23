@@ -226,7 +226,7 @@ spotless {
     java {
         target fileTree(".") {
             include "**/*.java"
-            exclude "**/build/**", "**/build-*/**", ".photonvision/**"
+            exclude "**/build/**", "**/build-*/**", "**/.photonvision/**"
         }
         toggleOffOn()
 
