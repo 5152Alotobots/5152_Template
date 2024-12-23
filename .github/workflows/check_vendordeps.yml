@@ -1,0 +1,50 @@
+name: Check Dependencies
+
+on:
+  schedule:
+    - cron: '0 12 */2 * *'  # Run at noon UTC every other day
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests packaging
+
+      - name: Check for updates
+        id: check
+        run: python .github/scripts/check_vendordeps.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Issue for Updates
+        if: steps.check.outputs.has_updates == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const updates = JSON.parse(process.env.UPDATES);
+            const body = updates.map(u => 
+              `### ${u.name}\n` +
+              `- Current version: ${u.current}\n` +
+              `- Latest version: ${u.latest}\n` +
+              `- Source: ${u.source}\n` +
+              (u.url ? `- [View Release](${u.url})\n` : '') +
+              (u.name === 'WPILib' ? '\n⚠️ **Note**: Please use WPILib VS Code tools for actual updates\n' : '') +
+              (u.notes ? '\n<details><summary>Release Notes</summary>\n\n' + u.notes + '\n</details>\n' : '')
+            ).join('\n');
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔄 Dependency Updates Available',
+              body: body,
+              labels: ['dependencies']
+            });
