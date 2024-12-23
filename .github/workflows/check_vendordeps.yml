@@ -30,21 +30,41 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const updates = JSON.parse(process.env.UPDATES);
-            const body = updates.map(u => 
-              `### ${u.name}\n` +
-              `- Current version: ${u.current}\n` +
-              `- Latest version: ${u.latest}\n` +
-              `- Source: ${u.source}\n` +
-              (u.url ? `- [View Release](${u.url})\n` : '') +
-              (u.name === 'WPILib' ? '\n⚠️ **Note**: Please use WPILib VS Code tools for actual updates\n' : '') +
-              (u.notes ? '\n<details><summary>Release Notes</summary>\n\n' + u.notes + '\n</details>\n' : '')
-            ).join('\n');
+            try {
+              const updates = JSON.parse('${{ steps.check.outputs.updates }}');
             
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: '🔄 Dependency Updates Available',
-              body: body,
-              labels: ['dependencies']
-            });
+              let body = '# Dependency Updates Available\n\n';
+            
+              for (const update of updates) {
+                body += `### ${update.name}\n`;
+                body += `- Current version: ${update.current}\n`;
+                body += `- Latest version: ${update.latest}\n`;
+                body += `- Source: ${update.source}\n`;
+            
+                if (update.url) {
+                  body += `- [View Release](${update.url})\n`;
+                }
+            
+                if (update.name === 'WPILib') {
+                  body += '\n⚠️ **Note**: Please use WPILib VS Code tools for actual updates\n';
+                  if (update.notes) {
+                    body += '\n<details><summary>Release Notes</summary>\n\n';
+                    body += update.notes;
+                    body += '\n</details>\n';
+                  }
+                }
+            
+                body += '\n';
+              }
+            
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🔄 Dependency Updates Available',
+                body: body,
+                labels: ['dependencies']
+              });
+            } catch (error) {
+              console.error('Error processing updates:', error);
+              core.setFailed(error.message);
+            }

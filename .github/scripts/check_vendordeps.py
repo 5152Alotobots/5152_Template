@@ -237,12 +237,14 @@ def main():
         if os.getenv('GITHUB_OUTPUT'):
             with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                 f.write(f"has_updates=true\n")
-                f.write(f"updates={json.dumps(updates)}\n")
+                # Properly escape the JSON string for GitHub Actions
+                updates_json = json.dumps(updates).replace('%', '%25').replace('\n', '%0A').replace('\r', '%0D')
+                f.write(f"updates={updates_json}\n")
     else:
         print("\nAll dependencies are up to date!")
         if os.getenv('GITHUB_OUTPUT'):
             with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                 f.write("has_updates=false\n")
-
+                f.write("updates=[]\n")
 if __name__ == "__main__":
     main()
