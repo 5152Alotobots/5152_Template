@@ -19,6 +19,12 @@ import static frc.alotobots.library.subsystems.vision.photonvision.objectdetecti
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.alotobots.library.subsystems.bling.BlingSubsystem;
+import frc.alotobots.library.subsystems.bling.commands.NoAllianceWaiting;
+import frc.alotobots.library.subsystems.bling.commands.SetToAllianceColor;
+import frc.alotobots.library.subsystems.bling.io.BlingIO;
+import frc.alotobots.library.subsystems.bling.io.BlingIOReal;
+import frc.alotobots.library.subsystems.bling.io.BlingIOSim;
 import frc.alotobots.library.subsystems.swervedrive.ModulePosition;
 import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
@@ -49,6 +55,7 @@ public class RobotContainer {
   private final SwerveDriveSubsystem swerveDriveSubsystem;
   private final AprilTagSubsystem aprilTagSubsystem;
   private final ObjectDetectionSubsystem objectDetectionSubsystem;
+  private final BlingSubsystem blingSubsystem;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -74,6 +81,7 @@ public class RobotContainer {
             new ObjectDetectionSubsystem(
                 swerveDriveSubsystem::getPose,
                 new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
+        blingSubsystem = new BlingSubsystem(new BlingIOReal());
         break;
 
       case SIM:
@@ -95,6 +103,7 @@ public class RobotContainer {
         // Sim support for object detection doesn't exist yet, so use a no-op
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
+        blingSubsystem = new BlingSubsystem(new BlingIOSim());
         break;
 
       default:
@@ -114,6 +123,7 @@ public class RobotContainer {
                 new AprilTagIO() {});
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
+        blingSubsystem = new BlingSubsystem(new BlingIO() {});
         break;
     }
 
@@ -147,6 +157,8 @@ public class RobotContainer {
   private void configureDefaultCommands() {
 
     swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
+    blingSubsystem.setDefaultCommand(
+        new NoAllianceWaiting(blingSubsystem).andThen(new SetToAllianceColor(blingSubsystem)));
     // Add other subsystem default commands here as needed
   }
 
