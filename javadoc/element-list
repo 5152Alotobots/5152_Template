@@ -1,4 +1,8 @@
 frc.alotobots
+frc.alotobots.library.subsystems.bling
+frc.alotobots.library.subsystems.bling.commands
+frc.alotobots.library.subsystems.bling.constants
+frc.alotobots.library.subsystems.bling.io
 frc.alotobots.library.subsystems.swervedrive
 frc.alotobots.library.subsystems.swervedrive.commands
 frc.alotobots.library.subsystems.swervedrive.constants

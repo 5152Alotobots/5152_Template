@@ -17,6 +17,14 @@
          <lastmod>2024-12-23</lastmod>
     </url>
     <url>
+         <loc>https://5152alotobots.github.io/5152_Template/library/commands/bling/noalliancewaiting/</loc>
+         <lastmod>2024-12-23</lastmod>
+    </url>
+    <url>
+         <loc>https://5152alotobots.github.io/5152_Template/library/commands/bling/settoalliancecolor/</loc>
+         <lastmod>2024-12-23</lastmod>
+    </url>
+    <url>
          <loc>https://5152alotobots.github.io/5152_Template/library/commands/swerve/characterization/</loc>
          <lastmod>2024-12-23</lastmod>
     </url>
@@ -38,6 +46,10 @@
     </url>
     <url>
          <loc>https://5152alotobots.github.io/5152_Template/library/commands/vision/objectdetection/pathfindtobestobject/</loc>
+         <lastmod>2024-12-23</lastmod>
+    </url>
+    <url>
+         <loc>https://5152alotobots.github.io/5152_Template/library/subsystems/bling/</loc>
          <lastmod>2024-12-23</lastmod>
     </url>
     <url>
