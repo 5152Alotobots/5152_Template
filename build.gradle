@@ -228,9 +228,6 @@ spotless {
             include "**/*.java"
             exclude "**/build/**", "**/build-*/**"
         }
-        targetExclude {
-            '.photonvision/**'
-        }
         toggleOffOn()
 
         licenseHeader '''
@@ -265,7 +262,7 @@ spotless {
     json {
         target fileTree(".") {
             include "**/*.json"
-            exclude "**/build/**", "**/build-*/**"
+            exclude "**/build/**", "**/build-*/**", ".photonvision/**"
         }
         gson().indentWithSpaces(2)
     }
