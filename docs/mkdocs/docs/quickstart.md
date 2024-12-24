@@ -201,6 +201,11 @@ Update PID and FF values based on characterization:
     - Deploy code
     - Start with very slow movements
     - Test forward/backward/strafe
+    - Plot values for
+      - /RealOutputs/SwerveStates/Measured
+      - /RealOutputs/SwerveStates/SetpointsOptimized
+    - Try to match the Measured value as close to Optimized as possible. 
+    - Transitions won't be instant, but ensure that we don't over/under shoot
     - Watch for:
         - Smooth acceleration
         - No oscillation
@@ -410,25 +415,10 @@ After configuring robot mass, measure the robot's rotational inertia (MOI) for b
 ### 1.11 Wheel Coefficient of Friction Measurement
 After configuring mass and MOI, measure the wheel coefficient of friction for accurate path following:
 
-1. Setup:
-    - Clear a flat, consistent surface area
-    - Place robot on competition surface material
-    - Open AdvantageScope for data logging
-    - Create plots for:
-        - Module velocities
-        - Drive motor currents
-        - Robot acceleration
-
-2. Measurement Process:
-    - Run the "Wheel COF Characterization" autonomous routine
-    - Command will:
-        - Gradually increase drive power
-        - Monitor wheel slip
-        - Calculate static and dynamic COF
-    - Test will run for about 10 seconds
-    - Results print to Driver Station console
-
-3. Update Configuration:
+1. Locate the wheel COF on the manufacturer website, some common examples have been provided here:
+   - Most Colson wheels: 1.0
+   - **BRAND NEW** Billet Wheel, 4"OD x 1.5"W (MK4/4i/4n): 1.1 **(THIS VALUE ONLY LASTS FOR 1-1.5 EVENTS WORTH OF USE)**
+2. Update Configuration:
     - In your TunerConstants file, update the COF constant:
     ```java
     public static final double WHEEL_COF = 1.1;  // Update with measured value
