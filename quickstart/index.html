@@ -1767,6 +1767,11 @@ Before beginning any swerve configuration, verify all CAN IDs:</p>
 <li>Deploy code</li>
 <li>Start with very slow movements</li>
 <li>Test forward/backward/strafe</li>
+<li>Plot values for</li>
+<li>/RealOutputs/SwerveStates/Measured</li>
+<li>/RealOutputs/SwerveStates/SetpointsOptimized</li>
+<li>Try to match the Measured value as close to Optimized as possible.</li>
+<li>Transitions won't be instant, but ensure that we don't over/under shoot</li>
 <li>Watch for:<ul>
 <li>Smooth acceleration</li>
 <li>No oscillation</li>
@@ -2057,37 +2062,10 @@ This value represents the robot's resistance to rotational acceleration</li>
 <h3 id="111-wheel-coefficient-of-friction-measurement">1.11 Wheel Coefficient of Friction Measurement</h3>
 <p>After configuring mass and MOI, measure the wheel coefficient of friction for accurate path following:</p>
 <ol>
-<li>
-<p>Setup:</p>
-<ul>
-<li>Clear a flat, consistent surface area</li>
-<li>Place robot on competition surface material</li>
-<li>Open AdvantageScope for data logging</li>
-<li>Create plots for:<ul>
-<li>Module velocities</li>
-<li>Drive motor currents</li>
-<li>Robot acceleration</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>Measurement Process:</p>
-<ul>
-<li>Run the "Wheel COF Characterization" autonomous routine</li>
-<li>Command will:<ul>
-<li>Gradually increase drive power</li>
-<li>Monitor wheel slip</li>
-<li>Calculate static and dynamic COF</li>
-</ul>
-</li>
-<li>Test will run for about 10 seconds</li>
-<li>Results print to Driver Station console</li>
-</ul>
-</li>
-<li>
-<p>Update Configuration:</p>
-<ul>
+<li>Locate the wheel COF on the manufacturer website, some common examples have been provided here:</li>
+<li>Most Colson wheels: 1.0</li>
+<li><strong>BRAND NEW</strong> Billet Wheel, 4"OD x 1.5"W (MK4/4i/4n): 1.1 <strong>(THIS VALUE ONLY LASTS FOR 1-1.5 EVENTS WORTH OF USE)</strong></li>
+<li>Update Configuration:<ul>
 <li>In your TunerConstants file, update the COF constant:
 <div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">WHEEL_COF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.1</span><span class="p">;</span><span class="w">  </span><span class="c1">// Update with measured value</span>
 </code></pre></div>
