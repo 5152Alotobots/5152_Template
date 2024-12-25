@@ -174,7 +174,7 @@ public class RobotContainer {
   private void configureLogicCommands() {
     driveFacingBestObjectButton.toggleOnTrue(
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
-    pathfindToBestObjectButton.whileTrue(
+    pathfindToBestObjectButton.onTrue(
         new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
   }
 

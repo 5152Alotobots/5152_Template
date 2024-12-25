@@ -10,6 +10,7 @@ nav:
   - Home: index.md
   - Game: []
   - Core:
+      - Controller Bindings: core/bindings.md
       - Auto Named Commands: core/autonamedcommands.md
       - Robot: core/robot.md
       - Robot Container: core/robotcontainer.md
