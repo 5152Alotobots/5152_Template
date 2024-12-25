@@ -8,6 +8,7 @@ theme:
     accent: grey
 nav:
   - Home: index.md
+  - Style Guide: styleguide.md
   - Game: []
   - Core:
       - Controller Bindings: core/bindings.md
