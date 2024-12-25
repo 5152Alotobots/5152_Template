@@ -77,6 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">OI</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">The Operator Interface (OI) class handles all driver control inputs and button mappings. This
+ class provides methods to access controller inputs and defines button bindings for commanding the
+ robot.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -91,13 +94,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final double</code></div>
 <div class="col-second even-row-color"><code><a href="#DEADBAND" class="member-name-link">DEADBAND</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The minimum value that joystick inputs must exceed to be registered.</div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html" title="class or interface in edu.wpi.first.wpilibj2.command.button" class="external-link">Trigger</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#driveFacingBestObjectButton" class="member-name-link">driveFacingBestObjectButton</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Button for activating the drive facing best object command.</div>
+</div>
 <div class="col-first even-row-color"><code>static <a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html" title="class or interface in edu.wpi.first.wpilibj2.command.button" class="external-link">Trigger</a></code></div>
 <div class="col-second even-row-color"><code><a href="#pathfindToBestObjectButton" class="member-name-link">pathfindToBestObjectButton</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Button for activating the pathfind to best object command.</div>
+</div>
 </div>
 </section>
 </li>
@@ -127,19 +136,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRotationAxis()" class="member-name-link">getRotationAxis</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the rotation input from the driver's controller.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTranslateForwardAxis()" class="member-name-link">getTranslateForwardAxis</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the forward/backward translation input from the driver's controller.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTranslateStrafeAxis()" class="member-name-link">getTranslateStrafeAxis</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the left/right translation input from the driver's controller.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTurboSpeedTrigger()" class="member-name-link">getTurboSpeedTrigger</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the turbo (fast) speed control input value.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTurtleSpeedTrigger()" class="member-name-link">getTurtleSpeedTrigger</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the turtle (slow) speed control input value.</div>
+</div>
 </div>
 </div>
 </div>
@@ -161,6 +180,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="DEADBAND">
 <h3>DEADBAND</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">DEADBAND</span></div>
+<div class="block">The minimum value that joystick inputs must exceed to be registered. Used to prevent drift and
+ unintended movement.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -175,12 +196,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="driveFacingBestObjectButton">
 <h3>driveFacingBestObjectButton</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html" title="class or interface in edu.wpi.first.wpilibj2.command.button" class="external-link">Trigger</a></span>&nbsp;<span class="element-name">driveFacingBestObjectButton</span></div>
+<div class="block">Button for activating the drive facing best object command.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="pathfindToBestObjectButton">
 <h3>pathfindToBestObjectButton</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj2/command/button/Trigger.html" title="class or interface in edu.wpi.first.wpilibj2.command.button" class="external-link">Trigger</a></span>&nbsp;<span class="element-name">pathfindToBestObjectButton</span></div>
+<div class="block">Button for activating the pathfind to best object command.</div>
 </section>
 </li>
 </ul>
@@ -209,30 +232,55 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTranslateForwardAxis()">
 <h3>getTranslateForwardAxis</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getTranslateForwardAxis</span>()</div>
+<div class="block">Gets the forward/backward translation input from the driver's controller.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Value between -1.0 (backward) and 1.0 (forward)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTranslateStrafeAxis()">
 <h3>getTranslateStrafeAxis</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getTranslateStrafeAxis</span>()</div>
+<div class="block">Gets the left/right translation input from the driver's controller.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Value between -1.0 (left) and 1.0 (right)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getRotationAxis()">
 <h3>getRotationAxis</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getRotationAxis</span>()</div>
+<div class="block">Gets the rotation input from the driver's controller.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Value between -1.0 (counter-clockwise) and 1.0 (clockwise)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTurtleSpeedTrigger()">
 <h3>getTurtleSpeedTrigger</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getTurtleSpeedTrigger</span>()</div>
+<div class="block">Gets the turtle (slow) speed control input value.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Value between 0.0 and 1.0</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTurboSpeedTrigger()">
 <h3>getTurboSpeedTrigger</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getTurboSpeedTrigger</span>()</div>
+<div class="block">Gets the turbo (fast) speed control input value.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Value between 0.0 and 1.0</dd>
+</dl>
 </section>
 </li>
 </ul>

@@ -73,9 +73,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Constants</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
- on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
- (log replay from a file).</div>
+<div class="block">Robot-wide constants class that defines runtime modes and device configurations. This class
+ contains global constants and configurations used across the robot code.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -90,10 +89,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="Constants.CanId.html" class="type-name-link" title="class in frc.alotobots">Constants.CanId</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">CAN bus device ID assignments.</div>
+</div>
 <div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="Constants.Mode.html" class="type-name-link" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Defines the possible runtime modes for the robot code.</div>
+</div>
 </div>
 </section>
 </li>
@@ -108,13 +111,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final <a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
 <div class="col-second even-row-color"><code><a href="#currentMode" class="member-name-link">currentMode</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">The current runtime mode, determined by whether running on real hardware or in simulation.</div>
+</div>
 <div class="col-first odd-row-color"><code>static final <a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#simMode" class="member-name-link">simMode</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">The simulation mode to use when not running on real hardware.</div>
+</div>
 <div class="col-first even-row-color"><code>static final <a href="library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></code></div>
 <div class="col-second even-row-color"><code><a href="#tunerConstants" class="member-name-link">tunerConstants</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Global tuning constants for the swerve drive.</div>
+</div>
 </div>
 </section>
 </li>
@@ -153,18 +162,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="simMode">
 <h3>simMode</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></span>&nbsp;<span class="element-name">simMode</span></div>
+<div class="block">The simulation mode to use when not running on real hardware.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="currentMode">
 <h3>currentMode</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Constants.Mode.html" title="enum class in frc.alotobots">Constants.Mode</a></span>&nbsp;<span class="element-name">currentMode</span></div>
+<div class="block">The current runtime mode, determined by whether running on real hardware or in simulation.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="tunerConstants">
 <h3>tunerConstants</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></span>&nbsp;<span class="element-name">tunerConstants</span></div>
+<div class="block">Global tuning constants for the swerve drive.</div>
 </section>
 </li>
 </ul>

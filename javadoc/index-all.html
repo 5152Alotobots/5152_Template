@@ -132,11 +132,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/Robot.html#autonomousInit()" class="member-name-link">autonomousInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This autonomous runs the autonomous command selected by your <a href="frc/alotobots/RobotContainer.html" title="class in frc.alotobots"><code>RobotContainer</code></a> class.</div>
+<div class="block">Called once when autonomous mode is enabled.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#autonomousPeriodic()" class="member-name-link">autonomousPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called periodically during autonomous.</div>
+<div class="block">Called periodically during autonomous mode.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIO.PoseObservation.html#averageTagDistance()" class="member-name-link">averageTagDistance()</a> - Method in record class frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIO.PoseObservation.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag.io">AprilTagIO.PoseObservation</a></dt>
 <dd>
@@ -344,16 +344,22 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/Constants.html" class="type-name-link" title="class in frc.alotobots">Constants</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
 <dd>
-<div class="block">This class defines the runtime mode used by AdvantageKit.</div>
+<div class="block">Robot-wide constants class that defines runtime modes and device configurations.</div>
 </dd>
 <dt><a href="frc/alotobots/Constants.html#%3Cinit%3E()" class="member-name-link">Constants()</a> - Constructor for class frc.alotobots.<a href="frc/alotobots/Constants.html" title="class in frc.alotobots">Constants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/Constants.CanId.html" class="type-name-link" title="class in frc.alotobots">Constants.CanId</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">CAN bus device ID assignments.</div>
+</dd>
 <dt><a href="frc/alotobots/Constants.Mode.html" class="type-name-link" title="enum class in frc.alotobots">Constants.Mode</a> - Enum Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Defines the possible runtime modes for the robot code.</div>
+</dd>
 <dt><a href="frc/alotobots/Constants.html#currentMode" class="member-name-link">currentMode</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/Constants.html" title="class in frc.alotobots">Constants</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The current runtime mode, determined by whether running on real hardware or in simulation.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/bling/io/BlingIO.BlingIOInputs.html#currentSolidColor" class="member-name-link">currentSolidColor</a> - Variable in class frc.alotobots.library.subsystems.bling.io.<a href="frc/alotobots/library/subsystems/bling/io/BlingIO.BlingIOInputs.html" title="class in frc.alotobots.library.subsystems.bling.io">BlingIO.BlingIOInputs</a></dt>
 <dd>
 <div class="block">Current solid color setting of the LEDs</div>
@@ -364,7 +370,9 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:D">D</h2>
 <dl class="index">
 <dt><a href="frc/alotobots/OI.html#DEADBAND" class="member-name-link">DEADBAND</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The minimum value that joystick inputs must exceed to be registered.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/commands/DefaultDrive.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.swervedrive.commands">DefaultDrive</a> - Class in <a href="frc/alotobots/library/subsystems/swervedrive/commands/package-summary.html">frc.alotobots.library.subsystems.swervedrive.commands</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/commands/DefaultDrive.html#%3Cinit%3E(frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem)" class="member-name-link">DefaultDrive(SwerveDriveSubsystem)</a> - Constructor for class frc.alotobots.library.subsystems.swervedrive.commands.<a href="frc/alotobots/library/subsystems/swervedrive/commands/DefaultDrive.html" title="class in frc.alotobots.library.subsystems.swervedrive.commands">DefaultDrive</a></dt>
@@ -387,11 +395,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#disabledInit()" class="member-name-link">disabledInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called once when the robot is disabled.</div>
+<div class="block">Called once when the robot is disabled.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#disabledPeriodic()" class="member-name-link">disabledPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called periodically when disabled.</div>
+<div class="block">Called periodically when the robot is disabled.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html#DRIVE_BASE_RADIUS" class="member-name-link">DRIVE_BASE_RADIUS</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.CustomConstants</a></dt>
 <dd>&nbsp;</dd>
@@ -423,7 +431,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new DriveFacingBestObject command.</div>
 </dd>
 <dt><a href="frc/alotobots/OI.html#driveFacingBestObjectButton" class="member-name-link">driveFacingBestObjectButton</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Button for activating the drive facing best object command.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/commands/DriveFacingPose.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.swervedrive.commands">DriveFacingPose</a> - Class in <a href="frc/alotobots/library/subsystems/swervedrive/commands/package-summary.html">frc.alotobots.library.subsystems.swervedrive.commands</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/commands/DriveFacingPose.html#%3Cinit%3E(frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem)" class="member-name-link">DriveFacingPose(SwerveDriveSubsystem)</a> - Constructor for class frc.alotobots.library.subsystems.swervedrive.commands.<a href="frc/alotobots/library/subsystems/swervedrive/commands/DriveFacingPose.html" title="class in frc.alotobots.library.subsystems.swervedrive.commands">DriveFacingPose</a></dt>
@@ -649,7 +659,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="frc/alotobots/RobotContainer.html#getAutonomousCommand()" class="member-name-link">getAutonomousCommand()</a> - Method in class frc.alotobots.<a href="frc/alotobots/RobotContainer.html" title="class in frc.alotobots">RobotContainer</a></dt>
 <dd>
-<div class="block">Use this to pass the autonomous command to the main <a href="frc/alotobots/Robot.html" title="class in frc.alotobots"><code>Robot</code></a> class.</div>
+<div class="block">Returns the command to run in autonomous mode.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html#getBackLeft()" class="member-name-link">getBackLeft()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023</a></dt>
 <dd>&nbsp;</dd>
@@ -821,7 +831,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets current odometry rotation.</div>
 </dd>
 <dt><a href="frc/alotobots/OI.html#getRotationAxis()" class="member-name-link">getRotationAxis()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the rotation input from the driver's controller.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html#getSpeedAt12Volts()" class="member-name-link">getSpeedAt12Volts()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html#getSpeedAt12Volts()" class="member-name-link">getSpeedAt12Volts()</a> - Method in interface frc.alotobots.library.subsystems.swervedrive.constants.<a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></dt>
@@ -847,21 +859,29 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the title of this notification</div>
 </dd>
 <dt><a href="frc/alotobots/OI.html#getTranslateForwardAxis()" class="member-name-link">getTranslateForwardAxis()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the forward/backward translation input from the driver's controller.</div>
+</dd>
 <dt><a href="frc/alotobots/OI.html#getTranslateStrafeAxis()" class="member-name-link">getTranslateStrafeAxis()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the left/right translation input from the driver's controller.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html#getTurboSpeed()" class="member-name-link">getTurboSpeed()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html#getTurboSpeed()" class="member-name-link">getTurboSpeed()</a> - Method in interface frc.alotobots.library.subsystems.swervedrive.constants.<a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/OI.html#getTurboSpeedTrigger()" class="member-name-link">getTurboSpeedTrigger()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the turbo (fast) speed control input value.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html#getTurtleSpeed()" class="member-name-link">getTurtleSpeed()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html#getTurtleSpeed()" class="member-name-link">getTurtleSpeed()</a> - Method in interface frc.alotobots.library.subsystems.swervedrive.constants.<a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/OI.html#getTurtleSpeedTrigger()" class="member-name-link">getTurtleSpeedTrigger()</a> - Static method in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Gets the turtle (slow) speed control input value.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html#getUnstableDetectedObjects()" class="member-name-link">getUnstableDetectedObjects()</a> - Method in class frc.alotobots.library.subsystems.vision.photonvision.objectdetection.<a href="frc/alotobots/library/subsystems/vision/photonvision/objectdetection/ObjectDetectionSubsystem.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.objectdetection">ObjectDetectionSubsystem</a></dt>
 <dd>
 <div class="block">Gets a list of only unstable/pending detected objects.</div>
@@ -1130,11 +1150,11 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="frc/alotobots/Main.html#main(java.lang.String...)" class="member-name-link">main(String...)</a> - Static method in class frc.alotobots.<a href="frc/alotobots/Main.html" title="class in frc.alotobots">Main</a></dt>
 <dd>
-<div class="block">Main initialization function.</div>
+<div class="block">Main initialization method that starts the robot code.</div>
 </dd>
 <dt><a href="frc/alotobots/Main.html" class="type-name-link" title="class in frc.alotobots">Main</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
 <dd>
-<div class="block">Do NOT add any static variables to this class, or any initialization at all.</div>
+<div class="block">The Main class serves as the entry point for the robot program.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/PhoenixOdometryThread.html#makeTimestampQueue()" class="member-name-link">makeTimestampQueue()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/PhoenixOdometryThread.html" title="class in frc.alotobots.library.subsystems.swervedrive">PhoenixOdometryThread</a></dt>
 <dd>&nbsp;</dd>
@@ -1270,7 +1290,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Color setting for LEDs off</div>
 </dd>
 <dt><a href="frc/alotobots/OI.html" class="type-name-link" title="class in frc.alotobots">OI</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The Operator Interface (OI) class handles all driver control inputs and button mappings.</div>
+</dd>
 <dt><a href="frc/alotobots/OI.html#%3Cinit%3E()" class="member-name-link">OI()</a> - Constructor for class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -1287,7 +1309,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new PathfindToBestObject command.</div>
 </dd>
 <dt><a href="frc/alotobots/OI.html#pathfindToBestObjectButton" class="member-name-link">pathfindToBestObjectButton</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/OI.html" title="class in frc.alotobots">OI</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Button for activating the pathfind to best object command.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html#pathPlannerConfig" class="member-name-link">pathPlannerConfig</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.CustomConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/Constants.CanId.html#PCM_CAN_ID" class="member-name-link">PCM_CAN_ID</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/Constants.CanId.html" title="class in frc.alotobots">Constants.CanId</a></dt>
@@ -1382,22 +1406,23 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="frc/alotobots/Robot.html" class="type-name-link" title="class in frc.alotobots">Robot</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
 <dd>
-<div class="block">The VM is configured to automatically run this class, and to call the functions corresponding to
- each mode, as described in the TimedRobot documentation.</div>
+<div class="block">Main robot class that handles robot lifecycle and mode transitions.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#%3Cinit%3E()" class="member-name-link">Robot()</a> - Constructor for class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Constructor for the Robot class.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html#ROBOT_MASS_KG" class="member-name-link">ROBOT_MASS_KG</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.CustomConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html#ROBOT_MOI" class="member-name-link">ROBOT_MOI</a> - Static variable in class frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.<a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.CustomConstants.html" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023.CustomConstants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/RobotContainer.html" class="type-name-link" title="class in frc.alotobots">RobotContainer</a> - Class in <a href="frc/alotobots/package-summary.html">frc.alotobots</a></dt>
 <dd>
-<div class="block">This class is where the bulk of the robot should be declared.</div>
+<div class="block">The main container class for the robot.</div>
 </dd>
 <dt><a href="frc/alotobots/RobotContainer.html#%3Cinit%3E()" class="member-name-link">RobotContainer()</a> - Constructor for class frc.alotobots.<a href="frc/alotobots/RobotContainer.html" title="class in frc.alotobots">RobotContainer</a></dt>
 <dd>
-<div class="block">The container for the robot.</div>
+<div class="block">Constructs the RobotContainer and initializes all robot subsystems and commands.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#robotPeriodic()" class="member-name-link">robotPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
@@ -1589,14 +1614,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Running a physics simulator.</div>
 </dd>
 <dt><a href="frc/alotobots/Constants.html#simMode" class="member-name-link">simMode</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/Constants.html" title="class in frc.alotobots">Constants</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The simulation mode to use when not running on real hardware.</div>
+</dd>
 <dt><a href="frc/alotobots/Robot.html#simulationInit()" class="member-name-link">simulationInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called once when the robot is first started up.</div>
+<div class="block">Called once when simulation mode is first enabled.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#simulationPeriodic()" class="member-name-link">simulationPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called periodically whilst in simulation.</div>
+<div class="block">Called periodically during simulation mode.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/PhoenixOdometryThread.html#start()" class="member-name-link">start()</a> - Method in class frc.alotobots.library.subsystems.swervedrive.<a href="frc/alotobots/library/subsystems/swervedrive/PhoenixOdometryThread.html" title="class in frc.alotobots.library.subsystems.swervedrive">PhoenixOdometryThread</a></dt>
 <dd>&nbsp;</dd>
@@ -1652,19 +1679,19 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#teleopInit()" class="member-name-link">teleopInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called once when teleop is enabled.</div>
+<div class="block">Called once when teleop mode is enabled.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#teleopPeriodic()" class="member-name-link">teleopPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called periodically during operator control.</div>
+<div class="block">Called periodically during teleop mode.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#testInit()" class="member-name-link">testInit()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called once when test mode is enabled.</div>
+<div class="block">Called once when test mode is enabled.</div>
 </dd>
 <dt><a href="frc/alotobots/Robot.html#testPeriodic()" class="member-name-link">testPeriodic()</a> - Method in class frc.alotobots.<a href="frc/alotobots/Robot.html" title="class in frc.alotobots">Robot</a></dt>
 <dd>
-<div class="block">This function is called periodically during test mode.</div>
+<div class="block">Called periodically during test mode.</div>
 </dd>
 <dt><a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIO.PoseObservation.html#timestamp()" class="member-name-link">timestamp()</a> - Method in record class frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.<a href="frc/alotobots/library/subsystems/vision/photonvision/apriltag/io/AprilTagIO.PoseObservation.html" title="class in frc.alotobots.library.subsystems.vision.photonvision.apriltag.io">AprilTagIO.PoseObservation</a></dt>
 <dd>
@@ -1735,7 +1762,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Attempts to run the command until no error is produced.</div>
 </dd>
 <dt><a href="frc/alotobots/Constants.html#tunerConstants" class="member-name-link">tunerConstants</a> - Static variable in class frc.alotobots.<a href="frc/alotobots/Constants.html" title="class in frc.alotobots">Constants</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Global tuning constants for the swerve drive.</div>
+</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/TunerConstants.html" class="type-name-link" title="interface in frc.alotobots.library.subsystems.swervedrive.constants">TunerConstants</a> - Interface in <a href="frc/alotobots/library/subsystems/swervedrive/constants/package-summary.html">frc.alotobots.library.subsystems.swervedrive.constants</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/TunerConstants2023.html" class="type-name-link" title="class in frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023">TunerConstants2023</a> - Class in <a href="frc/alotobots/library/subsystems/swervedrive/constants/mk4i2023/package-summary.html">frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023</a></dt>

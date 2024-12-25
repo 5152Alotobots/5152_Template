@@ -77,9 +77,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">Main</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Do NOT add any static variables to this class, or any initialization at all. Unless you know what
- you are doing, do not modify this file except to change the parameter class to the startRobot
- call.</div>
+<div class="block">The Main class serves as the entry point for the robot program. This class should not be modified
+ except to change the parameter class in the startRobot call. No static variables or
+ initialization should be added.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -97,7 +97,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#main(java.lang.String...)" class="member-name-link">main</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Main initialization function.</div>
+<div class="block">Main initialization method that starts the robot code.</div>
 </div>
 </div>
 </div>
@@ -120,9 +120,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="main(java.lang.String...)">
 <h3>main</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">main</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</span></div>
-<div class="block">Main initialization function. Do not perform any initialization here.
-
- <p>If you change your main robot class, change the parameter type.</div>
+<div class="block">Main initialization method that starts the robot code. Do not perform any robot initialization
+ here. All robot initialization should be done in the Robot class.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>args</code> - Command line arguments (unused)</dd>
+</dl>
 </section>
 </li>
 </ul>

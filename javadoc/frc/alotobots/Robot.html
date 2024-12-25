@@ -87,10 +87,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Robot</span>
 <span class="extends-implements">extends org.littletonrobotics.junction.LoggedRobot</span></div>
-<div class="block">The VM is configured to automatically run this class, and to call the functions corresponding to
- each mode, as described in the TimedRobot documentation. If you change the name of this class or
- the package after creating this project, you must also update the build.gradle file in the
- project.</div>
+<div class="block">Main robot class that handles robot lifecycle and mode transitions. This class extends
+ LoggedRobot to integrate with AdvantageKit logging framework. It manages the robot's different
+ operating modes (autonomous, teleop, test) and handles the scheduling of commands.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,7 +111,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Robot</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for the Robot class.</div>
+</div>
 </div>
 </section>
 </li>
@@ -130,22 +131,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#autonomousInit()" class="member-name-link">autonomousInit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This autonomous runs the autonomous command selected by your <a href="RobotContainer.html" title="class in frc.alotobots"><code>RobotContainer</code></a> class.</div>
+<div class="block">Called once when autonomous mode is enabled.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#autonomousPeriodic()" class="member-name-link">autonomousPeriodic</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called periodically during autonomous.</div>
+<div class="block">Called periodically during autonomous mode.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disabledInit()" class="member-name-link">disabledInit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called once when the robot is disabled.</div>
+<div class="block">Called once when the robot is disabled.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disabledPeriodic()" class="member-name-link">disabledPeriodic</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called periodically when disabled.</div>
+<div class="block">Called periodically when the robot is disabled.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#robotPeriodic()" class="member-name-link">robotPeriodic</a>()</code></div>
@@ -155,32 +156,32 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#simulationInit()" class="member-name-link">simulationInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called once when the robot is first started up.</div>
+<div class="block">Called once when simulation mode is first enabled.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#simulationPeriodic()" class="member-name-link">simulationPeriodic</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called periodically whilst in simulation.</div>
+<div class="block">Called periodically during simulation mode.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopInit()" class="member-name-link">teleopInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called once when teleop is enabled.</div>
+<div class="block">Called once when teleop mode is enabled.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#teleopPeriodic()" class="member-name-link">teleopPeriodic</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called periodically during operator control.</div>
+<div class="block">Called periodically during teleop mode.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testInit()" class="member-name-link">testInit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called once when test mode is enabled.</div>
+<div class="block">Called once when test mode is enabled.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#testPeriodic()" class="member-name-link">testPeriodic</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">This function is called periodically during test mode.</div>
+<div class="block">Called periodically during test mode.</div>
 </div>
 </div>
 </div>
@@ -212,6 +213,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>Robot</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Robot</span>()</div>
+<div class="block">Constructor for the Robot class. Initializes AdvantageKit logging and sets up the robot
+ container. Different logging configurations are used based on whether the robot is running in
+ real, simulation, or replay mode.</div>
 </section>
 </li>
 </ul>
@@ -226,7 +230,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="robotPeriodic()">
 <h3>robotPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">robotPeriodic</span>()</div>
-<div class="block">This function is called periodically during all modes.</div>
+<div class="block">This function is called periodically during all modes. It runs the command scheduler with high
+ priority to ensure consistent timing.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#robotPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">robotPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -237,7 +242,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="disabledInit()">
 <h3>disabledInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledInit</span>()</div>
-<div class="block">This function is called once when the robot is disabled.</div>
+<div class="block">Called once when the robot is disabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#disabledInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">disabledInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -248,7 +253,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="disabledPeriodic()">
 <h3>disabledPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disabledPeriodic</span>()</div>
-<div class="block">This function is called periodically when disabled.</div>
+<div class="block">Called periodically when the robot is disabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#disabledPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">disabledPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -259,7 +264,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="autonomousInit()">
 <h3>autonomousInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">autonomousInit</span>()</div>
-<div class="block">This autonomous runs the autonomous command selected by your <a href="RobotContainer.html" title="class in frc.alotobots"><code>RobotContainer</code></a> class.</div>
+<div class="block">Called once when autonomous mode is enabled. Schedules the autonomous command selected in
+ RobotContainer.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#autonomousInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">autonomousInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -270,7 +276,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="autonomousPeriodic()">
 <h3>autonomousPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">autonomousPeriodic</span>()</div>
-<div class="block">This function is called periodically during autonomous.</div>
+<div class="block">Called periodically during autonomous mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#autonomousPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">autonomousPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -281,7 +287,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="teleopInit()">
 <h3>teleopInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">teleopInit</span>()</div>
-<div class="block">This function is called once when teleop is enabled.</div>
+<div class="block">Called once when teleop mode is enabled. Cancels the autonomous command if it's still running.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#teleopInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">teleopInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -292,7 +298,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="teleopPeriodic()">
 <h3>teleopPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">teleopPeriodic</span>()</div>
-<div class="block">This function is called periodically during operator control.</div>
+<div class="block">Called periodically during teleop mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#teleopPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">teleopPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -303,7 +309,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="testInit()">
 <h3>testInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testInit</span>()</div>
-<div class="block">This function is called once when test mode is enabled.</div>
+<div class="block">Called once when test mode is enabled. Cancels all running commands when entering test mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#testInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">testInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -314,7 +320,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="testPeriodic()">
 <h3>testPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">testPeriodic</span>()</div>
-<div class="block">This function is called periodically during test mode.</div>
+<div class="block">Called periodically during test mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#testPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">testPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -325,7 +331,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="simulationInit()">
 <h3>simulationInit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">simulationInit</span>()</div>
-<div class="block">This function is called once when the robot is first started up.</div>
+<div class="block">Called once when simulation mode is first enabled.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#simulationInit()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">simulationInit</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
@@ -336,7 +342,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="simulationPeriodic()">
 <h3>simulationPeriodic</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">simulationPeriodic</span>()</div>
-<div class="block">This function is called periodically whilst in simulation.</div>
+<div class="block">Called periodically during simulation mode.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html#simulationPeriodic()" title="class or interface in edu.wpi.first.wpilibj" class="external-link">simulationPeriodic</a></code>&nbsp;in class&nbsp;<code><a href="https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/IterativeRobotBase.html" title="class or interface in edu.wpi.first.wpilibj" class="external-link">IterativeRobotBase</a></code></dd>
