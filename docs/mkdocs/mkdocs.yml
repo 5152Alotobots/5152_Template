@@ -14,6 +14,7 @@ nav:
       - Robot: core/robot.md
       - Robot Container: core/robotcontainer.md
       - Constants: core/constants.md
+      - Main: core/main.md
   - Library:
       - Commands:
           - Swerve:
