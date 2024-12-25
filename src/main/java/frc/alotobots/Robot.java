@@ -23,15 +23,22 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
+ * Main robot class that handles robot lifecycle and mode transitions. This class extends
+ * LoggedRobot to integrate with AdvantageKit logging framework. It manages the robot's different
+ * operating modes (autonomous, teleop, test) and handles the scheduling of commands.
  */
 public class Robot extends LoggedRobot {
+  /** The command to run during autonomous mode. */
   private Command autonomousCommand;
+
+  /** The main robot container instance that holds all subsystems and commands. */
   private RobotContainer robotContainer;
 
+  /**
+   * Constructor for the Robot class. Initializes AdvantageKit logging and sets up the robot
+   * container. Different logging configurations are used based on whether the robot is running in
+   * real, simulation, or replay mode.
+   */
   public Robot() {
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -81,78 +88,77 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
   }
 
-  /** This function is called periodically during all modes. */
+  /**
+   * This function is called periodically during all modes. It runs the command scheduler with high
+   * priority to ensure consistent timing.
+   */
   @Override
   public void robotPeriodic() {
     // Switch thread to high priority to improve loop timing
     Threads.setCurrentThreadPriority(true, 99);
 
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled commands, running already-scheduled commands, removing
-    // finished or interrupted commands, and running subsystem periodic() methods.
-    // This must be called from the robot's periodic block in order for anything in
-    // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
     // Return to normal thread priority
     Threads.setCurrentThreadPriority(false, 10);
   }
 
-  /** This function is called once when the robot is disabled. */
+  /** Called once when the robot is disabled. */
   @Override
   public void disabledInit() {}
 
-  /** This function is called periodically when disabled. */
+  /** Called periodically when the robot is disabled. */
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * Called once when autonomous mode is enabled. Schedules the autonomous command selected in
+   * RobotContainer.
+   */
   @Override
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
   }
 
-  /** This function is called periodically during autonomous. */
+  /** Called periodically during autonomous mode. */
   @Override
   public void autonomousPeriodic() {}
 
-  /** This function is called once when teleop is enabled. */
+  /**
+   * Called once when teleop mode is enabled. Cancels the autonomous command if it's still running.
+   */
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
   }
 
-  /** This function is called periodically during operator control. */
+  /** Called periodically during teleop mode. */
   @Override
   public void teleopPeriodic() {}
 
-  /** This function is called once when test mode is enabled. */
+  /**
+   * Called once when test mode is enabled. Cancels all running commands when entering test mode.
+   */
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /** This function is called periodically during test mode. */
+  /** Called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 
-  /** This function is called once when the robot is first started up. */
+  /** Called once when simulation mode is first enabled. */
   @Override
   public void simulationInit() {}
 
-  /** This function is called periodically whilst in simulation. */
+  /** Called periodically during simulation mode. */
   @Override
   public void simulationPeriodic() {}
 }
