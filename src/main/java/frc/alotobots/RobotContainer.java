@@ -45,26 +45,35 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.O
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
+ * The main container class for the robot. This class is responsible for initializing all
+ * subsystems, configuring button bindings, and setting up autonomous commands. It follows a
+ * dependency injection pattern for hardware IO to support simulation and replay modes.
  */
 public class RobotContainer {
-  // Subsystems
+  /** The swerve drive subsystem that handles robot movement. */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
+
+  /** The AprilTag vision subsystem for robot localization. */
   private final AprilTagSubsystem aprilTagSubsystem;
+
+  /** The object detection subsystem for game piece tracking. */
   private final ObjectDetectionSubsystem objectDetectionSubsystem;
+
+  /** The LED control subsystem for robot status indication. */
   private final BlingSubsystem blingSubsystem;
 
-  // Dashboard inputs
+  /** Dashboard chooser for selecting autonomous routines. */
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * Constructs the RobotContainer and initializes all robot subsystems and commands. Different IO
+   * implementations are used based on whether the robot is running in real, simulation, or replay
+   * mode.
+   */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
-        // Real robot, instantiate hardware IO implementations
+        // Real robot hardware initialization
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
                 new GyroIOPigeon2(),
@@ -85,7 +94,7 @@ public class RobotContainer {
         break;
 
       case SIM:
-        // Sim robot, instantiate physics sim IO implementations
+        // Simulation hardware initialization
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
                 new GyroIO() {},
@@ -100,14 +109,13 @@ public class RobotContainer {
                     AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
                 new AprilTagIOPhotonVisionSim(
                     AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
-        // Sim support for object detection doesn't exist yet, so use a no-op
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIOSim());
         break;
 
       default:
-        // Replayed robot, disable IO implementations
+        // Replay mode initialization
         swerveDriveSubsystem =
             new SwerveDriveSubsystem(
                 new GyroIO() {},
@@ -115,7 +123,6 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        // MAKE SURE TO USE THE SAME NUMBER OF CAMERAS AS REAL ROBOT!!
         aprilTagSubsystem =
             new AprilTagSubsystem(
                 swerveDriveSubsystem::addVisionMeasurement,
@@ -148,33 +155,33 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)",
         swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    // run configure
+
     configureDefaultCommands();
     configureLogicCommands();
   }
 
-  /** Configures default commands for subsystems. */
+  /**
+   * Configures the default commands for each subsystem. These commands run automatically when no
+   * other commands are scheduled for a subsystem.
+   */
   private void configureDefaultCommands() {
-
     swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
     blingSubsystem.setDefaultCommand(
         new NoAllianceWaiting(blingSubsystem).andThen(new SetToAllianceColor(blingSubsystem)));
-    // Add other subsystem default commands here as needed
   }
 
-  /** Configures commands with logic (e.g., button presses). */
+  /** Configures commands that are triggered by button presses or other logic conditions. */
   private void configureLogicCommands() {
     driveFacingBestObjectButton.toggleOnTrue(
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     pathfindToBestObjectButton.whileTrue(
         new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
-    // Add other logic-based commands here
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * Returns the command to run in autonomous mode.
    *
-   * @return the command to run in autonomous
+   * @return The command selected in the autonomous chooser
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
