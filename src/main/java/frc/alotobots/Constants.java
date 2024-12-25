@@ -18,14 +18,17 @@ import frc.alotobots.library.subsystems.swervedrive.constants.mk4i2023.TunerCons
 import lombok.experimental.UtilityClass;
 
 /**
- * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
- * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
- * (log replay from a file).
+ * Robot-wide constants class that defines runtime modes and device configurations. This class
+ * contains global constants and configurations used across the robot code.
  */
 public final class Constants {
+  /** The simulation mode to use when not running on real hardware. */
   public static final Mode simMode = Mode.SIM;
+
+  /** The current runtime mode, determined by whether running on real hardware or in simulation. */
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
+  /** Defines the possible runtime modes for the robot code. */
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -37,13 +40,14 @@ public final class Constants {
     REPLAY
   }
 
+  /** Global tuning constants for the swerve drive. */
   public static final TunerConstants tunerConstants = new TunerConstants2023();
 
-  @UtilityClass
   /**
-   * CAN bus device IDs CAN bus device ID assignments. Maps CAN IDs for motors, sensors and other
+   * CAN bus device ID assignments. This class maps CAN IDs for all motors, sensors and other
    * CAN-connected devices.
    */
+  @UtilityClass
   public static final class CanId {
     /** Power Distribution Panel CAN ID */
     public static final int PDP_CAN_ID = 1;

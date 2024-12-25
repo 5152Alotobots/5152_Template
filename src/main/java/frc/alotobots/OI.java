@@ -15,34 +15,69 @@ package frc.alotobots;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+/**
+ * The Operator Interface (OI) class handles all driver control inputs and button mappings. This
+ * class provides methods to access controller inputs and defines button bindings for commanding the
+ * robot.
+ */
 public class OI {
+  /**
+   * The minimum value that joystick inputs must exceed to be registered. Used to prevent drift and
+   * unintended movement.
+   */
   public static final double DEADBAND = 0.1;
+
+  /** The primary driver's controller. Used for main robot control functions. */
   private static final CommandXboxController driverController = new CommandXboxController(0);
 
-  // Driver controller inputs for translation and rotation
+  /**
+   * Gets the forward/backward translation input from the driver's controller.
+   *
+   * @return Value between -1.0 (backward) and 1.0 (forward)
+   */
   public static double getTranslateForwardAxis() {
     return driverController.getLeftY();
   }
 
+  /**
+   * Gets the left/right translation input from the driver's controller.
+   *
+   * @return Value between -1.0 (left) and 1.0 (right)
+   */
   public static double getTranslateStrafeAxis() {
     return driverController.getLeftX();
   }
 
+  /**
+   * Gets the rotation input from the driver's controller.
+   *
+   * @return Value between -1.0 (counter-clockwise) and 1.0 (clockwise)
+   */
   public static double getRotationAxis() {
     return driverController.getRightX();
   }
 
-  // Speed control triggers
+  /**
+   * Gets the turtle (slow) speed control input value.
+   *
+   * @return Value between 0.0 and 1.0
+   */
   public static double getTurtleSpeedTrigger() {
     return driverController.getLeftTriggerAxis();
   }
 
+  /**
+   * Gets the turbo (fast) speed control input value.
+   *
+   * @return Value between 0.0 and 1.0
+   */
   public static double getTurboSpeedTrigger() {
     return driverController.getRightTriggerAxis();
   }
 
-  // Buttons
+  /** Button for activating the drive facing best object command. */
   public static Trigger driveFacingBestObjectButton = driverController.a();
+
+  /** Button for activating the pathfind to best object command. */
   public static Trigger pathfindToBestObjectButton = driverController.b();
-  // Add any additional controller bindings or button methods here
 }

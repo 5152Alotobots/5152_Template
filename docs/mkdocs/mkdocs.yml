@@ -10,7 +10,13 @@ nav:
   - Home: index.md
   - Game: []
   - Core:
+      - Controller Bindings: core/bindings.md
       - Auto Named Commands: core/autonamedcommands.md
+      - Robot: core/robot.md
+      - Robot Container: core/robotcontainer.md
+      - Constants: core/constants.md
+      - Main: core/main.md
+      - OI: core/oi.md
   - Library:
       - Commands:
           - Swerve:

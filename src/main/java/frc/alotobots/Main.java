@@ -15,17 +15,22 @@ package frc.alotobots;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
- * Do NOT add any static variables to this class, or any initialization at all. Unless you know what
- * you are doing, do not modify this file except to change the parameter class to the startRobot
- * call.
+ * The Main class serves as the entry point for the robot program. This class should not be modified
+ * except to change the parameter class in the startRobot call. No static variables or
+ * initialization should be added.
  */
 public final class Main {
+  /**
+   * Private constructor to prevent instantiation. This class should not be instantiated as it only
+   * contains a static main method.
+   */
   private Main() {}
 
   /**
-   * Main initialization function. Do not perform any initialization here.
+   * Main initialization method that starts the robot code. Do not perform any robot initialization
+   * here. All robot initialization should be done in the Robot class.
    *
-   * <p>If you change your main robot class, change the parameter type.
+   * @param args Command line arguments (unused)
    */
   public static void main(String... args) {
     RobotBase.startRobot(Robot::new);
