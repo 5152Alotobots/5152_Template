@@ -204,7 +204,7 @@ Update PID and FF values based on characterization:
     - Plot values for
       - /RealOutputs/SwerveStates/Measured
       - /RealOutputs/SwerveStates/SetpointsOptimized
-    - Try to match the Measured value as close to Optimized as possible. 
+    - Try to match the Measured value as close to Optimized as possible.
     - Transitions won't be instant, but ensure that we don't over/under shoot
     - Watch for:
         - Smooth acceleration

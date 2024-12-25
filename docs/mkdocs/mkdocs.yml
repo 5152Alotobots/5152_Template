@@ -9,6 +9,8 @@ theme:
 nav:
   - Home: index.md
   - Game: []
+  - Core:
+      - Auto Named Commands: core/autonamedcommands.md
   - Library:
       - Commands:
           - Swerve:

@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.alotobots.AutoNamedCommands;
 import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
@@ -143,6 +144,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         Constants.tunerConstants.getPathPlannerConfig(),
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
+    AutoNamedCommands.setupNamedCommands(); // Setup the named commands
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
         (activePath) -> {
