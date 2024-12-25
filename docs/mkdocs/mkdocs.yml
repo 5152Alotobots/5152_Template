@@ -13,6 +13,7 @@ nav:
       - Auto Named Commands: core/autonamedcommands.md
       - Robot: core/robot.md
       - Robot Container: core/robotcontainer.md
+      - Constants: core/constants.md
   - Library:
       - Commands:
           - Swerve:
