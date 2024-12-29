@@ -12,11 +12,12 @@
 */
 package frc.alotobots;
 
-import static frc.alotobots.OI.driveFacingBestObjectButton;
-import static frc.alotobots.OI.pathfindToBestObjectButton;
+import static frc.alotobots.OI.*;
 import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.NOTE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.subsystems.bling.BlingSubsystem;
@@ -42,6 +43,12 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.comm
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
+import frc.alotobots.library.subsystems.vision.questnav.OculusSubsystem;
+import frc.alotobots.library.subsystems.vision.questnav.commands.CalculateCameraOffsetCommand;
+import frc.alotobots.library.subsystems.vision.questnav.commands.ResetOculusPoseCommand;
+import frc.alotobots.library.subsystems.vision.questnav.io.OculusIO;
+import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOReal;
+import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -61,6 +68,8 @@ public class RobotContainer {
 
   /** The LED control subsystem for robot status indication. */
   private final BlingSubsystem blingSubsystem;
+
+  private final OculusSubsystem oculusSubsystem;
 
   /** Dashboard chooser for selecting autonomous routines. */
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -91,6 +100,7 @@ public class RobotContainer {
                 swerveDriveSubsystem::getPose,
                 new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         blingSubsystem = new BlingSubsystem(new BlingIOReal());
+        oculusSubsystem = new OculusSubsystem(new OculusIOReal());
         break;
 
       case SIM:
@@ -112,6 +122,7 @@ public class RobotContainer {
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIOSim());
+        oculusSubsystem = new OculusSubsystem(new OculusIOSim());
         break;
 
       default:
@@ -131,6 +142,7 @@ public class RobotContainer {
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIO() {});
+        oculusSubsystem = new OculusSubsystem(new OculusIO() {});
         break;
     }
 
@@ -176,6 +188,10 @@ public class RobotContainer {
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     pathfindToBestObjectButton.onTrue(
         new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
+    testButton.onTrue(
+        new ResetOculusPoseCommand(
+            oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))));
+    testButton2.whileTrue(new CalculateCameraOffsetCommand(oculusSubsystem));
   }
 
   /**
