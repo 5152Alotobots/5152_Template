@@ -18,7 +18,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 public class OculusConstants {
   public static final Transform2d OCULUS_TO_ROBOT =
       new Transform2d(
-          0.16, 0, Rotation2d.fromDegrees(0)); // X: +Forwards, Y: + Left, ROT: + CCW .16 x
+          0.17, 0, Rotation2d.fromDegrees(0)); // X: +Forwards, Y: + Left, ROT: + CCW .16 x
 
   public static final double RESET_TIMEOUT_SECONDS = 0.2;
   public static final int MAX_RESET_ATTEMPTS = 3;
