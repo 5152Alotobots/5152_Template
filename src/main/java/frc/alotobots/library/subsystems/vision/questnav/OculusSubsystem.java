@@ -301,9 +301,6 @@ public class OculusSubsystem extends SubsystemBase {
     var pose = new Pose2d(oculusPositionCompensated, Rotation2d.fromDegrees(getOculusYaw()));
     Logger.recordOutput("Oculus/debug/poses/rawPose", pose);
 
-    var transformedPose = pose.transformBy(OCULUS_TO_ROBOT);
-    Logger.recordOutput("Oculus/debug/poses/transformedPose", transformedPose);
-
     return pose;
   }
 
@@ -311,10 +308,7 @@ public class OculusSubsystem extends SubsystemBase {
     var oculusPose = getOculusPose();
     Logger.recordOutput("Oculus/debug/poses/currentOculusPose", oculusPose);
 
-    var robotPose =
-        new Pose2d(
-            getOculusPosition().minus(OCULUS_TO_ROBOT.getTranslation()),
-            Rotation2d.fromDegrees(getOculusYaw()));
+    var robotPose = getOculusPose().transformBy(OCULUS_TO_ROBOT);
     Logger.recordOutput("Oculus/debug/poses/finalRobotPose", robotPose);
 
     return robotPose;
