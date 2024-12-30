@@ -49,41 +49,18 @@ public class OculusSubsystem extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Oculus", inputs);
 
-    // Log all raw input values
-    Logger.recordOutput("Oculus/debug/raw/eulerAngles", inputs.eulerAngles);
-    Logger.recordOutput("Oculus/debug/raw/position", inputs.position);
-    Logger.recordOutput("Oculus/debug/raw/misoValue", inputs.misoValue);
-    Logger.recordOutput("Oculus/debug/state/poseResetInProgress", poseResetInProgress);
-    Logger.recordOutput("Oculus/debug/state/headingResetInProgress", headingResetInProgress);
-    Logger.recordOutput("Oculus/debug/state/currentResetAttempt", currentResetAttempt);
-    Logger.recordOutput("Oculus/debug/state/resetStartTime", resetStartTime);
-
     // Log timing information
     double currentTime = Timer.getTimestamp();
-    Logger.recordOutput("Oculus/debug/timing/currentTime", currentTime);
-    Logger.recordOutput("Oculus/debug/timing/timeSinceReset", currentTime - resetStartTime);
-    Logger.recordOutput(
-        "Oculus/debug/timing/timeoutStatus",
-        (currentTime - resetStartTime) > RESET_TIMEOUT_SECONDS);
 
     // Handle reset timeout
     if (currentTime - resetStartTime > RESET_TIMEOUT_SECONDS) {
       if (headingResetInProgress) {
-        Logger.recordOutput("Oculus/debug/timeout", "Heading reset timeout occurred");
         handleResetTimeoutHeading();
       }
       if (poseResetInProgress) {
-        Logger.recordOutput("Oculus/debug/timeout", "Pose reset timeout occurred");
         handleResetTimeoutPose();
       }
     }
-
-    // Log reset completion status
-    Logger.recordOutput(
-        "Oculus/debug/resetCompletion/headingReset",
-        headingResetInProgress && inputs.misoValue == 99);
-    Logger.recordOutput(
-        "Oculus/debug/resetCompletion/poseReset", poseResetInProgress && inputs.misoValue == 98);
 
     // Handle reset completion
     if (headingResetInProgress && inputs.misoValue == 99) {
@@ -102,35 +79,11 @@ public class OculusSubsystem extends SubsystemBase {
     // Handle ping response
     if (inputs.misoValue == 97) {
       Logger.recordOutput("Oculus/debug/status", "Ping response received");
-      Logger.recordOutput("Oculus/debug/ping/responseTime", Timer.getTimestamp());
       io.setMosi(0);
     }
-
-    // Log all pose calculations
-    Translation2d oculusPos = getOculusPosition();
-    Logger.recordOutput("Oculus/debug/calculations/oculusPosition/x", oculusPos.getX());
-    Logger.recordOutput("Oculus/debug/calculations/oculusPosition/y", oculusPos.getY());
-
-    double heading = getHeading();
-    Logger.recordOutput("Oculus/debug/calculations/heading", heading);
-    Logger.recordOutput("Oculus/debug/calculations/turnRate", getTurnRate());
-    Logger.recordOutput("Oculus/debug/calculations/oculusYaw", getOculusYaw());
-
-    // Log poses as objects
-    Logger.recordOutput("Oculus/debug/poses/oculus", getOculusPose());
-    Logger.recordOutput("Oculus/debug/poses/robot", getRobotPose());
-    Logger.recordOutput("Oculus/debug/transforms/oculusToRobot", OCULUS_TO_ROBOT);
-
-    // Original logging
-    Logger.recordOutput("Oculus/debug/position", getOculusPosition());
-    Logger.recordOutput("Oculus/Pose", getOculusPose());
-    Logger.recordOutput("Oculus/RobotPose", getRobotPose());
   }
 
   private void handleResetTimeoutPose() {
-    Logger.recordOutput("Oculus/debug/resetTimeout/pose/attemptNumber", currentResetAttempt);
-    Logger.recordOutput("Oculus/debug/resetTimeout/pose/maxAttempts", MAX_RESET_ATTEMPTS);
-
     if (currentResetAttempt < MAX_RESET_ATTEMPTS) {
       Logger.recordOutput(
           "Oculus/debug/status",
@@ -148,7 +101,6 @@ public class OculusSubsystem extends SubsystemBase {
             "Oculus/debug/resetTimeout/pose/pendingReset/rotation",
             pendingResetPose.getRotation().getDegrees());
       }
-
       // Reset Mosi
       io.setMosi(0);
       // Retry the reset
@@ -165,9 +117,6 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   private void handleResetTimeoutHeading() {
-    Logger.recordOutput("Oculus/debug/resetTimeout/heading/attemptNumber", currentResetAttempt);
-    Logger.recordOutput("Oculus/debug/resetTimeout/heading/maxAttempts", MAX_RESET_ATTEMPTS);
-
     if (currentResetAttempt < MAX_RESET_ATTEMPTS) {
       Logger.recordOutput(
           "Oculus/debug/status",
@@ -187,7 +136,7 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   private void clearPoseResetState() {
-    Logger.recordOutput("Oculus/debug/clearState", "Clearing pose reset state");
+    Logger.recordOutput("Oculus/debug/status", "Clearing pose reset state");
     poseResetInProgress = false;
     pendingResetPose = null;
     currentResetAttempt = 0;
@@ -195,19 +144,13 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   private void clearHeadingResetState() {
-    Logger.recordOutput("Oculus/debug/clearState", "Clearing heading reset state");
+    Logger.recordOutput("Oculus/debug/status", "Clearing heading reset state");
     headingResetInProgress = false;
     currentResetAttempt = 0;
     io.setMosi(0);
   }
 
   public boolean resetToPose(Pose2d targetPose) {
-    Logger.recordOutput("Oculus/debug/resetToPose/called", true);
-    Logger.recordOutput("Oculus/debug/resetToPose/initial/x", targetPose.getX());
-    Logger.recordOutput("Oculus/debug/resetToPose/initial/y", targetPose.getY());
-    Logger.recordOutput(
-        "Oculus/debug/resetToPose/initial/rotation", targetPose.getRotation().getDegrees());
-
     if (poseResetInProgress) {
       Logger.recordOutput("Oculus/debug/status", "Cannot reset pose - reset already in progress");
       return false;
@@ -220,13 +163,7 @@ public class OculusSubsystem extends SubsystemBase {
     }
 
     targetPose = targetPose.plus(OCULUS_TO_ROBOT);
-    Logger.recordOutput("Oculus/debug/resetToPose/transformed/x", targetPose.getX());
-    Logger.recordOutput("Oculus/debug/resetToPose/transformed/y", targetPose.getY());
-    Logger.recordOutput(
-        "Oculus/debug/resetToPose/transformed/rotation", targetPose.getRotation().getDegrees());
-
     pendingResetPose = targetPose;
-
     Logger.recordOutput(
         "Oculus/debug/status",
         String.format(
@@ -244,14 +181,9 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   public void zeroHeading() {
-    Logger.recordOutput("Oculus/debug/zeroHeading/called", true);
-    Logger.recordOutput("Oculus/debug/zeroHeading/currentMisoValue", inputs.misoValue);
-
     if (inputs.misoValue == 0) {
       Logger.recordOutput("Oculus/debug/status", "Zeroing heading");
-      Logger.recordOutput("Oculus/debug/zeroHeading/previousYawOffset", yawOffset);
       yawOffset = inputs.eulerAngles[1];
-      Logger.recordOutput("Oculus/debug/zeroHeading/newYawOffset", yawOffset);
       headingResetInProgress = true;
       io.setMosi(1);
       resetStartTime = Timer.getTimestamp();
@@ -264,21 +196,15 @@ public class OculusSubsystem extends SubsystemBase {
 
   public double getHeading() {
     double heading = Rotation2d.fromDegrees(getOculusYaw()).getDegrees();
-    Logger.recordOutput("Oculus/debug/getHeading/value", heading);
     return heading;
   }
 
   public double getTurnRate() {
-    double turnRate = -getOculusYaw();
-    Logger.recordOutput("Oculus/debug/getTurnRate/value", turnRate);
-    return turnRate;
+    return -getOculusYaw(); // Negative bc we are neg gyro
   }
 
   private float getOculusYaw() {
     float[] eulerAngles = inputs.eulerAngles;
-    Logger.recordOutput("Oculus/debug/getOculusYaw/rawEulerAngle", eulerAngles[1]);
-    Logger.recordOutput("Oculus/debug/getOculusYaw/yawOffset", yawOffset);
-
     var ret = eulerAngles[1] - yawOffset;
     ret %= 360;
     if (ret < 0) {
@@ -295,22 +221,14 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   public Pose2d getOculusPose() {
-    var oculusPositionCompensated = getOculusPosition();
-    Logger.recordOutput("Oculus/debug/poses/compensatedPosition", oculusPositionCompensated);
-
-    var pose = new Pose2d(oculusPositionCompensated, Rotation2d.fromDegrees(getOculusYaw()));
-    Logger.recordOutput("Oculus/debug/poses/rawPose", pose);
-
+    var pose = new Pose2d(getOculusPosition(), Rotation2d.fromDegrees(getOculusYaw()));
+    Logger.recordOutput("Oculus/debug/poses/headsetPose", pose);
     return pose;
   }
 
   public Pose2d getRobotPose() {
-    var oculusPose = getOculusPose();
-    Logger.recordOutput("Oculus/debug/poses/currentOculusPose", oculusPose);
-
     var robotPose = getOculusPose().transformBy(OCULUS_TO_ROBOT);
-    Logger.recordOutput("Oculus/debug/poses/finalRobotPose", robotPose);
-
+    Logger.recordOutput("Oculus/debug/poses/robotPose", robotPose);
     return robotPose;
   }
 
