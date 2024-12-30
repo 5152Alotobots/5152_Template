@@ -62,7 +62,6 @@ public class OculusIOReal implements OculusIO {
 
   @Override
   public void setResetPose(double x, double y, double rotation) {
-    // First value of 1 indicates "ready"
     resetPosePub.set(new double[] {x, y, rotation});
   }
 }
