@@ -49,6 +49,7 @@ public class OculusSubsystem extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Oculus", inputs);
 
+    getRobotPose();
     // Log timing information
     double currentTime = Timer.getTimestamp();
 
@@ -181,17 +182,19 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   public void zeroHeading() {
-    if (inputs.misoValue == 0) {
-      Logger.recordOutput("Oculus/debug/status", "Zeroing heading");
-      yawOffset = inputs.eulerAngles[1];
-      headingResetInProgress = true;
-      io.setMosi(1);
-      resetStartTime = Timer.getTimestamp();
-    } else {
-      Logger.recordOutput(
-          "Oculus/debug/status",
-          "Cannot zero heading - system busy (MISO=" + inputs.misoValue + ")");
-    }
+    float[] eulerAngles = inputs.eulerAngles;
+    yawOffset = eulerAngles[1];
+    //    if (inputs.misoValue == 0) {
+    //      Logger.recordOutput("Oculus/debug/status", "Zeroing heading");
+    //      yawOffset = inputs.eulerAngles[1];
+    //      headingResetInProgress = true;
+    //      io.setMosi(1);
+    //      resetStartTime = Timer.getTimestamp();
+    //    } else {
+    //      Logger.recordOutput(
+    //          "Oculus/debug/status",
+    //          "Cannot zero heading - system busy (MISO=" + inputs.misoValue + ")");
+    //    }
   }
 
   public double getHeading() {
@@ -227,7 +230,10 @@ public class OculusSubsystem extends SubsystemBase {
   }
 
   public Pose2d getRobotPose() {
-    var robotPose = getOculusPose().transformBy(OCULUS_TO_ROBOT);
+    var robotPose =
+        new Pose2d(
+            getOculusPose().getTranslation().minus(OCULUS_TO_ROBOT.getTranslation()),
+            Rotation2d.fromDegrees(getOculusYaw()));
     Logger.recordOutput("Oculus/debug/poses/robotPose", robotPose);
     return robotPose;
   }
