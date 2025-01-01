@@ -24,12 +24,17 @@ nav:
               - Object Detection:
                   - Drive Facing Best Object: library/commands/vision/objectdetection/drivefacingbestobject.md
                   - Pathfind to Best Object: library/commands/vision/objectdetection/pathfindtobestobject.md
+              - Oculus QuestNav:
+                  - Ping: library/commands/vision/oculus/ping.md
+                  - Reset Pose: library/commands/vision/oculus/resetpose.md
+                  - Zero Heading: library/commands/vision/oculus/zeroheading.md
       - Subsystems:
           - Swerve: library/subsystems/swerve.md
           - Bling: library/subsystems/bling.md
           - Vision:
               - Object Detection: library/subsystems/vision/objectdetection.md
               - AprilTag: library/subsystems/vision/apriltag.md
+              - Oculus: library/subsystems/vision/oculus.md
   - Core:
       - Controller Bindings: core/bindings.md
       - Auto Named Commands: core/autonamedcommands.md
