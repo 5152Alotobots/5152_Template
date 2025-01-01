@@ -10,16 +10,16 @@
 *
 * Source code must be publicly available on GitHub or an alternative web accessible site
 */
-package frc.alotobots.library.subsystems.vision.questnav;
+package frc.alotobots.library.subsystems.vision.oculus;
 
-import static frc.alotobots.library.subsystems.vision.questnav.constants.OculusConstants.*;
+import static frc.alotobots.library.subsystems.vision.oculus.constants.OculusConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.alotobots.library.subsystems.vision.questnav.io.OculusIO;
-import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOInputsAutoLogged;
+import frc.alotobots.library.subsystems.vision.oculus.io.OculusIO;
+import frc.alotobots.library.subsystems.vision.oculus.io.OculusIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 /**

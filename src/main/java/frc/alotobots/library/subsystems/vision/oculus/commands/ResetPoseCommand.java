@@ -10,14 +10,14 @@
 *
 * Source code must be publicly available on GitHub or an alternative web accessible site
 */
-package frc.alotobots.library.subsystems.vision.questnav.commands;
+package frc.alotobots.library.subsystems.vision.oculus.commands;
 
-import static frc.alotobots.library.subsystems.vision.questnav.constants.OculusConstants.*;
+import static frc.alotobots.library.subsystems.vision.oculus.constants.OculusConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.alotobots.library.subsystems.vision.questnav.OculusSubsystem;
+import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 /**

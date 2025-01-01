@@ -10,7 +10,7 @@
 *
 * Source code must be publicly available on GitHub or an alternative web accessible site
 */
-package frc.alotobots.library.subsystems.vision.questnav.constants;
+package frc.alotobots.library.subsystems.vision.oculus.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -21,8 +21,8 @@ import edu.wpi.first.math.geometry.Transform2d;
  */
 public class OculusConstants {
   /**
-   * Transform from the robot center to the headset. Coordinate system: - X:
-   * Positive is forwards - Y: Positive is left - Rotation: Positive is counter-clockwise
+   * Transform from the robot center to the headset. Coordinate system: - X: Positive is forwards -
+   * Y: Positive is left - Rotation: Positive is counter-clockwise
    */
   public static final Transform2d ROBOT_TO_OCULUS = new Transform2d(0.075, 0.0, new Rotation2d());
 

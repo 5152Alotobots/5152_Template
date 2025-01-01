@@ -10,7 +10,7 @@
 *
 * Source code must be publicly available on GitHub or an alternative web accessible site
 */
-package frc.alotobots.library.subsystems.vision.questnav.io;
+package frc.alotobots.library.subsystems.vision.oculus.io;
 
 /** Simulation implementation of OculusIO that provides static test values. */
 public class OculusIOSim implements OculusIO {

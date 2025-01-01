@@ -32,6 +32,11 @@ import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
 import frc.alotobots.library.subsystems.swervedrive.commands.FeedforwardCharacterization;
 import frc.alotobots.library.subsystems.swervedrive.commands.WheelRadiusCharacterization;
 import frc.alotobots.library.subsystems.swervedrive.io.*;
+import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
+import frc.alotobots.library.subsystems.vision.oculus.commands.ResetPoseCommand;
+import frc.alotobots.library.subsystems.vision.oculus.io.OculusIO;
+import frc.alotobots.library.subsystems.vision.oculus.io.OculusIOReal;
+import frc.alotobots.library.subsystems.vision.oculus.io.OculusIOSim;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.AprilTagConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO;
@@ -43,11 +48,6 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.comm
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
-import frc.alotobots.library.subsystems.vision.questnav.OculusSubsystem;
-import frc.alotobots.library.subsystems.vision.questnav.commands.ResetPoseCommand;
-import frc.alotobots.library.subsystems.vision.questnav.io.OculusIO;
-import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOReal;
-import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
