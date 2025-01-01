@@ -21,10 +21,10 @@ import edu.wpi.first.math.geometry.Transform2d;
  */
 public class OculusConstants {
   /**
-   * Transform from the Oculus headset position to the robot's center. Coordinate system: - X:
+   * Transform from the robot center to the headset. Coordinate system: - X:
    * Positive is forwards - Y: Positive is left - Rotation: Positive is counter-clockwise
    */
-  public static final Transform2d OCULUS_TO_ROBOT = new Transform2d(0.075, 0.0, new Rotation2d());
+  public static final Transform2d ROBOT_TO_OCULUS = new Transform2d(0.075, 0.0, new Rotation2d());
 
   /**
    * Timeout duration in seconds for reset operations (pose reset, heading reset, ping). If a reset

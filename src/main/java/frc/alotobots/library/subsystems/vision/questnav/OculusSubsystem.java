@@ -49,7 +49,7 @@ public class OculusSubsystem extends SubsystemBase {
     Logger.processInputs("Oculus", inputs);
 
     var oculusPose = getOculusPose();
-    var robotPose = oculusPose.transformBy(OCULUS_TO_ROBOT.inverse());
+    var robotPose = oculusPose.transformBy(ROBOT_TO_OCULUS.inverse());
     Logger.recordOutput("Oculus/poses/headsetPose", oculusPose);
     Logger.recordOutput("Oculus/poses/robotPose", robotPose);
   }
@@ -87,7 +87,7 @@ public class OculusSubsystem extends SubsystemBase {
    * @return The calculated robot pose
    */
   public Pose2d getRobotPose() {
-    return getOculusPose().transformBy(OCULUS_TO_ROBOT.inverse());
+    return getOculusPose().transformBy(ROBOT_TO_OCULUS.inverse());
   }
 
   /**
@@ -114,7 +114,7 @@ public class OculusSubsystem extends SubsystemBase {
    * @param pose The target pose to reset to
    */
   public void setResetPose(Pose2d pose) {
-    var targetPose = pose.plus(OCULUS_TO_ROBOT);
+    var targetPose = pose.plus(ROBOT_TO_OCULUS);
     io.setResetPose(targetPose.getX(), targetPose.getY(), targetPose.getRotation().getDegrees());
   }
 
