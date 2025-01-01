@@ -14,18 +14,42 @@ package frc.alotobots.library.subsystems.vision.questnav.io;
 
 import edu.wpi.first.networktables.*;
 
+/** Implementation of OculusIO for real hardware communication via NetworkTables. */
 public class OculusIOReal implements OculusIO {
+  /** NetworkTable for Oculus communication */
   private final NetworkTable nt4Table;
+
+  /** Subscriber for MISO (Master In Slave Out) values */
   private final IntegerSubscriber questMiso;
+
+  /** Publisher for MOSI (Master Out Slave In) values */
   private final IntegerPublisher questMosi;
+
+  /** Subscriber for frame count updates */
   private final IntegerSubscriber questFrameCount;
+
+  /** Subscriber for timestamp updates */
   private final DoubleSubscriber questTimestamp;
+
+  /** Subscriber for position updates */
   private final FloatArraySubscriber questPosition;
+
+  /** Subscriber for quaternion orientation updates */
   private final FloatArraySubscriber questQuaternion;
+
+  /** Subscriber for Euler angle updates */
   private final FloatArraySubscriber questEulerAngles;
+
+  /** Subscriber for battery percentage updates */
   private final DoubleSubscriber questBatteryPercent;
+
+  /** Publisher for pose reset commands */
   private final DoubleArrayPublisher resetPosePub;
 
+  /**
+   * Creates a new OculusIOReal instance and initializes all NetworkTable publishers and
+   * subscribers.
+   */
   public OculusIOReal() {
     nt4Table = NetworkTableInstance.getDefault().getTable("questnav");
     questMiso = nt4Table.getIntegerTopic("miso").subscribe(0);
@@ -40,7 +64,6 @@ public class OculusIOReal implements OculusIO {
         nt4Table.getFloatArrayTopic("eulerAngles").subscribe(new float[] {0.0f, 0.0f, 0.0f});
     questBatteryPercent = nt4Table.getDoubleTopic("batteryPercent").subscribe(0.0);
 
-    // Publishers for pose reset
     resetPosePub = nt4Table.getDoubleArrayTopic("resetpose").publish();
   }
 

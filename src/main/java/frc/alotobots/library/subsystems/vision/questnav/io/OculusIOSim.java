@@ -12,6 +12,7 @@
 */
 package frc.alotobots.library.subsystems.vision.questnav.io;
 
+/** Simulation implementation of OculusIO that provides static test values. */
 public class OculusIOSim implements OculusIO {
   @Override
   public void updateInputs(OculusIOInputs inputs) {
@@ -26,8 +27,12 @@ public class OculusIOSim implements OculusIO {
   }
 
   @Override
-  public void setMosi(int value) {}
+  public void setMosi(int value) {
+    // Simulation does not need to handle MOSI values
+  }
 
   @Override
-  public void setResetPose(double x, double y, double rotation) {}
+  public void setResetPose(double x, double y, double rotation) {
+    // Simulation does not need to handle pose reset
+  }
 }

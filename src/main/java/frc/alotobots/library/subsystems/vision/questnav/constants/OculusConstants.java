@@ -15,10 +15,26 @@ package frc.alotobots.library.subsystems.vision.questnav.constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
+/**
+ * Constants used by the Oculus Quest navigation subsystem. Contains configuration values for
+ * physical setup and operation parameters.
+ */
 public class OculusConstants {
-  public static final Transform2d OCULUS_TO_ROBOT =
-      new Transform2d(0.17, 0, new Rotation2d()); // X: +Forwards, Y: + Left, ROT: + CCW .16 x
+  /**
+   * Transform from the Oculus headset position to the robot's center. Coordinate system: - X:
+   * Positive is forwards - Y: Positive is left - Rotation: Positive is counter-clockwise
+   */
+  public static final Transform2d OCULUS_TO_ROBOT = new Transform2d(0.075, 0.0, new Rotation2d());
 
+  /**
+   * Timeout duration in seconds for reset operations (pose reset, heading reset, ping). If a reset
+   * operation takes longer than this time, it will be considered failed.
+   */
   public static final double RESET_TIMEOUT_SECONDS = 0.2;
+
+  /**
+   * Maximum number of attempts for reset operations. If a reset operation fails this many times,
+   * the command will terminate.
+   */
   public static final int MAX_RESET_ATTEMPTS = 3;
 }

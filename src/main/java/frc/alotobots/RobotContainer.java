@@ -44,8 +44,7 @@ import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.cons
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
 import frc.alotobots.library.subsystems.vision.questnav.OculusSubsystem;
-import frc.alotobots.library.subsystems.vision.questnav.commands.CalculateCameraOffsetCommand;
-import frc.alotobots.library.subsystems.vision.questnav.commands.ResetOculusPoseCommand;
+import frc.alotobots.library.subsystems.vision.questnav.commands.ResetPoseCommand;
 import frc.alotobots.library.subsystems.vision.questnav.io.OculusIO;
 import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOReal;
 import frc.alotobots.library.subsystems.vision.questnav.io.OculusIOSim;
@@ -189,9 +188,9 @@ public class RobotContainer {
     pathfindToBestObjectButton.onTrue(
         new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     testButton.onTrue(
-        new ResetOculusPoseCommand(
-            oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))));
-    testButton2.whileTrue(new CalculateCameraOffsetCommand(oculusSubsystem));
+        new ResetPoseCommand(oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))));
+    testButton2.onTrue(
+        new ResetPoseCommand(oculusSubsystem, new Pose2d(5.3, 2.5, Rotation2d.fromDegrees(180.0))));
   }
 
   /**
