@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.subsystems.bling.BlingSubsystem;
 import frc.alotobots.library.subsystems.bling.commands.NoAllianceWaiting;
@@ -188,9 +189,12 @@ public class RobotContainer {
     pathfindToBestObjectButton.onTrue(
         new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     testButton.onTrue(
-        new ResetPoseCommand(oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))));
-    testButton2.onTrue(
-        new ResetPoseCommand(oculusSubsystem, new Pose2d(5.3, 2.5, Rotation2d.fromDegrees(180.0))));
+        new ResetPoseCommand(oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0)))
+            .andThen(
+                new InstantCommand(
+                    () ->
+                        swerveDriveSubsystem.setPose(
+                            new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))))));
   }
 
   /**
