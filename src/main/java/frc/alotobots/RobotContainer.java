@@ -16,69 +16,39 @@ import static frc.alotobots.OI.*;
 import static frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants.NOTE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.alotobots.library.subsystems.bling.BlingSubsystem;
-import frc.alotobots.library.subsystems.bling.commands.NoAllianceWaiting;
-import frc.alotobots.library.subsystems.bling.commands.SetToAllianceColor;
-import frc.alotobots.library.subsystems.bling.io.BlingIO;
-import frc.alotobots.library.subsystems.bling.io.BlingIOReal;
-import frc.alotobots.library.subsystems.bling.io.BlingIOSim;
-import frc.alotobots.library.subsystems.swervedrive.ModulePosition;
-import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
-import frc.alotobots.library.subsystems.swervedrive.commands.FeedforwardCharacterization;
-import frc.alotobots.library.subsystems.swervedrive.commands.WheelRadiusCharacterization;
+import frc.alotobots.library.subsystems.bling.commands.*;
+import frc.alotobots.library.subsystems.bling.io.*;
+import frc.alotobots.library.subsystems.swervedrive.*;
+import frc.alotobots.library.subsystems.swervedrive.commands.*;
 import frc.alotobots.library.subsystems.swervedrive.io.*;
+import frc.alotobots.library.subsystems.swervedrive.util.PathPlannerManager;
+import frc.alotobots.library.subsystems.vision.localizationfusion.LocalizationFusion;
 import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
-import frc.alotobots.library.subsystems.vision.oculus.commands.ResetPoseCommand;
-import frc.alotobots.library.subsystems.vision.oculus.io.OculusIO;
-import frc.alotobots.library.subsystems.vision.oculus.io.OculusIOReal;
-import frc.alotobots.library.subsystems.vision.oculus.io.OculusIOSim;
+import frc.alotobots.library.subsystems.vision.oculus.io.*;
+import frc.alotobots.library.subsystems.vision.oculus.util.OculusPoseSource;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.AprilTagSubsystem;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.constants.AprilTagConstants;
-import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIO;
-import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVision;
-import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.AprilTagIOPhotonVisionSim;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.io.*;
+import frc.alotobots.library.subsystems.vision.photonvision.apriltag.util.AprilTagPoseSource;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
-import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.DriveFacingBestObject;
-import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.PathfindToBestObject;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.commands.*;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.constants.ObjectDetectionConstants;
-import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
-import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIOPhotonVision;
+import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-/**
- * The main container class for the robot. This class is responsible for initializing all
- * subsystems, configuring button bindings, and setting up autonomous commands. It follows a
- * dependency injection pattern for hardware IO to support simulation and replay modes.
- */
 public class RobotContainer {
-  /** The swerve drive subsystem that handles robot movement. */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
-
-  /** The AprilTag vision subsystem for robot localization. */
-  private final AprilTagSubsystem aprilTagSubsystem;
-
-  /** The object detection subsystem for game piece tracking. */
-  private final ObjectDetectionSubsystem objectDetectionSubsystem;
-
-  /** The LED control subsystem for robot status indication. */
-  private final BlingSubsystem blingSubsystem;
-
   private final OculusSubsystem oculusSubsystem;
-
-  /** Dashboard chooser for selecting autonomous routines. */
+  private final AprilTagSubsystem aprilTagSubsystem;
+  private final LocalizationFusion localizationFusion;
+  private final ObjectDetectionSubsystem objectDetectionSubsystem;
+  private final BlingSubsystem blingSubsystem;
+  private final PathPlannerManager pathPlannerManager;
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  /**
-   * Constructs the RobotContainer and initializes all robot subsystems and commands. Different IO
-   * implementations are used based on whether the robot is running in real, simulation, or replay
-   * mode.
-   */
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
@@ -90,17 +60,29 @@ public class RobotContainer {
                 new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index));
+
+        oculusSubsystem = new OculusSubsystem(new OculusIOReal());
         aprilTagSubsystem =
             new AprilTagSubsystem(
-                swerveDriveSubsystem::addVisionMeasurement,
                 new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[0]),
                 new AprilTagIOPhotonVision(AprilTagConstants.CAMERA_CONFIGS[1]));
+
+        // Create pose sources
+        OculusPoseSource oculusPoseSource = new OculusPoseSource(oculusSubsystem);
+        AprilTagPoseSource aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
+
+        // Initialize localization fusion with pose sources
+        LocalizationFusion.PoseVisionConsumer poseConsumer =
+            swerveDriveSubsystem::addVisionMeasurement;
+        localizationFusion =
+            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(
                 swerveDriveSubsystem::getPose,
                 new ObjectDetectionIOPhotonVision(ObjectDetectionConstants.CAMERA_CONFIGS[0]));
         blingSubsystem = new BlingSubsystem(new BlingIOReal());
-        oculusSubsystem = new OculusSubsystem(new OculusIOReal());
         break;
 
       case SIM:
@@ -112,17 +94,28 @@ public class RobotContainer {
                 new ModuleIOSim(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOSim(ModulePosition.BACK_LEFT.index),
                 new ModuleIOSim(ModulePosition.BACK_RIGHT.index));
+
+        oculusSubsystem = new OculusSubsystem(new OculusIOSim());
         aprilTagSubsystem =
             new AprilTagSubsystem(
-                swerveDriveSubsystem::addVisionMeasurement,
                 new AprilTagIOPhotonVisionSim(
                     AprilTagConstants.CAMERA_CONFIGS[0], swerveDriveSubsystem::getPose),
                 new AprilTagIOPhotonVisionSim(
                     AprilTagConstants.CAMERA_CONFIGS[1], swerveDriveSubsystem::getPose));
+
+        // Create pose sources
+        oculusPoseSource = new OculusPoseSource(oculusSubsystem);
+        aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
+
+        // Initialize localization fusion with pose sources
+        poseConsumer = swerveDriveSubsystem::addVisionMeasurement;
+        localizationFusion =
+            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIOSim());
-        oculusSubsystem = new OculusSubsystem(new OculusIOSim());
         break;
 
       default:
@@ -134,22 +127,30 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        aprilTagSubsystem =
-            new AprilTagSubsystem(
-                swerveDriveSubsystem::addVisionMeasurement,
-                new AprilTagIO() {},
-                new AprilTagIO() {});
+
+        oculusSubsystem = new OculusSubsystem(new OculusIO() {});
+        aprilTagSubsystem = new AprilTagSubsystem(new AprilTagIO() {}, new AprilTagIO() {});
+
+        // Create pose sources
+        oculusPoseSource = new OculusPoseSource(oculusSubsystem);
+        aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
+
+        // Initialize localization fusion with pose sources
+        poseConsumer = swerveDriveSubsystem::addVisionMeasurement;
+        localizationFusion =
+            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIO() {});
-        oculusSubsystem = new OculusSubsystem(new OculusIO() {});
         break;
     }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
+    // Add SysId routines
     autoChooser.addOption(
         "Drive Wheel Radius Characterization",
         new WheelRadiusCharacterization(swerveDriveSubsystem));
@@ -172,36 +173,22 @@ public class RobotContainer {
     configureLogicCommands();
   }
 
-  /**
-   * Configures the default commands for each subsystem. These commands run automatically when no
-   * other commands are scheduled for a subsystem.
-   */
   private void configureDefaultCommands() {
     swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
     blingSubsystem.setDefaultCommand(
         new NoAllianceWaiting(blingSubsystem).andThen(new SetToAllianceColor(blingSubsystem)));
   }
 
-  /** Configures commands that are triggered by button presses or other logic conditions. */
   private void configureLogicCommands() {
     driveFacingBestObjectButton.toggleOnTrue(
         new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
     pathfindToBestObjectButton.onTrue(
-        new PathfindToBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
+        new PathfindToBestObject(
+            objectDetectionSubsystem, swerveDriveSubsystem, pathPlannerManager, NOTE));
     testButton.onTrue(
-        new ResetPoseCommand(oculusSubsystem, new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0)))
-            .andThen(
-                new InstantCommand(
-                    () ->
-                        swerveDriveSubsystem.setPose(
-                            new Pose2d(15.3, 5.5, Rotation2d.fromDegrees(0.0))))));
+        localizationFusion.runOnce(localizationFusion::requestResetOculusPoseViaAprilTags));
   }
 
-  /**
-   * Returns the command to run in autonomous mode.
-   *
-   * @return The command selected in the autonomous chooser
-   */
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }

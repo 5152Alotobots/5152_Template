@@ -17,12 +17,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
 
 /**
- * Command that resets the Oculus system's pose estimation to a specified target pose.
- * This is useful for initializing or correcting the robot's position tracking.
+ * Command that resets the Oculus system's pose estimation to a specified target pose. This is
+ * useful for initializing or correcting the robot's position tracking.
  */
 public class ResetPoseCommand extends Command {
   /** The Oculus subsystem instance to reset */
   private final OculusSubsystem oculus;
+
   /** The target pose to reset to */
   private final Pose2d targetPose;
 

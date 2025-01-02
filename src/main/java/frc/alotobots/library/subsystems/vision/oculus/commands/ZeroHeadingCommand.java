@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
 
 /**
- * Command that zeros the heading (rotation) of the Oculus system.
- * This is useful for aligning the robot's coordinate system with the field.
+ * Command that zeros the heading (rotation) of the Oculus system. This is useful for aligning the
+ * robot's coordinate system with the field.
  */
 public class ZeroHeadingCommand extends Command {
   /** The Oculus subsystem instance to zero */

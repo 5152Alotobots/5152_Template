@@ -25,6 +25,7 @@ import frc.alotobots.Constants;
 import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
 import frc.alotobots.library.subsystems.swervedrive.commands.DefaultDrive;
 import frc.alotobots.library.subsystems.swervedrive.commands.DriveFacingPose;
+import frc.alotobots.library.subsystems.swervedrive.util.PathPlannerManager;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.ObjectDetectionSubsystem;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.io.ObjectDetectionIO;
 import frc.alotobots.library.subsystems.vision.photonvision.objectdetection.util.GameElement;
@@ -41,6 +42,9 @@ public class PathfindToBestObject extends Command {
 
   /** Subsystem for controlling robot movement */
   private final SwerveDriveSubsystem swerveDriveSubsystem;
+
+  /** The pathplanner instance */
+  private final PathPlannerManager pathPlannerManager;
 
   /** Array of game elements to target, in priority order */
   private final GameElement[] targetGameElementNames;
@@ -64,9 +68,11 @@ public class PathfindToBestObject extends Command {
   public PathfindToBestObject(
       ObjectDetectionSubsystem objectDetectionSubsystem,
       SwerveDriveSubsystem swerveDriveSubsystem,
+      PathPlannerManager pathPlannerManager,
       GameElement... targetGameElementNames) {
     this.objectDetectionSubsystem = objectDetectionSubsystem;
     this.swerveDriveSubsystem = swerveDriveSubsystem;
+    this.pathPlannerManager = pathPlannerManager;
     this.targetGameElementNames = targetGameElementNames;
     this.driveFacingPose = new DriveFacingPose(swerveDriveSubsystem);
     this.defaultDrive = new DefaultDrive(swerveDriveSubsystem);
@@ -119,7 +125,7 @@ public class PathfindToBestObject extends Command {
           new Pose2d(objectPose.getTranslation().plus(offsetTranslation), objectPose.getRotation());
 
       Command command =
-          swerveDriveSubsystem.getPathFinderCommand(
+          pathPlannerManager.getPathFinderCommand(
               targetPose, LinearVelocity.ofBaseUnits(0, Units.MetersPerSecond));
       command.schedule();
     }

@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
 
 /**
- * Command that sends a ping to the Oculus system and waits for a response.
- * Used to verify communication with the Oculus headset.
+ * Command that sends a ping to the Oculus system and waits for a response. Used to verify
+ * communication with the Oculus headset.
  */
 public class PingCommand extends Command {
   /** The Oculus subsystem instance to use for pinging */
