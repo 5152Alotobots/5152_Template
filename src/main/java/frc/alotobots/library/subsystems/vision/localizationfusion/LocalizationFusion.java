@@ -12,10 +12,7 @@
 */
 package frc.alotobots.library.subsystems.vision.localizationfusion;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,26 +20,30 @@ import frc.alotobots.library.subsystems.vision.oculus.util.OculusPoseSource;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.util.AprilTagPoseSource;
 import org.littletonrobotics.junction.Logger;
 
-/**
- * A subsystem that fuses multiple pose sources for robot localization.
- *
- * <p>This system primarily uses the Meta Quest 3's SLAM capabilities for high-frequency (120Hz)
- * pose updates, with AprilTag detection serving as a validation and initialization mechanism. The
- * system follows a hierarchical approach:
- *
- * <p>1. Quest SLAM (Primary): Provides continuous, high-precision pose estimates 2. AprilTag System
- * (Secondary): Used for initial pose acquisition and ongoing validation 3. Emergency Odometry
- * (Fallback): Available when both primary systems fail
- *
- * <p>The system maintains a state machine to manage transitions between these sources based on
- * availability and reliability metrics.
- */
 public class LocalizationFusion extends SubsystemBase implements StateTransitionLogger {
   /** Maximum acceptable difference between AprilTag and Quest poses for validation (meters) */
-  private static final double APRILTAG_VALIDATION_THRESHOLD = 0.5;
+  private static final double APRILTAG_VALIDATION_THRESHOLD = 1.0; // More lenient with Quest
+
+  /** Stricter threshold for validating poses during initialization */
+  private static final double INIT_VALIDATION_THRESHOLD = 0.3; // Stricter during init
 
   /** Update interval matching Quest's native 120Hz update rate (seconds) */
   private static final double POSE_UPDATE_INTERVAL = 1.0 / 120.0;
+
+  /** Time window for considering a Quest disconnect as temporary (seconds) */
+  private static final double QUICK_RECONNECT_WINDOW = 5.0;
+
+  /** Time required for Quest initialization (seconds) */
+  private static final double QUEST_INIT_TIMEOUT = 2.0;
+
+  /** Time required for AprilTag initialization (seconds) */
+  private static final double TAG_INIT_TIMEOUT = 1.0;
+
+  /** Minimum valid Quest updates required for initialization */
+  private static final int MIN_QUEST_VALID_UPDATES = 10;
+
+  /** Minimum valid AprilTag updates required for initialization */
+  private static final int MIN_TAG_VALID_UPDATES = 3;
 
   /** Consumer interface for receiving pose updates */
   private final PoseVisionConsumer poseConsumer;
@@ -68,26 +69,21 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   /** Previous DriverStation connection state */
   private boolean wasConnected = false;
 
-  /** Functional interface for consuming pose updates from the fusion system. */
-  @FunctionalInterface
-  public interface PoseVisionConsumer {
-    /**
-     * Accepts a new pose update from the fusion system.
-     *
-     * @param pose The current robot pose in field coordinates
-     * @param timestampSeconds The timestamp when this pose was measured
-     * @param stdDevs Standard deviations for x, y, and rotation measurements
-     */
-    void accept(Pose2d pose, double timestampSeconds, Matrix<N3, N1> stdDevs);
-  }
+  // Quest initialization tracking
+  private double questInitStartTime = 0.0;
+  private int consecutiveValidQuestUpdates = 0;
+  private Pose2d lastQuestInitPose = null;
+  private boolean questInitialized = false;
+  private double lastQuestDisconnectTime = 0.0;
+  private boolean hadPreviousCalibration = false;
 
-  /**
-   * Creates a new LocalizationFusion subsystem.
-   *
-   * @param poseConsumer Consumer for receiving pose updates
-   * @param oculusSource Primary pose source using Quest SLAM
-   * @param aprilTagSource Secondary pose source using AprilTags
-   */
+  // AprilTag initialization tracking
+  private double tagInitStartTime = 0.0;
+  private int consecutiveValidTagUpdates = 0;
+  private Pose2d lastTagInitPose = null;
+  private boolean tagInitialized = false;
+
+  /** Creates a new LocalizationFusion subsystem. */
   public LocalizationFusion(
       PoseVisionConsumer poseConsumer,
       OculusPoseSource oculusSource,
@@ -102,36 +98,165 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   public void periodic() {
     logSystemStatus();
     handleDriverStationConnection();
-    updatePoses();
-    updateState();
-  }
 
-  /** Logs current system status to NetworkTables for monitoring. */
-  private void logSystemStatus() {
-    Logger.recordOutput("PoseEstimator/State", state.getCurrentState().getDescription());
-    Logger.recordOutput("PoseEstimator/OculusConnected", oculusSource.isConnected());
-    Logger.recordOutput("PoseEstimator/AprilTagConnected", tagSource.isConnected());
+    // Handle initialization of both sources
+    if (!questInitialized && oculusSource.isConnected()) {
+      handleQuestInitialization();
+    }
+    if (!tagInitialized && tagSource.isConnected()) {
+      handleTagInitialization();
+    }
+
+    // Only proceed with normal updates if at least one source is initialized
+    if (questInitialized || tagInitialized) {
+      updatePoses();
+      updateState();
+    } else if (!state.isInState(LocalizationState.State.EMERGENCY)) {
+      state.transitionTo(LocalizationState.State.EMERGENCY);
+    }
+
+    // Log initialization and status
+    logDetailedStatus();
   }
 
   /**
-   * Handles DriverStation connection state changes. When reconnecting, attempts to reset to last
-   * known good pose.
+   * Handles initialization of the Quest SLAM system. Differentiates between temporary disconnects
+   * and full reboots.
    */
-  private void handleDriverStationConnection() {
-    boolean isConnected = DriverStation.isDSAttached();
-    if (!wasConnected && isConnected && lastValidatedPose != null) {
-      Logger.recordOutput("PoseEstimator/Event", "DriverStation connected - initiating pose reset");
-      if (resetToPose(lastValidatedPose)) {
-        state.transitionTo(LocalizationState.State.RESETTING);
+  private void handleQuestInitialization() {
+    if (!oculusSource.isConnected()) {
+      if (questInitialized) {
+        lastQuestDisconnectTime = Timer.getTimestamp();
+        hadPreviousCalibration = true;
+      }
+      resetQuestInitialization();
+      return;
+    }
+
+    // Check if this is a quick reconnect with maintained calibration
+    if (hadPreviousCalibration
+        && (Timer.getTimestamp() - lastQuestDisconnectTime) < QUICK_RECONNECT_WINDOW) {
+
+      // Verify the pose hasn't jumped dramatically
+      Pose2d questPose = oculusSource.getCurrentPose();
+      if (questPose != null && lastQuestInitPose != null) {
+        double poseJump =
+            questPose.getTranslation().getDistance(lastQuestInitPose.getTranslation());
+
+        if (poseJump < APRILTAG_VALIDATION_THRESHOLD) {
+          // Quick restore of previous calibration
+          questInitialized = true;
+          Logger.recordOutput(
+              "PoseEstimator/Event",
+              "Quest reconnected with valid calibration - resuming tracking");
+          state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
+          return;
+        } else {
+          Logger.recordOutput(
+              "PoseEstimator/Event", "Quest calibration invalid after reconnect - reinitializing");
+          hadPreviousCalibration = false;
+        }
       }
     }
-    wasConnected = isConnected;
+
+    // Otherwise proceed with full initialization
+    Pose2d questPose = oculusSource.getCurrentPose();
+    if (questPose == null) {
+      return;
+    }
+
+    // Start initialization process
+    if (questInitStartTime == 0.0) {
+      questInitStartTime = Timer.getTimestamp();
+      lastQuestInitPose = questPose;
+
+      // If we have a valid reference pose, use it
+      Pose2d referencePose = getValidReferencePose();
+      if (referencePose != null) {
+        if (!resetToPose(referencePose)) {
+          Logger.recordOutput(
+              "PoseEstimator/Event", "Quest initialization failed - could not set initial pose");
+          resetQuestInitialization();
+          return;
+        }
+      }
+
+      state.transitionTo(LocalizationState.State.RESETTING);
+      return;
+    }
+
+    // Verify pose stability and consistency
+    if (isNewPoseValid(questPose, lastQuestInitPose, INIT_VALIDATION_THRESHOLD)) {
+      consecutiveValidQuestUpdates++;
+      lastQuestInitPose = questPose;
+    } else {
+      consecutiveValidQuestUpdates = 0;
+    }
+
+    // Check initialization criteria
+    double initDuration = Timer.getTimestamp() - questInitStartTime;
+    if (consecutiveValidQuestUpdates >= MIN_QUEST_VALID_UPDATES
+        && initDuration >= QUEST_INIT_TIMEOUT) {
+
+      questInitialized = true;
+      Logger.recordOutput("PoseEstimator/Event", "Quest initialization complete - system ready");
+
+      // Only switch to primary if AprilTags aren't providing better data
+      if (!tagInitialized || shouldPreferQuest()) {
+        state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
+      }
+    } else if (initDuration > QUEST_INIT_TIMEOUT * 2) {
+      Logger.recordOutput("PoseEstimator/Event", "Quest initialization failed - timeout exceeded");
+      resetQuestInitialization();
+    }
   }
 
-  /**
-   * Updates pose estimates based on current state and available sources. Maintains rate limiting to
-   * match Quest update frequency.
-   */
+  /** Handles initialization of the AprilTag vision system. */
+  private void handleTagInitialization() {
+    if (!tagSource.isConnected()) {
+      resetTagInitialization();
+      return;
+    }
+
+    Pose2d tagPose = tagSource.getCurrentPose();
+    if (tagPose == null) {
+      return;
+    }
+
+    // Start initialization process
+    if (tagInitStartTime == 0.0) {
+      tagInitStartTime = Timer.getTimestamp();
+      lastTagInitPose = tagPose;
+      return;
+    }
+
+    // Verify pose stability and consistency
+    if (isNewPoseValid(tagPose, lastTagInitPose, INIT_VALIDATION_THRESHOLD)) {
+      consecutiveValidTagUpdates++;
+      lastTagInitPose = tagPose;
+    } else {
+      consecutiveValidTagUpdates = 0;
+    }
+
+    // Check initialization criteria
+    double initDuration = Timer.getTimestamp() - tagInitStartTime;
+    if (consecutiveValidTagUpdates >= MIN_TAG_VALID_UPDATES && initDuration >= TAG_INIT_TIMEOUT) {
+
+      tagInitialized = true;
+      Logger.recordOutput("PoseEstimator/Event", "AprilTag initialization complete - system ready");
+
+      // Switch to TAG_BACKUP if Quest isn't ready or is less reliable
+      if (!questInitialized || !shouldPreferQuest()) {
+        state.transitionTo(LocalizationState.State.TAG_BACKUP);
+      }
+    } else if (initDuration > TAG_INIT_TIMEOUT * 2) {
+      Logger.recordOutput(
+          "PoseEstimator/Event", "AprilTag initialization failed - timeout exceeded");
+      resetTagInitialization();
+    }
+  }
+
+  /** Updates pose estimates based on current state and available sources. */
   private void updatePoses() {
     double currentTime = Timer.getTimestamp();
     if (currentTime - lastUpdateTime < POSE_UPDATE_INTERVAL) {
@@ -154,13 +279,92 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         break;
       case EMERGENCY:
         Logger.recordOutput(
-            "PoseEstimator/Event",
-            "Failed to connect to any external pose source. Running with odometry only!");
+            "PoseEstimator/Event", "No valid pose sources available - emergency mode active");
         break;
     }
   }
 
-  /** Handles system initialization using AprilTag poses. */
+  private boolean shouldPreferQuest() {
+    if (!questInitialized) return false;
+    if (!tagInitialized) return true;
+
+    // If we're in a mid-match initialization (DriverStation is enabled and enough time has passed)
+    boolean isMidMatch = DriverStation.isEnabled() && Timer.getMatchTime() > 5.0;
+
+    // During mid-match initialization, prefer AprilTags until Quest fully validates
+    if (isMidMatch && Timer.getTimestamp() - questInitStartTime < QUEST_INIT_TIMEOUT * 3) {
+      return false;
+    }
+
+    // Otherwise strongly prefer Quest as primary source
+    return validatePose(oculusSource.getCurrentPose());
+  }
+
+  private boolean validatePose(Pose2d pose) {
+    if (pose == null) return false;
+
+    Pose2d tagPose = tagSource.getCurrentPose();
+    if (tagPose == null) {
+      return true; // No validation possible, trust Quest
+    }
+
+    double poseError = tagPose.getTranslation().getDistance(pose.getTranslation());
+
+    // During initialization, use stricter threshold
+    if (!questInitialized) {
+      return poseError <= INIT_VALIDATION_THRESHOLD;
+    }
+
+    // Once initialized, be more lenient with Quest
+    return poseError <= APRILTAG_VALIDATION_THRESHOLD;
+  }
+
+  private boolean isNewPoseValid(Pose2d newPose, Pose2d lastPose, double maxChange) {
+    if (lastPose == null) return true;
+
+    double poseChange = newPose.getTranslation().getDistance(lastPose.getTranslation());
+    double rotationChange =
+        Math.abs(newPose.getRotation().minus(lastPose.getRotation()).getDegrees());
+
+    return poseChange <= maxChange && rotationChange <= 45.0; // 45 degrees max rotation
+  }
+
+  private Pose2d getValidReferencePose() {
+    if (tagInitialized) {
+      return tagSource.getCurrentPose();
+    }
+    return null;
+  }
+
+  private void resetQuestInitialization() {
+    questInitStartTime = 0.0;
+    consecutiveValidQuestUpdates = 0;
+    lastQuestInitPose = null;
+    questInitialized = false;
+  }
+
+  private void resetTagInitialization() {
+    tagInitStartTime = 0.0;
+    consecutiveValidTagUpdates = 0;
+    lastTagInitPose = null;
+    tagInitialized = false;
+  }
+
+  private void logDetailedStatus() {
+    Logger.recordOutput("PoseEstimator/QuestInitialized", questInitialized);
+    Logger.recordOutput("PoseEstimator/TagInitialized", tagInitialized);
+    Logger.recordOutput("PoseEstimator/QuestHadCalibration", hadPreviousCalibration);
+
+    if (questInitialized) {
+      Logger.recordOutput("PoseEstimator/QuestValidUpdates", consecutiveValidQuestUpdates);
+      Logger.recordOutput("PoseEstimator/LastQuestUpdate", lastQuestUpdate);
+    }
+    if (tagInitialized) {
+      Logger.recordOutput("PoseEstimator/TagValidUpdates", consecutiveValidTagUpdates);
+    }
+  }
+
+  /* Original state handling methods remain unchanged */
   private void handleUninitializedState() {
     Pose2d tagPose = tagSource.getCurrentPose();
     if (tagPose != null) {
@@ -172,7 +376,6 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     }
   }
 
-  /** Handles pose reset operations and transitions. */
   private void handleResettingState() {
     if (!oculusSource.isConnected()) {
       state.transitionTo(LocalizationState.State.TAG_BACKUP);
@@ -187,13 +390,14 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     }
   }
 
-  /**
-   * Handles primary Quest-based pose updates with AprilTag validation.
-   *
-   * @param currentTime Current system timestamp
-   */
   private void handleQuestPrimaryState(double currentTime) {
     if (!oculusSource.isConnected()) {
+      if (questInitialized) {
+        // Mark for potential quick reconnect
+        lastQuestDisconnectTime = Timer.getTimestamp();
+        hadPreviousCalibration = true;
+        lastQuestInitPose = oculusSource.getCurrentPose();
+      }
       state.transitionTo(LocalizationState.State.TAG_BACKUP);
       Logger.recordOutput("PoseEstimator/Event", "Quest connection lost - switching to AprilTags");
       return;
@@ -204,26 +408,45 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
       if (validatePose(questPose)) {
         poseConsumer.accept(questPose, currentTime, oculusSource.getStdDevs());
         lastQuestUpdate = currentTime;
+        lastValidatedPose = questPose;
       } else {
         Logger.recordOutput("PoseEstimator/Event", "Quest pose validation failed");
-        state.transitionTo(LocalizationState.State.TAG_BACKUP);
+        // Don't immediately switch to backup if we have recent valid data
+        if (currentTime - lastQuestUpdate > QUEST_INIT_TIMEOUT) {
+          state.transitionTo(LocalizationState.State.TAG_BACKUP);
+        }
       }
     }
   }
 
-  /**
-   * Handles fallback AprilTag-based pose updates.
-   *
-   * @param currentTime Current system timestamp
-   */
   private void handleTagBackupState(double currentTime) {
-    if (oculusSource.isConnected()) {
-      state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
-      Logger.recordOutput(
-          "PoseEstimator/Event", "Quest connection restored - switching to primary");
+    // Check for Quest quick reconnect opportunity
+    if (oculusSource.isConnected()
+        && hadPreviousCalibration
+        && (Timer.getTimestamp() - lastQuestDisconnectTime) < QUICK_RECONNECT_WINDOW) {
+
+      Pose2d questPose = oculusSource.getCurrentPose();
+      if (questPose != null && lastQuestInitPose != null) {
+        double poseJump =
+            questPose.getTranslation().getDistance(lastQuestInitPose.getTranslation());
+
+        if (poseJump < APRILTAG_VALIDATION_THRESHOLD) {
+          state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
+          Logger.recordOutput(
+              "PoseEstimator/Event",
+              "Quest connection restored with valid calibration - resuming primary");
+          return;
+        }
+      }
+    }
+
+    // If Quest is available but needs full reinit
+    if (oculusSource.isConnected() && !hadPreviousCalibration) {
+      handleQuestInitialization();
       return;
     }
 
+    // Otherwise use AprilTag data
     Pose2d tagPose = tagSource.getCurrentPose();
     if (tagPose != null) {
       poseConsumer.accept(tagPose, currentTime, tagSource.getStdDevs());
@@ -231,58 +454,35 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     }
   }
 
-  /**
-   * Validates Quest pose against AprilTag measurements.
-   *
-   * @param pose Quest pose to validate
-   * @return true if pose is valid or no validation possible
-   */
-  private boolean validatePose(Pose2d pose) {
-    Pose2d tagPose = tagSource.getCurrentPose();
-    if (tagPose == null) {
-      return true; // No validation possible, assume valid
-    }
-
-    double poseError = tagPose.getTranslation().getDistance(pose.getTranslation());
-    return poseError <= APRILTAG_VALIDATION_THRESHOLD;
+  private void logSystemStatus() {
+    Logger.recordOutput("PoseEstimator/State", state.getCurrentState().getDescription());
+    Logger.recordOutput("PoseEstimator/OculusConnected", oculusSource.isConnected());
+    Logger.recordOutput("PoseEstimator/AprilTagConnected", tagSource.isConnected());
   }
 
-  /** Updates system state based on source availability. */
-  private void updateState() {
-    if (!state.isInState(
-        LocalizationState.State.UNINITIALIZED, LocalizationState.State.RESETTING)) {
-      if (oculusSource.isConnected()) {
-        state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
-      } else {
-        state.transitionTo(LocalizationState.State.TAG_BACKUP);
+  private void handleDriverStationConnection() {
+    boolean isConnected = DriverStation.isDSAttached();
+    if (!wasConnected && isConnected && lastValidatedPose != null) {
+      Logger.recordOutput("PoseEstimator/Event", "DriverStation connected - initiating pose reset");
+      if (resetToPose(lastValidatedPose)) {
+        state.transitionTo(LocalizationState.State.RESETTING);
       }
     }
+    wasConnected = isConnected;
   }
 
-  /**
-   * Initiates a pose reset operation.
-   *
-   * @param pose Target pose to reset to
-   * @return true if reset was initiated successfully
-   */
   private boolean resetToPose(Pose2d pose) {
     return oculusSource.subsystem.resetToPose(pose);
   }
 
-  /**
-   * Checks if a pose reset operation is in progress.
-   *
-   * @return true if reset is ongoing
-   */
   private boolean isResetInProgress() {
     return oculusSource.subsystem.isPoseResetInProgress();
   }
 
   /**
-   * Manually triggers a pose reset using the most recent validated pose. This can be used as a
-   * callback for manual reset requests.
+   * Manually triggers a pose reset using the most recent validated pose.
    *
-   * @return true if reset was initiated successfully, false otherwise
+   * @return true if reset was initiated successfully
    */
   public boolean requestResetOculusPoseViaAprilTags() {
     Pose2d currentTagPose = tagSource.getCurrentPose();
@@ -303,11 +503,10 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   }
 
   /**
-   * Manually triggers a pose reset to a specific pose. Use this when you want to reset to a known
-   * position rather than the last validated pose.
+   * Manually triggers a pose reset to a specific pose.
    *
    * @param targetPose The pose to reset to
-   * @return true if reset was initiated successfully, false otherwise
+   * @return true if reset was initiated successfully
    */
   public boolean requestResetOculusPose(Pose2d targetPose) {
     if (targetPose == null) {
@@ -322,6 +521,28 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
       return true;
     }
     return false;
+  }
+
+  /** Updates system state based on source availability and initialization status */
+  private void updateState() {
+    // Skip state updates during initialization phases
+    if (state.isInState(LocalizationState.State.UNINITIALIZED, LocalizationState.State.RESETTING)) {
+      return;
+    }
+
+    // Handle source availability
+    if (oculusSource.isConnected() && questInitialized) {
+      // If we have a good Quest connection and it's initialized, prefer it
+      state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
+    } else if (tagSource.isConnected() && tagInitialized) {
+      // Fall back to AprilTags if available and initialized
+      state.transitionTo(LocalizationState.State.TAG_BACKUP);
+    } else {
+      // No valid sources available
+      state.transitionTo(LocalizationState.State.EMERGENCY);
+      Logger.recordOutput(
+          "PoseEstimator/Event", "No valid pose sources available - entering emergency mode");
+    }
   }
 
   @Override

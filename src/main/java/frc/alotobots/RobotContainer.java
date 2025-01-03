@@ -71,11 +71,9 @@ public class RobotContainer {
         OculusPoseSource oculusPoseSource = new OculusPoseSource(oculusSubsystem);
         AprilTagPoseSource aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
 
-        // Initialize localization fusion with pose sources
-        LocalizationFusion.PoseVisionConsumer poseConsumer =
-            swerveDriveSubsystem::addVisionMeasurement;
         localizationFusion =
-            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+            new LocalizationFusion(
+                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
         pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
 
         objectDetectionSubsystem =
@@ -106,11 +104,9 @@ public class RobotContainer {
         // Create pose sources
         oculusPoseSource = new OculusPoseSource(oculusSubsystem);
         aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
-
-        // Initialize localization fusion with pose sources
-        poseConsumer = swerveDriveSubsystem::addVisionMeasurement;
         localizationFusion =
-            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+            new LocalizationFusion(
+                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
         pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
 
         objectDetectionSubsystem =
@@ -134,11 +130,9 @@ public class RobotContainer {
         // Create pose sources
         oculusPoseSource = new OculusPoseSource(oculusSubsystem);
         aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
-
-        // Initialize localization fusion with pose sources
-        poseConsumer = swerveDriveSubsystem::addVisionMeasurement;
         localizationFusion =
-            new LocalizationFusion(poseConsumer, oculusPoseSource, aprilTagPoseSource);
+            new LocalizationFusion(
+                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
         pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
 
         objectDetectionSubsystem =
