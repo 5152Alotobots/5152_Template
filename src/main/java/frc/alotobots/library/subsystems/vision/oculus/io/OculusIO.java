@@ -29,13 +29,13 @@ public interface OculusIO {
     public float[] eulerAngles = new float[] {0.0f, 0.0f, 0.0f};
 
     /** Current timestamp from the Oculus */
-    public double timestamp = 0.0;
+    public double timestamp = -1.0;
 
     /** Frame counter from the Oculus */
-    public int frameCount = 0;
+    public int frameCount = -1;
 
     /** Battery level percentage */
-    public double batteryPercent = 0.0;
+    public double batteryPercent = -1.0;
 
     /** Current MISO (Master In Slave Out) value */
     public int misoValue = 0;

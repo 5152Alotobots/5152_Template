@@ -54,15 +54,15 @@ public class OculusIOReal implements OculusIO {
     nt4Table = NetworkTableInstance.getDefault().getTable("questnav");
     questMiso = nt4Table.getIntegerTopic("miso").subscribe(0);
     questMosi = nt4Table.getIntegerTopic("mosi").publish();
-    questFrameCount = nt4Table.getIntegerTopic("frameCount").subscribe(0);
-    questTimestamp = nt4Table.getDoubleTopic("timestamp").subscribe(0.0);
+    questFrameCount = nt4Table.getIntegerTopic("frameCount").subscribe(-1);
+    questTimestamp = nt4Table.getDoubleTopic("timestamp").subscribe(-1.0);
     questPosition =
         nt4Table.getFloatArrayTopic("position").subscribe(new float[] {0.0f, 0.0f, 0.0f});
     questQuaternion =
         nt4Table.getFloatArrayTopic("quaternion").subscribe(new float[] {0.0f, 0.0f, 0.0f, 0.0f});
     questEulerAngles =
         nt4Table.getFloatArrayTopic("eulerAngles").subscribe(new float[] {0.0f, 0.0f, 0.0f});
-    questBatteryPercent = nt4Table.getDoubleTopic("batteryPercent").subscribe(0.0);
+    questBatteryPercent = nt4Table.getDoubleTopic("batteryPercent").subscribe(-1.0);
 
     resetPosePub = nt4Table.getDoubleArrayTopic("resetpose").publish();
   }

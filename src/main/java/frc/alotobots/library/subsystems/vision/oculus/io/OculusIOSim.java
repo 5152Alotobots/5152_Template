@@ -20,8 +20,8 @@ public class OculusIOSim implements OculusIO {
     inputs.position = new float[] {0.0f, 0.0f, 0.0f};
     inputs.quaternion = new float[] {1.0f, 0.0f, 0.0f, 0.0f};
     inputs.eulerAngles = new float[] {0.0f, 0.0f, 0.0f};
-    inputs.timestamp = 0.0;
-    inputs.frameCount = 0;
+    inputs.timestamp = -1.0;
+    inputs.frameCount = -1;
     inputs.batteryPercent = 100.0;
     inputs.misoValue = 0;
   }

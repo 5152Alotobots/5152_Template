@@ -93,6 +93,8 @@ public class OculusSubsystem extends SubsystemBase implements PoseSource {
   /** Current robot pose estimate */
   private Pose2d currentPose = null;
 
+  private double lastQuestUpdateTime = Timer.getTimestamp();
+
   /**
    * Creates a new OculusSubsystem.
    *
@@ -372,14 +374,20 @@ public class OculusSubsystem extends SubsystemBase implements PoseSource {
   /**
    * {@inheritDoc}
    *
-   * <p>Quest connection requires: - Valid timestamps - Recent updates (within timeout) - Consistent
-   * update rate
+   * <p>Quest connection is determined by checking if we've received any new Quest timestamp updates
+   * within our timeout window. Small variations in update timing are allowed, only triggering
+   * disconnect on significant delays.
    */
   @Override
   public boolean isConnected() {
-    double questTimeDelta = currentTimestamp - lastTimestamp;
-    boolean timeoutValid = (questTimeDelta >= 0) && (questTimeDelta < CONNECTION_TIMEOUT);
-    return timeoutValid;
+    // If timestamp has changed since last check, update our last update time
+    if (inputs.timestamp != lastTimestamp) {
+      lastQuestUpdateTime = Timer.getTimestamp();
+    }
+
+    // Only consider disconnected if we haven't seen ANY new timestamps
+    // for longer than our timeout period
+    return (Timer.getTimestamp() - lastQuestUpdateTime) < CONNECTION_TIMEOUT;
   }
 
   /**
