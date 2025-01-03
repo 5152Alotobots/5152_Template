@@ -34,10 +34,10 @@ public class LocalizationFusionConstants {
     public static final double INIT_VALIDATION_THRESHOLD = 0.3;
 
     /** Maximum allowed pose change during disabled state to trigger recalibration (meters). */
-    public static final double DISABLED_RECALIBRATION_THRESHOLD = 0.5;
+    public static final double DISABLED_RECALIBRATION_THRESHOLD = 0.05;
 
     /** Maximum allowed rotation change between poses (degrees). */
-    public static final double MAX_ROTATION_CHANGE_DEGREES = 45.0;
+    public static final double MAX_ROTATION_CHANGE_DEGREES = 35.0;
   }
 
   /**
@@ -56,7 +56,7 @@ public class LocalizationFusionConstants {
     public static final double TAG_INIT_TIMEOUT = 1.0;
 
     /** Minimum time required to validate initial pose stability (seconds). */
-    public static final double INITIAL_POSE_STABILITY_TIME = 3.0;
+    public static final double INITIAL_POSE_STABILITY_TIME = 15.0;
 
     /** Maximum time to wait for reset sequence to complete (seconds). */
     public static final double RESET_TIMEOUT = 5.0;

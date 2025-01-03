@@ -112,8 +112,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   /** Indicates if initial pose validation is complete. */
   private boolean initialPoseValidated = false;
 
-  // TODO: Also, we should only reset for a significant change in pose while disabled until the
-  // TODO: match starts. Otherwise, when we transition from auto to teleop, we would reset
+  
 
   // -------------------- Constructor --------------------
   /**
