@@ -126,6 +126,15 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
   private String currentAutoSelection = "";
 
+  /** Timestamp when stability check started. */
+  private double stabilityStartTime = 0.0;
+
+  /** Timestamp of the last auto-realignment. */
+  private double lastAutoRealignTime = 0.0;
+
+  /** Pose when stability check started. */
+  private Pose2d stabilityStartPose = null;
+
   // Separate flags for pose validation sources
   private boolean hasTagValidatedPose = false; // Set only when we get AprilTag validation
   private boolean hasAutoPose = false; // Set when we accept an auto pose
@@ -404,6 +413,11 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     Pose2d questPose = oculusSource.getCurrentPose();
     if (questPose != null) {
       if (validatePose(questPose, false)) {
+        // Try auto realign if its enabled
+        if (LocalizationFusionConstants.AutoRealignConstants.ENABLED) {
+          tryAutoRealign(currentTime);
+        }
+
         poseConsumer.accept(questPose, currentTime, oculusSource.getStdDevs());
         lastQuestUpdate = currentTime;
       } else {
@@ -868,6 +882,71 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
   // -------------------- Reset Methods --------------------
   /**
+   * Attempts to perform an auto-realignment if conditions are met.
+   *
+   * @param currentTime the current system timestamp
+   * @return true if realignment was attempted
+   */
+  private boolean tryAutoRealign(double currentTime) {
+
+    if (!LocalizationFusionConstants.AutoRealignConstants.ENABLED
+        || !DriverStation.isTeleopEnabled()) {
+      return false;
+    }
+
+    // Check cooldown period
+    if (currentTime - lastAutoRealignTime
+        < LocalizationFusionConstants.AutoRealignConstants.COOLDOWN) {
+      return false;
+    }
+
+    // Get current poses
+    Pose2d questPose = oculusSource.getCurrentPose();
+    Pose2d tagPose = tagSource.getCurrentPose();
+
+    if (questPose == null || tagPose == null) {
+      lastAutoRealignTime = currentTime; // Rate limit so we arent dumping calls
+      return false;
+    }
+
+    // Verify stability
+    if (!checkStability(questPose, currentTime)) {
+      lastAutoRealignTime = currentTime; // Rate limit so we arent dumping calls
+      return false;
+    }
+
+    // Check pose error
+    double poseError = questPose.getTranslation().getDistance(tagPose.getTranslation());
+    if (poseError > LocalizationFusionConstants.AutoRealignConstants.THRESHOLD) {
+      String message = String.format("Auto-realignment triggered (error: %.2fm)", poseError);
+      Logger.recordOutput("LocalizationFusion/Event", message);
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+              .withTitle("Auto Realignment")
+              .withDescription(message)
+              .withDisplaySeconds(3.0));
+
+      if (resetToPose(tagPose)) {
+        lastAutoRealignTime = currentTime; // Rate limit so we arent dumping calls
+        state.transitionTo(LocalizationState.State.RESETTING);
+        resetStartTime = currentTime;
+        // Reset stability tracking after realignment
+        stabilityStartTime = 0.0;
+        stabilityStartPose = null;
+        return true;
+      }
+    } else {
+      lastAutoRealignTime = currentTime; // Rate limit so we arent dumping calls
+      Logger.recordOutput(
+          "LocalizationFusion/Event",
+          String.format("Auto-realignment skipped! (error: %.2fm)", poseError));
+    }
+
+    return false;
+  }
+
+  /**
    * Attempts to reset the Quest pose to match a target pose.
    *
    * @param pose The target pose to reset to
@@ -946,6 +1025,36 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   }
 
   // -------------------- State Management Helpers --------------------
+  /**
+   * Checks if the robot has been stable (minimal pose change) for the required time period.
+   *
+   * @param currentPose the current robot pose
+   * @param currentTime the current system timestamp
+   * @return true if the robot has been stable for the required duration
+   */
+  private boolean checkStability(Pose2d currentPose, double currentTime) {
+    // Start stability check if not already started
+    if (stabilityStartTime == 0.0) {
+      stabilityStartTime = currentTime;
+      stabilityStartPose = currentPose;
+      return false;
+    }
+
+    // Check if we've moved too much since starting stability check
+    double poseChange =
+        currentPose.getTranslation().getDistance(stabilityStartPose.getTranslation());
+    if (poseChange > LocalizationFusionConstants.AutoRealignConstants.MAX_MOVEMENT) {
+      // Reset stability check
+      stabilityStartTime = currentTime;
+      stabilityStartPose = currentPose;
+      return false;
+    }
+
+    // Check if we've been stable long enough
+    return (currentTime - stabilityStartTime)
+        >= LocalizationFusionConstants.AutoRealignConstants.STABILITY_TIME;
+  }
+
   /** Updates the stored auto selection and initiates reset if needed */
   private void updateAutoSelection() {
     String selectedAuto = autoChooser.get().getName();
@@ -1069,7 +1178,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
                 .withTitle("Localization Emergency")
                 .withDescription(
                     "Localization system entered emergency state - Check vision systems")
-                .withDisplaySeconds(10.0));
+                .withDisplaySeconds(3.0));
         break;
       case RESETTING:
         Elastic.sendAlert(
@@ -1095,7 +1204,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
                 .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
                 .withTitle("Using Backup Tracking")
                 .withDescription("Switched to AprilTag-based tracking")
-                .withDisplaySeconds(10.0));
+                .withDisplaySeconds(3.0));
         break;
     }
   }

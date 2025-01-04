@@ -41,6 +41,29 @@ public class LocalizationFusionConstants {
   }
 
   /**
+   * Constants related to the auto-realignment feature for correcting Quest drift using AprilTags.
+   * This system monitors robot stability and pose error to trigger automatic realignments when the
+   * robot is stationary and significant drift is detected.
+   */
+  @UtilityClass
+  public class AutoRealignConstants {
+    /** Whether auto-realignment should be enabled. */
+    public static final boolean ENABLED = true;
+
+    /** Threshold for auto-realignment when pose error exceeds this value (meters). */
+    public static final double THRESHOLD = 0.1;
+
+    /** Maximum pose change over stability period to be considered stable (meters). */
+    public static final double MAX_MOVEMENT = 0.05;
+
+    /** Time robot must be stable before realigning (seconds). */
+    public static final double STABILITY_TIME = 1.0;
+
+    /** Minimum time between auto-realignments (seconds). */
+    public static final double COOLDOWN = 10.0;
+  }
+
+  /**
    * Constants related to timing and update intervals. Defines various timeouts, intervals, and
    * timing windows used in the localization system.
    */
