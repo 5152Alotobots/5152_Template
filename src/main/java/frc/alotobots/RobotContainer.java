@@ -26,6 +26,7 @@ import frc.alotobots.library.subsystems.swervedrive.commands.*;
 import frc.alotobots.library.subsystems.swervedrive.io.*;
 import frc.alotobots.library.subsystems.swervedrive.util.PathPlannerManager;
 import frc.alotobots.library.subsystems.vision.localizationfusion.LocalizationFusion;
+import frc.alotobots.library.subsystems.vision.localizationfusion.commands.RequestPositionResetViaTags;
 import frc.alotobots.library.subsystems.vision.oculus.OculusSubsystem;
 import frc.alotobots.library.subsystems.vision.oculus.io.*;
 import frc.alotobots.library.subsystems.vision.oculus.util.OculusPoseSource;
@@ -179,8 +180,7 @@ public class RobotContainer {
     pathfindToBestObjectButton.onTrue(
         new PathfindToBestObject(
             objectDetectionSubsystem, swerveDriveSubsystem, pathPlannerManager, NOTE));
-    testButton.onTrue(
-        localizationFusion.runOnce(localizationFusion::requestResetOculusPoseViaAprilTags));
+    testButton.onTrue(new RequestPositionResetViaTags(localizationFusion));
   }
 
   public Command getAutonomousCommand() {
