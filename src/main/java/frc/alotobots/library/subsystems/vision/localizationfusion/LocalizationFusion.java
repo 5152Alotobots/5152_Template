@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.subsystems.vision.oculus.util.OculusPoseSource;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.util.AprilTagPoseSource;
+import frc.alotobots.util.Elastic;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -111,8 +112,6 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
   /** Indicates if initial pose validation is complete. */
   private boolean initialPoseValidated = false;
-
-  
 
   // -------------------- Constructor --------------------
   /**
@@ -229,6 +228,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (resetStartTime > 0 && Timer.getTimestamp() - resetStartTime > RESET_TIMEOUT) {
       Logger.recordOutput(
           "LocalizationFusion/Event", "Reset sequence timed out - switching to emergency mode");
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+              .withTitle("Reset Failed")
+              .withDescription("Reset sequence timed out - Check vision systems")
+              .withDisplaySeconds(10.0));
       resetStartTime = 0.0;
       resetQuestInitialization();
       state.transitionTo(LocalizationState.State.EMERGENCY);
@@ -337,12 +342,24 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         Logger.recordOutput(
             "LocalizationFusion/Event",
             "Quest Reconnected; Pose Validated - maintaining Quest tracking");
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                .withTitle("Quest Reconnected")
+                .withDescription("Quest tracking restored - Pose validated")
+                .withDisplaySeconds(3.0));
         return;
       } else {
         // Re-init as we couldn't validate pose
         Logger.recordOutput(
             "LocalizationFusion/Event",
             "Quest Reconnected; Pose Failed to Validate - reinitializing Quest tracking");
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                .withTitle("Quest Validation Failed")
+                .withDescription("Quest reconnected but pose invalid - Reinitializing")
+                .withDisplaySeconds(3.0));
         handleQuestInitialization();
       }
     }
@@ -382,6 +399,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         lastQuestDisconnectTime = Timer.getTimestamp();
         hadPreviousCalibration = true;
         lastQuestInitPose = oculusSource.getCurrentPose();
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+                .withTitle("Quest Disconnected")
+                .withDescription("Quest tracking system disconnected - Check USB connection")
+                .withDisplaySeconds(10.0));
       }
       resetQuestInitialization();
       return;
@@ -417,12 +440,24 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (consecutiveValidQuestUpdates >= MIN_QUEST_VALID_UPDATES
         && initDuration >= QUEST_INIT_TIMEOUT) {
       questInitialized = true;
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+              .withTitle("Quest Initialized")
+              .withDescription("Quest tracking system successfully initialized")
+              .withDisplaySeconds(3.0));
       Pose2d referencePose = getValidReferencePose();
       if (referencePose != null && resetToPose(referencePose)) {
         state.transitionTo(LocalizationState.State.RESETTING);
         resetStartTime = Timer.getTimestamp();
       }
     } else if (initDuration > QUEST_INIT_TIMEOUT * QUEST_INIT_GRACE_MULTIPLIER) {
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+              .withTitle("Quest Init Failed")
+              .withDescription("Quest initialization timed out - Check headset")
+              .withDisplaySeconds(10.0));
       resetQuestInitialization();
     }
   }
@@ -433,6 +468,14 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
    */
   private void handleTagInitialization() {
     if (!tagSource.isConnected()) {
+      if (tagInitialized) {
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+                .withTitle("AprilTag System Disconnected")
+                .withDescription("AprilTag tracking system disconnected - Check camera connection")
+                .withDisplaySeconds(10.0));
+      }
       resetTagInitialization();
       return;
     }
@@ -458,10 +501,23 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     double initDuration = Timer.getTimestamp() - tagInitStartTime;
     if (consecutiveValidTagUpdates >= MIN_TAG_VALID_UPDATES && initDuration >= TAG_INIT_TIMEOUT) {
       tagInitialized = true;
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+              .withTitle("AprilTag System Ready")
+              .withDescription("AprilTag tracking system successfully initialized")
+              .withDisplaySeconds(3.0));
+
       if (!questInitialized || !shouldPreferQuest()) {
         state.transitionTo(LocalizationState.State.TAG_BACKUP);
       }
     } else if (initDuration > TAG_INIT_TIMEOUT * QUEST_INIT_GRACE_MULTIPLIER) {
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+              .withTitle("AprilTag Init Failed")
+              .withDescription("AprilTag initialization timed out - Check camera view of tags")
+              .withDisplaySeconds(3.0));
       resetTagInitialization();
     }
   }
@@ -489,6 +545,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (isMidMatchReboot()) {
       Logger.recordOutput(
           "LocalizationFusion/Event", "Mid-match reboot detected - maintaining Quest tracking");
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+              .withTitle("Mid-Match Reboot")
+              .withDescription("Maintaining Quest tracking after reboot")
+              .withDisplaySeconds(3.0));
       // Skip initialization and trust Quest's maintained tracking
       questInitialized = true;
       hadPreviousCalibration = true;
@@ -515,6 +577,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
     if (!wasConnected && isConnected) {
       if (!hadInitialConnection) {
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                .withTitle("Initial Connection")
+                .withDescription("Driver Station connected - Starting pose validation")
+                .withDisplaySeconds(3.0));
         Pose2d tagPose = tagSource.getCurrentPose();
         if (tagPose != null) {
           lastValidatedPose = tagPose;
@@ -525,6 +593,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
       } else {
         Logger.recordOutput(
             "LocalizationFusion/Event", "DriverStation reconnected - maintaining current pose");
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                .withTitle("Connection Restored")
+                .withDescription("Driver Station reconnected - Maintaining current pose")
+                .withDisplaySeconds(3.0));
       }
     }
 
@@ -554,6 +628,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
             Logger.recordOutput(
                 "LocalizationFusion/Event",
                 "Initial pose validated after stability period - initiating reset");
+            Elastic.sendAlert(
+                new Elastic.ElasticNotification()
+                    .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                    .withTitle("Initial Pose Validated")
+                    .withDescription("Robot position confirmed stable - Starting tracking")
+                    .withDisplaySeconds(3.0));
             if (resetToPose(currentTagPose)) {
               state.transitionTo(LocalizationState.State.RESETTING);
               initialPoseValidated = true;
@@ -562,6 +642,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
             Logger.recordOutput(
                 "LocalizationFusion/Event",
                 "Pose changed during validation - restarting stability timer");
+            Elastic.sendAlert(
+                new Elastic.ElasticNotification()
+                    .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                    .withTitle("Position Changed")
+                    .withDescription("Robot moved during validation - Restarting stability check")
+                    .withDisplaySeconds(3.0));
             initialPoseValidationStartTime = Timer.getTimestamp();
             lastValidatedPose = currentTagPose;
           }
@@ -581,6 +667,14 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
             String.format(
                 "Significant pose change detected while disabled (%.2fm) - recalibrating",
                 poseChange));
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                .withTitle("Position Changed")
+                .withDescription(
+                    String.format(
+                        "Robot moved %.2f meters while disabled - Recalibrating", poseChange))
+                .withDisplaySeconds(3.0));
 
         initialPoseValidationStartTime = Timer.getTimestamp();
         lastValidatedPose = currentTagPose;
@@ -677,6 +771,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (currentTagPose == null) {
       Logger.recordOutput(
           "LocalizationFusion/Event", "Manual reset failed - no AprilTag pose available");
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+              .withTitle("Reset Failed")
+              .withDescription("Manual reset failed - No AprilTags visible")
+              .withDisplaySeconds(3.0));
       return false;
     }
 
@@ -699,6 +799,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   public boolean requestResetOculusPose(Pose2d targetPose) {
     if (targetPose == null) {
       Logger.recordOutput("LocalizationFusion/Event", "Manual reset failed - null pose provided");
+      Elastic.sendAlert(
+          new Elastic.ElasticNotification()
+              .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+              .withTitle("Reset Failed")
+              .withDescription("Manual reset failed - Invalid pose provided")
+              .withDisplaySeconds(3.0));
       return false;
     }
 
@@ -785,5 +891,44 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     Logger.recordOutput(
         "LocalizationFusion/StateTransition",
         String.format("State transition: %s -> %s", from.name(), to.name()));
+
+    // Send appropriate notifications based on state transitions
+    switch (to) {
+      case EMERGENCY:
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.ERROR)
+                .withTitle("Localization Emergency")
+                .withDescription(
+                    "Localization system entered emergency state - Check vision systems")
+                .withDisplaySeconds(10.0));
+        break;
+      case RESETTING:
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                .withTitle("Localization Reset")
+                .withDescription("Realigning Quest and AprilTag poses")
+                .withDisplaySeconds(3.0));
+        break;
+      case QUEST_PRIMARY:
+        if (from == LocalizationState.State.TAG_BACKUP) {
+          Elastic.sendAlert(
+              new Elastic.ElasticNotification()
+                  .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                  .withTitle("Quest Tracking Restored")
+                  .withDescription("Switched back to primary Quest-based tracking")
+                  .withDisplaySeconds(3.0));
+        }
+        break;
+      case TAG_BACKUP:
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                .withTitle("Using Backup Tracking")
+                .withDescription("Switched to AprilTag-based tracking")
+                .withDisplaySeconds(10.0));
+        break;
+    }
   }
 }
