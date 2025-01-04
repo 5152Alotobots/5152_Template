@@ -16,16 +16,21 @@ import static frc.alotobots.library.subsystems.vision.localizationfusion.Localiz
 import static frc.alotobots.library.subsystems.vision.localizationfusion.LocalizationFusionConstants.Timing.*;
 import static frc.alotobots.library.subsystems.vision.localizationfusion.LocalizationFusionConstants.ValidationThresholds.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.alotobots.library.subsystems.vision.oculus.util.OculusPoseSource;
 import frc.alotobots.library.subsystems.vision.photonvision.apriltag.util.AprilTagPoseSource;
 import frc.alotobots.util.Elastic;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * The LocalizationFusion subsystem manages robot pose estimation by fusing data from multiple
@@ -47,6 +52,9 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
   /** State machine managing transitions between different localization states. */
   private final LocalizationState state;
+
+  /** Auto chooser for fallback pose setting */
+  LoggedDashboardChooser<Command> autoChooser;
 
   /** Tab for drivers to ensure readiness */
   private final ShuffleboardTab prematchTab = Shuffleboard.getTab("Prematch");
@@ -113,6 +121,15 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   /** Indicates if initial pose validation is complete. */
   private boolean initialPoseValidated = false;
 
+  /** Stores the previous and current auto selection state for comparison */
+  private String previousAutoSelection = "";
+
+  private String currentAutoSelection = "";
+
+  // Separate flags for pose validation sources
+  private boolean hasTagValidatedPose = false; // Set only when we get AprilTag validation
+  private boolean hasAutoPose = false; // Set when we accept an auto pose
+
   // -------------------- Constructor --------------------
   /**
    * Creates a new LocalizationFusion subsystem.
@@ -124,10 +141,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   public LocalizationFusion(
       PoseVisionConsumer poseConsumer,
       OculusPoseSource oculusSource,
-      AprilTagPoseSource aprilTagSource) {
+      AprilTagPoseSource aprilTagSource,
+      LoggedDashboardChooser<Command> autoChooser) {
     this.poseConsumer = poseConsumer;
     this.oculusSource = oculusSource;
     this.tagSource = aprilTagSource;
+    this.autoChooser = autoChooser;
     this.state = new LocalizationState(this);
     initializeConnectionState();
     setupShuffleboardLogging();
@@ -180,6 +199,46 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   }
 
   /**
+   * Gets the starting pose from the currently selected autonomous routine in PathPlanner.
+   *
+   * @return The starting Pose2d from the selected auto, or null if none available
+   */
+  private Pose2d getAutoStartingPose() {
+    try {
+      String autoName = autoChooser.getSendableChooser().getSelected();
+      if (autoName.equals("None")) {
+        Logger.recordOutput("LocalizationFusion/Event", "No auto selected");
+        return null;
+      }
+
+      Logger.recordOutput("LocalizationFusion/SelectedAuto", autoName);
+
+      var autoPath = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+      if (autoPath.isEmpty()) {
+        Logger.recordOutput("LocalizationFusion/Event", "No paths found in auto: " + autoName);
+        return null;
+      }
+
+      var startPose = autoPath.get(0).getStartingHolonomicPose();
+      if (startPose.isPresent()) {
+        if (AutoBuilder.shouldFlip()) {
+          return FlippingUtil.flipFieldPose(startPose.get());
+        } else {
+          return startPose.get();
+        }
+      } else {
+        Logger.recordOutput(
+            "LocalizationFusion/Event", "No starting pose defined in auto: " + autoName);
+        return null;
+      }
+    } catch (Exception e) {
+      Logger.recordOutput(
+          "LocalizationFusion/Event", "Error getting auto starting pose: " + e.getMessage());
+      return null;
+    }
+  }
+
+  /**
    * Periodic update method called by the command scheduler. Handles system state updates, source
    * initialization, and pose processing.
    */
@@ -187,6 +246,8 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
   public void periodic() {
     logSystemStatus();
     handleDriverStationConnection();
+    updateAutoSelection(); // Automatically set pose to auto path start pose if we don't have any
+    // other valid poses
 
     // Handle initialization of both sources
     if (!questInitialized && oculusSource.isConnected()) {
@@ -240,8 +301,21 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
       return;
     }
 
+    // If we have no tag pose, but Quest is connected and initialized
     Pose2d tagPose = tagSource.getCurrentPose();
     if (tagPose == null) {
+      // If this was triggered by auto selection and Quest is ready,
+      // we can proceed without tag validation
+      if (!hasTagValidatedPose && oculusSource.isConnected() && !isResetInProgress()) {
+        Pose2d questPose = oculusSource.getCurrentPose();
+        if (questPose != null) {
+          resetStartTime = 0.0;
+          lastQuestUpdate = Timer.getTimestamp();
+          state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
+          return;
+        }
+      }
+
       if (resetStartTime == 0.0) {
         resetStartTime = Timer.getTimestamp();
       }
@@ -265,6 +339,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (poseError <= INIT_VALIDATION_THRESHOLD) {
       resetStartTime = 0.0;
       lastQuestUpdate = Timer.getTimestamp();
+      hasTagValidatedPose = true; // Now we have tag validation
       state.transitionTo(LocalizationState.State.QUEST_PRIMARY);
     }
   }
@@ -277,11 +352,28 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     if (tagSource.isConnected()) {
       Pose2d tagPose = tagSource.getCurrentPose();
       if (tagPose != null) {
+        Logger.recordOutput(
+            "LocalizationFusion/Event",
+            "Valid AprilTag pose detected in EMERGENCY state - attempting recovery");
+
         if (oculusSource.isConnected() && resetToPose(tagPose)) {
           resetStartTime = Timer.getTimestamp();
           state.transitionTo(LocalizationState.State.RESETTING);
+          Elastic.sendAlert(
+              new Elastic.ElasticNotification()
+                  .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                  .withTitle("Recovery Attempt")
+                  .withDescription("Valid AprilTags found - Attempting to restore tracking")
+                  .withDisplaySeconds(3.0));
         } else {
+          // If Quest isn't available, fall back to tag-only tracking
           state.transitionTo(LocalizationState.State.TAG_BACKUP);
+          Elastic.sendAlert(
+              new Elastic.ElasticNotification()
+                  .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
+                  .withTitle("Partial Recovery")
+                  .withDescription("Switching to AprilTag-only tracking")
+                  .withDisplaySeconds(3.0));
         }
       }
     }
@@ -621,6 +713,19 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     }
 
     Pose2d currentTagPose = tagSource.getCurrentPose();
+
+    // If we're in EMERGENCY state and we see tags, attempt to recover
+    if (state.getCurrentState() == LocalizationState.State.EMERGENCY && currentTagPose != null) {
+      Logger.recordOutput(
+          "LocalizationFusion/Event",
+          "Tags detected while in EMERGENCY state during disabled - attempting recovery");
+      if (resetToPose(currentTagPose)) {
+        state.transitionTo(LocalizationState.State.RESETTING);
+        resetStartTime = Timer.getTimestamp();
+        return;
+      }
+    }
+
     if (currentTagPose == null) return;
 
     if (!initialPoseValidated) {
@@ -641,6 +746,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
                     .withDisplaySeconds(3.0));
             if (resetToPose(currentTagPose)) {
               state.transitionTo(LocalizationState.State.RESETTING);
+              resetStartTime = Timer.getTimestamp();
               initialPoseValidated = true;
             }
           } else {
@@ -685,6 +791,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         initialPoseValidationStartTime = Timer.getTimestamp();
         lastValidatedPose = currentTagPose;
         initialPoseValidated = false;
+
+        // Attempt immediate reset with new pose
+        if (resetToPose(currentTagPose)) {
+          state.transitionTo(LocalizationState.State.RESETTING);
+          resetStartTime = Timer.getTimestamp();
+        }
       }
     }
 
@@ -709,12 +821,19 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
     }
 
     double poseError = tagPose.getTranslation().getDistance(pose.getTranslation());
+    boolean isValid;
 
     if (!questInitialized) {
-      return poseError <= INIT_VALIDATION_THRESHOLD;
+      isValid = poseError <= INIT_VALIDATION_THRESHOLD;
+    } else {
+      isValid = poseError <= APRILTAG_VALIDATION_THRESHOLD;
     }
 
-    return poseError <= APRILTAG_VALIDATION_THRESHOLD;
+    if (isValid) {
+      hasTagValidatedPose = true; // Update this instead of hasValidPoseOffset
+    }
+
+    return isValid;
   }
 
   /**
@@ -791,6 +910,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         "Manual reset requested using AprilTag pose - initiating pose reset");
     if (resetToPose(currentTagPose)) {
       state.transitionTo(LocalizationState.State.RESETTING);
+      hasTagValidatedPose = true;
       return true;
     }
     return false;
@@ -819,12 +939,54 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         "Manual reset requested with custom pose - initiating pose reset");
     if (resetToPose(targetPose)) {
       state.transitionTo(LocalizationState.State.RESETTING);
+      hasTagValidatedPose = true; // Set on manual reset
       return true;
     }
     return false;
   }
 
   // -------------------- State Management Helpers --------------------
+  /** Updates the stored auto selection and initiates reset if needed */
+  private void updateAutoSelection() {
+    String selectedAuto = autoChooser.get().getName();
+    currentAutoSelection = (selectedAuto != null) ? selectedAuto : "";
+
+    // Update pose if either:
+    // 1. We don't have any pose source (!hasTagValidatedPose && !hasAutoPose)
+    // 2. We only have an auto pose (!hasTagValidatedPose && hasAutoPose) and auto changed
+    if (!hasTagValidatedPose
+        && (!hasAutoPose || !currentAutoSelection.equals(previousAutoSelection))) {
+
+      Logger.recordOutput(
+          "LocalizationFusion/Event",
+          "Auto selection changed from '"
+              + previousAutoSelection
+              + "' to '"
+              + currentAutoSelection
+              + "'");
+
+      Pose2d autoPose = getAutoStartingPose();
+      if (autoPose != null) {
+        Logger.recordOutput(
+            "LocalizationFusion/Event", "Updating pose to new auto starting position");
+        Elastic.sendAlert(
+            new Elastic.ElasticNotification()
+                .withLevel(Elastic.ElasticNotification.NotificationLevel.INFO)
+                .withTitle("Auto Selection Changed")
+                .withDescription("Updating robot position for new auto: " + currentAutoSelection)
+                .withDisplaySeconds(3.0));
+
+        if (resetToPose(autoPose)) {
+          state.transitionTo(LocalizationState.State.RESETTING);
+          lastValidatedPose = autoPose;
+          hasAutoPose = true;
+        }
+      }
+    }
+
+    previousAutoSelection = currentAutoSelection;
+  }
+
   /** Resets all Quest initialization state variables. */
   private void resetQuestInitialization() {
     questInitStartTime = 0.0;

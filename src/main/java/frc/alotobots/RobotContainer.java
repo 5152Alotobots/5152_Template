@@ -48,9 +48,10 @@ public class RobotContainer {
   private final ObjectDetectionSubsystem objectDetectionSubsystem;
   private final BlingSubsystem blingSubsystem;
   private final PathPlannerManager pathPlannerManager;
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() {
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot hardware initialization
@@ -61,6 +62,8 @@ public class RobotContainer {
                 new ModuleIOTalonFX(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_LEFT.index),
                 new ModuleIOTalonFX(ModulePosition.BACK_RIGHT.index));
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem);
+        configureAutoChooser();
 
         oculusSubsystem = new OculusSubsystem(new OculusIOReal());
         aprilTagSubsystem =
@@ -74,8 +77,10 @@ public class RobotContainer {
 
         localizationFusion =
             new LocalizationFusion(
-                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
-        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+                swerveDriveSubsystem::addVisionMeasurement,
+                oculusPoseSource,
+                aprilTagPoseSource,
+                autoChooser);
 
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(
@@ -93,6 +98,8 @@ public class RobotContainer {
                 new ModuleIOSim(ModulePosition.FRONT_RIGHT.index),
                 new ModuleIOSim(ModulePosition.BACK_LEFT.index),
                 new ModuleIOSim(ModulePosition.BACK_RIGHT.index));
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem);
+        configureAutoChooser();
 
         oculusSubsystem = new OculusSubsystem(new OculusIOSim());
         aprilTagSubsystem =
@@ -107,8 +114,10 @@ public class RobotContainer {
         aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
         localizationFusion =
             new LocalizationFusion(
-                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
-        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+                swerveDriveSubsystem::addVisionMeasurement,
+                oculusPoseSource,
+                aprilTagPoseSource,
+                autoChooser);
 
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
@@ -124,6 +133,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem);
+        configureAutoChooser();
 
         oculusSubsystem = new OculusSubsystem(new OculusIO() {});
         aprilTagSubsystem = new AprilTagSubsystem(new AprilTagIO() {}, new AprilTagIO() {});
@@ -133,15 +144,36 @@ public class RobotContainer {
         aprilTagPoseSource = new AprilTagPoseSource(aprilTagSubsystem);
         localizationFusion =
             new LocalizationFusion(
-                swerveDriveSubsystem::addVisionMeasurement, oculusPoseSource, aprilTagPoseSource);
-        pathPlannerManager = new PathPlannerManager(swerveDriveSubsystem, localizationFusion);
+                swerveDriveSubsystem::addVisionMeasurement,
+                oculusPoseSource,
+                aprilTagPoseSource,
+                autoChooser);
 
         objectDetectionSubsystem =
             new ObjectDetectionSubsystem(swerveDriveSubsystem::getPose, new ObjectDetectionIO() {});
         blingSubsystem = new BlingSubsystem(new BlingIO() {});
         break;
     }
+    configureDefaultCommands();
+    configureLogicCommands();
+  }
 
+  private void configureDefaultCommands() {
+    swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
+    blingSubsystem.setDefaultCommand(
+        new NoAllianceWaiting(blingSubsystem).andThen(new SetToAllianceColor(blingSubsystem)));
+  }
+
+  private void configureLogicCommands() {
+    driveFacingBestObjectButton.toggleOnTrue(
+        new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
+    pathfindToBestObjectButton.onTrue(
+        new PathfindToBestObject(
+            objectDetectionSubsystem, swerveDriveSubsystem, pathPlannerManager, NOTE));
+    testButton.onTrue(new RequestPositionResetViaTags(localizationFusion).withTimeout(1));
+  }
+
+  private void configureAutoChooser() {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -163,24 +195,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)",
         swerveDriveSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    configureDefaultCommands();
-    configureLogicCommands();
-  }
-
-  private void configureDefaultCommands() {
-    swerveDriveSubsystem.setDefaultCommand(new DefaultDrive(swerveDriveSubsystem).getCommand());
-    blingSubsystem.setDefaultCommand(
-        new NoAllianceWaiting(blingSubsystem).andThen(new SetToAllianceColor(blingSubsystem)));
-  }
-
-  private void configureLogicCommands() {
-    driveFacingBestObjectButton.toggleOnTrue(
-        new DriveFacingBestObject(objectDetectionSubsystem, swerveDriveSubsystem, NOTE));
-    pathfindToBestObjectButton.onTrue(
-        new PathfindToBestObject(
-            objectDetectionSubsystem, swerveDriveSubsystem, pathPlannerManager, NOTE));
-    testButton.onTrue(new RequestPositionResetViaTags(localizationFusion));
   }
 
   public Command getAutonomousCommand() {

@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.alotobots.AutoNamedCommands;
 import frc.alotobots.Constants;
 import frc.alotobots.library.subsystems.swervedrive.SwerveDriveSubsystem;
-import frc.alotobots.library.subsystems.vision.localizationfusion.LocalizationFusion;
 import frc.alotobots.util.LocalADStarAK;
 import org.littletonrobotics.junction.Logger;
 
@@ -33,18 +32,14 @@ import org.littletonrobotics.junction.Logger;
  */
 public class PathPlannerManager {
   private final SwerveDriveSubsystem driveSubsystem;
-  private final LocalizationFusion localizationFusion;
 
   /**
    * Creates a new PathPlannerManager.
    *
    * @param driveSubsystem The swerve drive subsystem to control
-   * @param localizationFusion The localizationFusion instance to be able to reset oculus pose
    */
-  public PathPlannerManager(
-      SwerveDriveSubsystem driveSubsystem, LocalizationFusion localizationFusion) {
+  public PathPlannerManager(SwerveDriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
-    this.localizationFusion = localizationFusion;
     configurePathPlanner();
   }
 
