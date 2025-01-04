@@ -39,8 +39,8 @@ public class RequestPositionResetViaTags extends Command {
     return reset;
   }
 
-    @Override
-    public boolean runsWhenDisabled() {
-        return true;
-    }
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
+  }
 }
