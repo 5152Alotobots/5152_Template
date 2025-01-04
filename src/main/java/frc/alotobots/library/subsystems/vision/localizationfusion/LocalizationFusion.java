@@ -611,10 +611,15 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
 
   // -------------------- Validation Methods --------------------
   /**
-   * Handles pose validation during the disabled state. Monitors pose stability and triggers
-   * recalibration if significant changes are detected.
+   * Handles pose validation during the disabled state. Only performs validation and resets before
+   * the match starts to avoid disrupting auto-to-teleop transitions.
    */
   private void handleDisabledPoseValidation() {
+    // Skip disabled validation if match has started
+    if (DriverStation.getMatchTime() > 0) {
+      return;
+    }
+
     Pose2d currentTagPose = tagSource.getCurrentPose();
     if (currentTagPose == null) return;
 
@@ -657,6 +662,7 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
       return;
     }
 
+    // Only check for pose changes requiring recalibration before match starts
     if (lastValidatedPose != null) {
       double poseChange =
           currentTagPose.getTranslation().getDistance(lastValidatedPose.getTranslation());
@@ -665,12 +671,12 @@ public class LocalizationFusion extends SubsystemBase implements StateTransition
         Logger.recordOutput(
             "LocalizationFusion/Event",
             String.format(
-                "Significant pose change detected while disabled (%.2fm) - recalibrating",
+                "Significant pre-match pose change detected while disabled (%.2fm) - recalibrating",
                 poseChange));
         Elastic.sendAlert(
             new Elastic.ElasticNotification()
                 .withLevel(Elastic.ElasticNotification.NotificationLevel.WARNING)
-                .withTitle("Position Changed")
+                .withTitle("Pre-Match Position Changed")
                 .withDescription(
                     String.format(
                         "Robot moved %.2f meters while disabled - Recalibrating", poseChange))
