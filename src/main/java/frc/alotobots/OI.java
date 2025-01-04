@@ -80,4 +80,10 @@ public class OI {
 
   /** Button for activating the pathfind to best object command. */
   public static Trigger pathfindToBestObjectButton = driverController.b();
+
+  /** A temporary test button. */
+  public static Trigger testButton = driverController.y();
+
+  /** A temporary test button. */
+  public static Trigger testButton2 = driverController.x();
 }

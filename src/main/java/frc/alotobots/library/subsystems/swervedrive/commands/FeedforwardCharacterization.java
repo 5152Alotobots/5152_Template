@@ -51,7 +51,7 @@ public class FeedforwardCharacterization extends Command {
     velocitySamples.clear();
     voltageSamples.clear();
     characterizationStarted = false;
-    startTime = Timer.getFPGATimestamp();
+    startTime = Timer.getTimestamp();
     timer.restart();
   }
 

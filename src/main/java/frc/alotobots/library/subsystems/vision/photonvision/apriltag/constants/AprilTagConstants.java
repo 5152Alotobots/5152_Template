@@ -65,4 +65,7 @@ public class AprilTagConstants {
   // Basic Filtering
   public static double MAX_AMBIGUITY = 0.3;
   public static double MAX_Z_ERROR = 0.75;
+
+  /** Time after which a pose is considered stale (seconds) */
+  public static final double POSE_TIMEOUT = 0.06;
 }

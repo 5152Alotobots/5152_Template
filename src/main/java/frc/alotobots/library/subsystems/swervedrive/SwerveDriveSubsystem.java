@@ -14,10 +14,7 @@ package frc.alotobots.library.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.DriveFeedforwards;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
@@ -34,21 +31,17 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.alotobots.AutoNamedCommands;
 import frc.alotobots.Constants;
 import frc.alotobots.Constants.Mode;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIO;
 import frc.alotobots.library.subsystems.swervedrive.io.GyroIOInputsAutoLogged;
 import frc.alotobots.library.subsystems.swervedrive.io.ModuleIO;
-import frc.alotobots.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -133,28 +126,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     // Initialize and start odometry thread
     PhoenixOdometryThread.getInstance().start();
-
-    // Configure AutoBuilder for PathPlanner
-    AutoBuilder.configure(
-        this::getPose,
-        this::setPose,
-        this::getChassisSpeeds,
-        this::runVelocity,
-        Constants.tunerConstants.getHolonomicDriveController(),
-        Constants.tunerConstants.getPathPlannerConfig(),
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-        this);
-    AutoNamedCommands.setupNamedCommands(); // Setup the named commands
-    Pathfinding.setPathfinder(new LocalADStarAK());
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
 
     setpointGenerator =
         new SwerveSetpointGenerator(
@@ -331,7 +302,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    * @return Current chassis speeds
    */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -420,17 +391,5 @@ public class SwerveDriveSubsystem extends SubsystemBase {
    */
   public double getMaxAngularSpeedRadPerSec() {
     return getMaxLinearSpeedMetersPerSec() / Constants.tunerConstants.getDriveBaseRadius();
-  }
-
-  /**
-   * Creates a pathfinding command to the specified pose.
-   *
-   * @param target Target pose
-   * @param velocity Target velocity
-   * @return Pathfinding command
-   */
-  public Command getPathFinderCommand(Pose2d target, LinearVelocity velocity) {
-    return AutoBuilder.pathfindToPose(
-        target, Constants.tunerConstants.getPathfindingConstraints(), velocity);
   }
 }
