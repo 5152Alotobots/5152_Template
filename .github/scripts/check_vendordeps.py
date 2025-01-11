@@ -4,6 +4,7 @@ from pathlib import Path
 import os
 from typing import Dict, Optional
 from packaging import version
+import sys
 
 class VendorDepChecker:
     def __init__(self):
