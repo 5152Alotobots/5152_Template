@@ -197,9 +197,9 @@ if __name__ == "__main__":
 
     # Set output for GitHub Actions
     if updates:
-        print("\nFound updates:")
+        print("\nFound updates:", file=sys.stderr)
         for update in updates:
-            print(f"- {update['name']}: {update['current']} -> {update['latest']}")
+            print(f"- {update['name']}: {update['current']} -> {update['latest']}", file=sys.stderr)
 
         # GitHub Actions output syntax
         result = {
@@ -208,7 +208,7 @@ if __name__ == "__main__":
         }
         print(json.dumps(result))
     else:
-        print("\nNo updates found.")
+        print("\nNo updates found.", file=sys.stderr)
         result = {
             "has_updates": False,
             "updates": []
