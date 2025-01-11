@@ -129,21 +129,22 @@ class VendorDepChecker:
 
     def is_newer_version(self, current: Dict, latest: Dict) -> bool:
         """Compare versions, considering betas as newer than releases."""
+        import sys
         current_ver = self.parse_version(current['version'])
         latest_ver = self.parse_version(latest['version'])
 
-        print(f"\nComparing versions:")
-        print(f"Current: {current['version']} (Beta: {current['is_beta']}) -> Parsed as: {current_ver}")
-        print(f"Latest: {latest['version']} (Beta: {latest['is_beta']}) -> Parsed as: {latest_ver}")
+        print(f"\nComparing versions:", file=sys.stderr)
+        print(f"Current: {current['version']} (Beta: {current['is_beta']}) -> Parsed as: {current_ver}", file=sys.stderr)
+        print(f"Latest: {latest['version']} (Beta: {latest['is_beta']}) -> Parsed as: {latest_ver}", file=sys.stderr)
 
         # If versions are equal, prefer beta over stable
         if current_ver == latest_ver:
             result = latest['is_beta'] and not current['is_beta']
-            print(f"Versions equal, checking beta status -> Update needed: {result}")
+            print(f"Versions equal, checking beta status -> Update needed: {result}", file=sys.stderr)
             return result
 
         result = latest_ver > current_ver
-        print(f"Comparing versions -> Update needed: {result}")
+        print(f"Comparing versions -> Update needed: {result}", file=sys.stderr)
         return result
 
     def check_all_updates(self):
