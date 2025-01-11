@@ -41,20 +41,21 @@ class VendorDepChecker:
 
     def get_github_latest(self, repo_url: str, is_wpilib: bool = False) -> Optional[Dict]:
         """Get latest release version from GitHub, including betas."""
+        import sys
         try:
-            print(f"\nChecking releases from: {repo_url}")
+            print(f"\nChecking releases from: {repo_url}", file=sys.stderr)
             response = requests.get(repo_url, headers=self.headers)
             response.raise_for_status()
             releases = response.json()
 
-            print(f"Found {len(releases)} total releases")
+            print(f"Found {len(releases)} total releases", file=sys.stderr)
 
             # For WPILib, filter releases to only include current year
             if is_wpilib:
                 releases = [r for r in releases if '2025' in r['tag_name']]
-                print(f"Found {len(releases)} 2025 releases")
+                print(f"Found {len(releases)} 2025 releases", file=sys.stderr)
                 for r in releases[:5]:  # Show first 5
-                    print(f"Release: {r['name']} (Tag: {r['tag_name']})")
+                    print(f"Release: {r['name']} (Tag: {r['tag_name']})", file=sys.stderr)
 
             # Convert all versions to comparable objects
             parsed_releases = []
@@ -68,9 +69,9 @@ class VendorDepChecker:
                         'is_beta': release.get('prerelease', False) or 'beta' in tag.lower(),
                         'url': release['html_url']
                     })
-                    print(f"Successfully parsed version: {tag} -> {ver}")
+                    print(f"Successfully parsed version: {tag} -> {ver}", file=sys.stderr)
                 except version.InvalidVersion:
-                    print(f"Skipping invalid version: {tag}")
+                    print(f"Skipping invalid version: {tag}", file=sys.stderr)
                     continue
 
             # Sort by version, highest first
@@ -78,17 +79,17 @@ class VendorDepChecker:
 
             if parsed_releases:
                 latest = parsed_releases[0]
-                print(f"\nSelected latest version: {latest['tag']} (Beta: {latest['is_beta']})")
+                print(f"\nSelected latest version: {latest['tag']} (Beta: {latest['is_beta']})", file=sys.stderr)
                 return {
                     'version': latest['tag'],
                     'is_beta': latest['is_beta'],
                     'url': latest['url']
                 }
-            print("No valid releases found")
+            print("No valid releases found", file=sys.stderr)
             return None
 
         except Exception as e:
-            print(f"Error fetching from GitHub: {e}")
+            print(f"Error fetching from GitHub: {e}", file=sys.stderr)
             return None
 
     def get_current_version(self, file_path: Path) -> Dict:
@@ -147,14 +148,15 @@ class VendorDepChecker:
 
     def check_all_updates(self):
         """Check all vendordeps for updates."""
+        import sys
         updates = []
         vendordeps_dir = Path('vendordeps')
 
-        print("Starting dependency check...")
+        print("Starting dependency check...", file=sys.stderr)
 
         # Check all GitHub-based vendordeps (including Phoenix6)
         for name, url in self.github_sources.items():
-            print(f"\nChecking {name}...")
+            print(f"\nChecking {name}...", file=sys.stderr)
 
             if name == 'WPILib':
                 current = self.get_wpilib_current_version()
@@ -162,18 +164,18 @@ class VendorDepChecker:
             else:
                 current_file = next(vendordeps_dir.glob(f"{name}*.json"), None)
                 if not current_file:
-                    print(f"No vendordep file found for {name}")
+                    print(f"No vendordep file found for {name}", file=sys.stderr)
                     continue
-                print(f"Found vendordep file: {current_file}")
+                print(f"Found vendordep file: {current_file}", file=sys.stderr)
                 current = self.get_current_version(current_file)
                 latest = self.get_github_latest(url)
 
             if current and latest:
-                print(f"Current version: {current['version']}")
-                print(f"Latest version: {latest['version']}")
+                print(f"Current version: {current['version']}", file=sys.stderr)
+                print(f"Latest version: {latest['version']}", file=sys.stderr)
 
                 if self.is_newer_version(current, latest):
-                    print(f"Update available for {name}")
+                    print(f"Update available for {name}", file=sys.stderr)
                     updates.append({
                         'name': name,
                         'current': current['version'],
@@ -184,7 +186,7 @@ class VendorDepChecker:
                         'url': latest.get('url')
                     })
             else:
-                print(f"Failed to get version info for {name}")
+                print(f"Failed to get version info for {name}", file=sys.stderr)
 
         return updates
 
