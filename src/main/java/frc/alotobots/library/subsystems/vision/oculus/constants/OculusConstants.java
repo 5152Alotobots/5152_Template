@@ -18,12 +18,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import lombok.experimental.UtilityClass;
 
 /**
  * Constants used by the Oculus Quest navigation subsystem. Contains configuration values for
  * physical setup and operation parameters.
  */
+@UtilityClass
 public class OculusConstants {
+
   /**
    * Transform from the robot center to the headset. Coordinate system: - X: Positive is forwards -
    * Y: Positive is left - Rotation: Positive is counter-clockwise
@@ -43,17 +46,29 @@ public class OculusConstants {
   public static final int MAX_RESET_ATTEMPTS = 3;
 
   /** Timeout threshold for considering Quest disconnected (seconds) */
-  public static final double CONNECTION_TIMEOUT = 0.1;
+  public static final double CONNECTION_TIMEOUT = 0.4;
 
   /**
    * Standard deviations representing how much we "trust" the position from the Oculus. By default,
-   * the Quest 3 provides sub-millimeter accuracy. Values represent: [0]: X position trust (5mm)
-   * [1]: Y position trust (5mm) [2]: Rotation trust (~2.87 degrees)
+   * the Quest 3 provides sub-centimeter accuracy. Values represent: [0]: X position trust (50mm)
+   * [1]: Y position trust (50mm) [2]: Rotation trust (~2.87 degrees)
    */
   public static final Matrix<N3, N1> OCULUS_STD_DEVS =
       VecBuilder.fill(
-          0.005, // Trust down to 5mm
-          0.005, // Trust down to 5mm
+          0.005, // Trust down to 50mm
+          0.005, // Trust down to 50mm
           0.05 // Trust down to ~2.87deg
           );
+
+  /**
+   * The divisor to divide the translational std devs by for simulation (how much we trust our sim)
+   * Higher = more trust
+   */
+  public static final double SIM_TRUST_TRANSLATION = 5.0;
+
+  /**
+   * The divisor to divide the rotational std devs by for simulation (how much we trust our sim)
+   * Higher = more trust
+   */
+  public static final double SIM_TRUST_ROTATION = 10.0;
 }
